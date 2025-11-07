@@ -26,6 +26,7 @@ class CandidateProfile(CandidateProfileBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
 
+
 class CandidateProfileUser(BaseModel):
     email: Annotated[EmailStr, MinLen(5), MaxLen(25)]
     name: Annotated[str, MinLen(2), MaxLen(50)]
@@ -39,4 +40,3 @@ class CandidateProfileUser(BaseModel):
 
 class CandidateProfileUpdate(CandidateProfileUser):
     pass
-

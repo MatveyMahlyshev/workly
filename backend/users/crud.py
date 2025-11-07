@@ -8,6 +8,7 @@ from .schemas import CreateUserWithProfile, UserCreate
 from core.models import User, CandidateProfile, UserRole
 import exceptions
 
+
 async def create_user(session: AsyncSession, user: UserCreate):
     email_exists = await session.execute(
         select(User.email).where(User.email == user.email)
@@ -22,7 +23,7 @@ async def create_user(session: AsyncSession, user: UserCreate):
     if user.role == UserRole.HR:
         session.add(new_user)
         await session.commit()
-
+    
     return new_user
 
 

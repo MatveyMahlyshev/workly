@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, Json, ConfigDict
 from typing import TypedDict
 
+
 class SkillTestBase(BaseModel):
     skill_id: int
     question: str
@@ -14,6 +15,7 @@ class SkillTest(SkillTestBase):
 
 class SkillTestCreate(SkillTestBase):
     correct_option_index: int
+
 
 class QuestionAnswer(TypedDict):
     question_id: int

@@ -85,9 +85,7 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.create_index(
-        op.f("ix_vacancies_title"), "vacancies", ["title"], unique=False
-    )
+    op.create_index(op.f("ix_vacancies_title"), "vacancies", ["title"], unique=False)
     op.create_table(
         "candidate_profile_skill_associations",
         sa.Column("candidate_profile_id", sa.Integer(), nullable=False),
@@ -130,9 +128,7 @@ def upgrade() -> None:
             ["candidate_profiles.id"],
             ondelete="CASCADE",
         ),
-        sa.ForeignKeyConstraint(
-            ["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -144,13 +140,9 @@ def upgrade() -> None:
             ["skill_id"],
             ["skills.id"],
         ),
-        sa.ForeignKeyConstraint(
-            ["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint(
-            "vacancy_id", "skill_id", name="idx_unique_vacancy_skill"
-        ),
+        sa.UniqueConstraint("vacancy_id", "skill_id", name="idx_unique_vacancy_skill"),
     )
     # ### end Alembic commands ###
 

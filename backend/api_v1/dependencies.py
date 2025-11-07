@@ -20,7 +20,9 @@ async def get_user(
     return user
 
 
-async def get_user_by_sub(payload: dict, session: AsyncSession, stmt: Any | None = None):
+async def get_user_by_sub(
+    payload: dict, session: AsyncSession, stmt: Any | None = None
+):
     email = payload.get("sub")
     if stmt is None:
         stmt = select(User).where(User.email == email)

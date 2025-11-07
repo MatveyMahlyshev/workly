@@ -6,6 +6,7 @@ from .base import Base
 if TYPE_CHECKING:
     from .skill import Skill
 
+
 class SkillTest(Base):
     __tablename__ = "skill_tests"
 
