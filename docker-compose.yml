@@ -11,31 +11,49 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: fastapi_backend
-    restart: always
-    depends_on:
-      - db
-    ports:
-      - "8000:8000"
-    environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/fastapi_db
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-    volumes:
-      - ./backend:/app
 
-  frontend:
-    image: python:3.12.3-slim
-    container_name: frontend_http_server
-    working_dir: /frontend
-    volumes:
-      - ./frontend:/frontend
+  db_test:
+    image: postgres:14
+    container_name: test_fastapi_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_db_test
     ports:
-      - "8080:8080"
-    command: python3 -m http.server 8080
+      - "5433:5432"
+    volumes:
+      - postgres_data_test:/var/lib/postgresql/data_test
+    
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   container_name: findjob_backend
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #   ports:
+  #     - "8000:8000"
+  #   environment:
+  #     DATABASE_URL: postgres://postgres:postgres@db:5432/fastapi_db
+  #   command: >
+  #     sh -c "python init_scripts/create_certs.py &&
+  #           alembic upgrade head &&
+  #           uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+  #   volumes:
+  #     - ./backend:/app
+
+  # frontend:
+  #   image: python:3.12.3-slim
+  #   container_name: frontend_http_server
+  #   working_dir: /frontend
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   ports:
+  #     - "8080:8080"
+  #   command: python3 -m http.server 8080
 
 volumes:
   postgres_data:
+  postgres_data_test:
