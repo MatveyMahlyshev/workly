@@ -9,7 +9,6 @@ from fastapi import Response
 from .schemas import VacancyBase, VacancyCreate, VacancyB
 from core.models import (
     User,
-    UserRole,
     Vacancy,
     Skill,
     VacancySkillAssociation,

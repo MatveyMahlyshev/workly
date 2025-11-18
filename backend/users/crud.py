@@ -5,7 +5,7 @@ from fastapi import HTTPException, status
 
 from auth.utils import hash_password
 from .schemas import CreateUserWithProfile, UserCreate
-from core.models import User, CandidateProfile, UserRole
+from core.models import User, CandidateProfile
 import exceptions
 
 
@@ -18,11 +18,13 @@ async def create_user(session: AsyncSession, user: UserCreate):
     new_user = User(
         email=user.email,
         password_hash=hash_password(user.password),
-        role=user.role,
+        is_active=True,
+        permission_level=2,
     )
-    if user.role == UserRole.HR:
-        session.add(new_user)
-        await session.commit()
+
+    session.add(new_user)
+    
+    await session.commit()
 
     return new_user
 
