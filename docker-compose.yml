@@ -1,12 +1,12 @@
 services:
   db:
     image: postgres:14
-    container_name: fastapi_postgres
+    container_name: workly_database
     restart: always
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: fastapi_db
+      POSTGRES_DB: workly_db
     ports:
       - "5432:5432"
     volumes:
@@ -23,7 +23,7 @@ services:
   #   ports:
   #     - "8000:8000"
   #   environment:
-  #     DATABASE_URL: postgres://postgres:postgres@db:5432/fastapi_db
+  #     DB_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db
   #   command: >
   #     sh -c "python init_scripts/create_certs.py &&
   #           alembic upgrade head &&
