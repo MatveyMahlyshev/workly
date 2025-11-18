@@ -29,4 +29,3 @@ class DataBaseHelper:
 
 
 db_helper = DataBaseHelper(url=settings.db.url, echo=settings.db.echo)
-db_helper_test = DataBaseHelper(url=settings.db.url_test, echo=settings.db.echo)
