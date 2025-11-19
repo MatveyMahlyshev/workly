@@ -7,9 +7,9 @@ class TestUserHr:
     @pytest.fixture(autouse=True)
     def setup_data(self):
         self.user_data = {
-            "good_email": "test@example.com",
+            "good_email": "hr@example.com",
             "bad_email": "invalid-email",
-            "good_password": "SecurePass123",
+            "good_password": "SecurePassHr123",
             "bad_password": "weak",
         }
         self.registered_users = []  
@@ -21,15 +21,22 @@ class TestUserHr:
             "/api/v1/users/delete/me/",
             headers={"Authorization": f"Bearer {access_token}"},
         )
-
-    def test_create_hr_user_success(self, client: TestClient):
-        response = client.post(
+    
+    def create_good_user(self, client: TestClient, response: bool = False):
+        result = client.post(
             "/api/v1/users/register/hr/",
             json={
                 "email": self.user_data["good_email"],
                 "password": self.user_data["good_password"],
             },
         )
+        if response:
+            return result
+
+        
+
+    def test_create_hr_user_success(self, client: TestClient):
+        response = self.create_good_user(client=client, response=True)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
@@ -52,20 +59,8 @@ class TestUserHr:
         assert response.json().get("id")
 
     def test_create_hr_user_failed(self, client: TestClient):
-        client.post(
-            "/api/v1/users/register/hr/",
-            json={
-                "email": self.user_data["good_email"],
-                "password": self.user_data["good_password"],
-            },
-        )
-        response = client.post(
-            "/api/v1/users/register/hr/",
-            json={
-                "email": self.user_data["good_email"],
-                "password": self.user_data["good_password"],
-            },
-        )
+        self.create_good_user(client=client, response=False)
+        response = self.create_good_user(client=client, response=True)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
@@ -126,13 +121,7 @@ class TestUserHr:
         assert response.status_code == 422
 
     def test_login_hr_user_success(self, client: TestClient):
-        client.post(
-            "/api/v1/users/register/hr/",
-            json={
-                "email": self.user_data["good_email"],
-                "password": self.user_data["good_password"],
-            },
-        )
+        self.create_good_user(client=client, response=False)
         response = client.post(
             "/api/v1/auth/login/",
             data={
@@ -160,13 +149,7 @@ class TestUserHr:
         assert response.status_code == 404
 
     def test_login_hr_user_bad_email(self, client: TestClient):
-        client.post(
-            "/api/v1/users/register/hr/",
-            json={
-                "email": self.user_data["good_email"],
-                "password": self.user_data["good_password"],
-            },
-        )
+        self.create_good_user(client=client, response=False)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
