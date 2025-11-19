@@ -46,7 +46,7 @@ def create_refresh_token(user: UserAuthSchema) -> str:
     )
 
 
-async def get_user_by_token_sub(payload: dict, session: AsyncSession) -> UserAuthSchema:
+async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     email: str | None = payload.get("sub")
     if not email:
         raise exceptions.UnauthorizedException.NO_EMAIL
