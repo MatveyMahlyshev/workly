@@ -1,0 +1,52 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: workly_db
+        ports: [5432:5432]
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Wait for PostgreSQL
+      run: |
+        sleep 5  # Ждем пока БД полностью запустится
+    
+    - name: Run migrations
+      run: |
+        cd backend
+        alembic upgrade head
+      env:
+        DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db
+    
+    - name: Run tests
+      run: |
+        cd backend
+        python -m pytest tests/ -v
+      env:
+        DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db
