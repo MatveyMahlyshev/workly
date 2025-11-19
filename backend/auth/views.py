@@ -22,7 +22,7 @@ auth = APIRouter(dependencies=[Depends(http_bearer)])
 
 
 @router.post("/login/", response_model=TokenInfo)
-async def auth_user(user: UserAuthSchema = Depends(validate_auth_user)) -> User:
+async def login_user(user: UserAuthSchema = Depends(validate_auth_user)):
 
     access_token = create_access_token(user=user)
     refresh_token = create_refresh_token(user=user)
@@ -54,5 +54,6 @@ async def get_role(
         payload=payload,
         session=session,
     )
+
 
 router.include_router(router=auth)

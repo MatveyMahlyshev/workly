@@ -1,6 +1,7 @@
-from fastapi import Form, Depends
+from fastapi import Form, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
+import re
 
 from core.models import User, db_helper
 from .utils import validate_password
@@ -10,11 +11,23 @@ import exceptions
 from api_v1 import dependencies as apd
 
 
+def validate_email(email: str) -> str:
+    """Валидация email"""
+    email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    if not re.match(email_pattern, email):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid email format. Example: user@example.com",
+        )
+    return email.lower()
+
+
 async def validate_auth_user(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-    email: str = Form(),
-    password: str = Form(),
+    email: str = Form(...),
+    password: str = Form(...),
 ):
+    email = validate_email(email=email)
 
     stmt = select(User).where(User.email == email)
     result: Result = await session.execute(statement=stmt)

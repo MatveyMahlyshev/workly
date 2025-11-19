@@ -6,16 +6,14 @@ import pytest
 class TestUserHr:
     @pytest.fixture(autouse=True)
     def setup_data(self):
-        """Фикстура с тестовыми данными, автоматически используется во всех тестах"""
         self.user_data = {
             "good_email": "test@example.com",
             "bad_email": "invalid-email",
             "good_password": "SecurePass123",
             "bad_password": "weak",
         }
-        self.registered_users = []  # Для отслеживания созданных пользователей
+        self.registered_users = []  
         yield
-        # Cleanup после всех тестов
         self.registered_users.clear()
 
     def cleanup_user(self, client: TestClient, access_token: str):
@@ -160,3 +158,38 @@ class TestUserHr:
             },
         )
         assert response.status_code == 404
+
+    def test_login_hr_user_bad_email(self, client: TestClient):
+        client.post(
+            "/api/v1/users/register/hr/",
+            json={
+                "email": self.user_data["good_email"],
+                "password": self.user_data["good_password"],
+            },
+        )
+        access_token = (
+            client.post(
+                "/api/v1/auth/login/",
+                data={
+                    "email": self.user_data["good_email"],
+                    "password": self.user_data["good_password"],
+                },
+            )
+            .json()
+            .get("access_token")
+        )
+
+        response = client.post(
+            "/api/v1/auth/login/",
+            data={
+                "email": self.user_data["bad_email"],
+                "password": self.user_data["good_password"],
+            },
+        )
+        self.cleanup_user(
+            client=client,
+            access_token=access_token,
+        )
+
+        assert response.status_code == 422
+        assert response.json().get("detail")
