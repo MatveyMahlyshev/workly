@@ -1,8 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
 from fastapi import HTTPException, status
+from sqlalchemy.exc import IntegrityError
 
-
+from auth.auth_helpers import get_user_by_token_sub
 from auth.utils import hash_password
 from .schemas import CreateUserWithProfile, UserCreate
 from core.models import User, CandidateProfile
@@ -23,17 +24,26 @@ async def create_user(session: AsyncSession, user: UserCreate):
     )
 
     session.add(new_user)
-    
-    await session.commit()
+    try:
+        await session.commit()
+    except IntegrityError as e:
+        await session.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail=str(e),
+        )
 
-    return new_user
+    return {
+        "id": new_user.id,
+        "email": new_user.email,
+    }
 
 
 async def create_user_with_profile(
     session: AsyncSession, user_profile: CreateUserWithProfile
 ) -> dict:
     user = await create_user(session=session, user=user_profile.user)
-    session.add(user)
+    # session.add(user)
     await session.flush()
 
     profile = CandidateProfile(
@@ -42,11 +52,10 @@ async def create_user_with_profile(
         patronymic=user_profile.profile.patronymic,
         age=user_profile.profile.age,
         about_candidate=user_profile.profile.about_candidate,
-        user_id=user.id,
+        user_id=user.get("id"),
         education=user_profile.profile.education,
     )
     session.add(profile)
-    await session.flush()
 
     await session.commit()
 
@@ -54,3 +63,15 @@ async def create_user_with_profile(
         "user": user,
         "profile": profile,
     }
+
+
+async def delete_user(
+    payload: dict,
+    session: AsyncSession,
+):
+    user = await get_user_by_token_sub(
+        payload=payload,
+        session=session,
+    )
+    await session.delete(user)
+    await session.commit()
