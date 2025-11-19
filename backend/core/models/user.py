@@ -15,7 +15,6 @@ class PermissionLevel(IntEnum):
     CANDIDATE = 1
     HR = 2
     ADMIN = 3
-    
 
 
 class User(Base):
