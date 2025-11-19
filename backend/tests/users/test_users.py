@@ -3,8 +3,6 @@ from tests.confest import client
 import pytest
 
 
-
-
 class TestUserHr:
     @pytest.fixture(autouse=True)
     def setup_data(self):
@@ -128,3 +126,37 @@ class TestUserHr:
             },
         )
         assert response.status_code == 422
+
+    def test_login_hr_user_success(self, client: TestClient):
+        client.post(
+            "/api/v1/users/register/hr/",
+            json={
+                "email": self.user_data["good_email"],
+                "password": self.user_data["good_password"],
+            },
+        )
+        response = client.post(
+            "/api/v1/auth/login/",
+            data={
+                "email": self.user_data["good_email"],
+                "password": self.user_data["good_password"],
+            },
+        )
+        self.cleanup_user(
+            client=client,
+            access_token=response.json().get("access_token"),
+        )
+
+        assert response.json().get("access_token")
+        assert response.json().get("refresh_token")
+        assert response.json().get("token_type") == "bearer"
+
+    def test_login_hr_user_not_found(self, client: TestClient):
+        response = client.post(
+            "/api/v1/auth/login/",
+            data={
+                "email": self.user_data["good_email"],
+                "password": self.user_data["good_password"],
+            },
+        )
+        assert response.status_code == 404
