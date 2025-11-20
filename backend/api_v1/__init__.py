@@ -4,7 +4,7 @@ from api_v1.skills.views import router as skills_router
 from auth.views import router as auth_router
 from api_v1.profiles.views import router as profile_router
 from api_v1.vacancies.views import router as vacancy_router
-from users.views import router as users_router
+from api_v1.users.views import router as users_router
 from api_v1.skill_tests.views import router as skill_tests_router
 
 router = APIRouter()
