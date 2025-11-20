@@ -16,7 +16,7 @@ class Vacancy(Base):
 
     title: Mapped[str] = mapped_column(nullable=False, index=True)
     company: Mapped[str] = mapped_column(nullable=False)
-    description: Mapped[str] = mapped_column(Text(), nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
     hr_id: Mapped[int] = mapped_column(
         ForeignKey("users.id"), unique=False, nullable=False
     )

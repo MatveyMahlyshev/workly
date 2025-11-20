@@ -32,7 +32,7 @@ class CandidateProfile(UserRelationMixin, Base):
 
     surname: Mapped[str] = mapped_column(String(50))
     name: Mapped[str] = mapped_column(String(50))
-    patronymic: Mapped[str | None] = mapped_column(String(50))
+    patronymic: Mapped[str | None] = mapped_column(String(50), default="")
     birth_date: Mapped[date] = mapped_column(
         Date,
         default=default_18_years_ago,

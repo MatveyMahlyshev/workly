@@ -30,7 +30,11 @@ class User(Base):
     )
 
     candidate_profile: Mapped["CandidateProfile"] = relationship(
-        "CandidateProfile", back_populates="user", uselist=False
+        "CandidateProfile",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
     vacancy: Mapped[list["Vacancy"]] = relationship("Vacancy", back_populates="hr")
