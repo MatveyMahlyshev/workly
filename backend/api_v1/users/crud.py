@@ -11,20 +11,21 @@ import exceptions
 
 
 async def create_user(session: AsyncSession, user: dict | UserCreate):
+    if isinstance(user, UserCreate):
+        user_dict = {"email": user.email, "password": user.password, "permission_level": 2}
+    else:
+        user_dict = user
+        user_dict["permission_level"] = 1
     email_exists = await session.execute(
-        select(User.email).where(User.email == user["email"])
+        select(User.email).where(User.email == user_dict["email"])
     )
     if email_exists.scalar_one_or_none():
         raise exceptions.ConflictException.EMAIL_ALREADY_EXISTS
-    if isinstance(user, UserCreate):
-        permission_level = 2
-    else:
-        permission_level = 1
     new_user = User(
-        email=user["email"],
-        password_hash=hash_password(user["password"]),
+        email=user_dict["email"],
+        password_hash=hash_password(user_dict["password"]),
         is_active=True,
-        permission_level=permission_level,
+        permission_level=user_dict["permission_level"],
     )
 
     session.add(new_user)
