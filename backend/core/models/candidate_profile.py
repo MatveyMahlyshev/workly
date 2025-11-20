@@ -5,10 +5,11 @@ from sqlalchemy.orm import (
 )
 from sqlalchemy import (
     String,
-    Integer,
     Text,
+    Date,
 )
 from typing import TYPE_CHECKING
+from datetime import date, timedelta
 
 
 from . import Base
@@ -17,6 +18,10 @@ from .mixins import UserRelationMixin
 if TYPE_CHECKING:
     from .candidate_profile_skill_association import CandidateProfileSkillAssociation
     from .vacancy_response import VacancyResponse
+
+
+def default_18_years_ago():
+    return date.today() - timedelta(days=18 * 365)
 
 
 class CandidateProfile(UserRelationMixin, Base):
@@ -28,9 +33,14 @@ class CandidateProfile(UserRelationMixin, Base):
     surname: Mapped[str] = mapped_column(String(50))
     name: Mapped[str] = mapped_column(String(50))
     patronymic: Mapped[str | None] = mapped_column(String(50))
-    age: Mapped[int] = mapped_column(Integer)
-    about_candidate: Mapped[str | None] = mapped_column(Text)
-    education: Mapped[str] = mapped_column(Text)
+    birth_date: Mapped[date] = mapped_column(
+        Date,
+        default=default_18_years_ago,
+        nullable=False,
+    )
+    work_experience: Mapped[str | None] = mapped_column(Text, default="")
+    education: Mapped[str | None] = mapped_column(Text, default="")
+    about_candidate: Mapped[str | None] = mapped_column(Text, default="")
 
     profile_skills: Mapped[list["CandidateProfileSkillAssociation"]] = relationship(
         back_populates="candidate_profile"
