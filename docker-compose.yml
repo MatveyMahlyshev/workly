@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:14
+    image: postgres:17
     container_name: workly_database
     restart: always
     environment:
@@ -12,35 +12,23 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   container_name: findjob_backend
-  #   restart: always
-  #   depends_on:
-  #     - db
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     DB_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db
-  #   command: >
-  #     sh -c "python init_scripts/create_certs.py &&
-  #           alembic upgrade head &&
-  #           uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
-  #   volumes:
-  #     - ./backend:/app
-
-  # frontend:
-  #   image: python:3.12.3-slim
-  #   container_name: frontend_http_server
-  #   working_dir: /frontend
-  #   volumes:
-  #     - ./frontend:/frontend
-  #   ports:
-  #     - "8080:8080"
-  #   command: python3 -m http.server 8080
-
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: workly_backend
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    environment:
+      DB_URL: postgresql+asyncpg://postgres:postgres@db:5432/workly_db
+    command: >
+      sh -c "python certs.py &&
+            alembic upgrade head &&
+            uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./backend:/app
 volumes:
   postgres_data:
-  postgres_data_test:

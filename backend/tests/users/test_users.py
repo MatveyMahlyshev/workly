@@ -12,7 +12,7 @@ class TestUserHr:
             "good_password": "SecurePassHr123",
             "bad_password": "weak",
         }
-        self.registered_users = []  
+        self.registered_users = []
         yield
         self.registered_users.clear()
 
@@ -21,8 +21,8 @@ class TestUserHr:
             "/api/v1/users/delete/me/",
             headers={"Authorization": f"Bearer {access_token}"},
         )
-    
-    def create_good_user(self, client: TestClient, response: bool = False):
+
+    def create_valid_user(self, client: TestClient, response: bool = False):
         result = client.post(
             "/api/v1/users/register/hr/",
             json={
@@ -33,10 +33,8 @@ class TestUserHr:
         if response:
             return result
 
-        
-
     def test_create_hr_user_success(self, client: TestClient):
-        response = self.create_good_user(client=client, response=True)
+        response = self.create_valid_user(client=client, response=True)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
@@ -59,8 +57,8 @@ class TestUserHr:
         assert response.json().get("id")
 
     def test_create_hr_user_failed(self, client: TestClient):
-        self.create_good_user(client=client, response=False)
-        response = self.create_good_user(client=client, response=True)
+        self.create_valid_user(client=client, response=False)
+        response = self.create_valid_user(client=client, response=True)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
@@ -121,7 +119,7 @@ class TestUserHr:
         assert response.status_code == 422
 
     def test_login_hr_user_success(self, client: TestClient):
-        self.create_good_user(client=client, response=False)
+        self.create_valid_user(client=client, response=False)
         response = client.post(
             "/api/v1/auth/login/",
             data={
@@ -149,7 +147,7 @@ class TestUserHr:
         assert response.status_code == 404
 
     def test_login_hr_user_bad_email(self, client: TestClient):
-        self.create_good_user(client=client, response=False)
+        self.create_valid_user(client=client, response=False)
         access_token = (
             client.post(
                 "/api/v1/auth/login/",
