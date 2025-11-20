@@ -26,7 +26,7 @@ class CandidateProfile(CandidateProfileBase):
 
 
 class CandidateProfileCreate(CandidateProfileBase):
-    pass
+    email: EmailStr
 
 
 class CandidateProfileUser(BaseModel):

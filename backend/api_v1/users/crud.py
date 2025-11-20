@@ -10,62 +10,45 @@ from core.models import User, CandidateProfile
 import exceptions
 
 
-async def create_user(session: AsyncSession, user: dict | UserCreate):
-    if isinstance(user, UserCreate):
-        user_dict = {"email": user.email, "password": user.password, "permission_level": 2}
-    else:
-        user_dict = user
-        user_dict["permission_level"] = 1
+async def create_user(
+    user: CreateUserWithProfile | UserCreate,
+    session: AsyncSession,
+):
     email_exists = await session.execute(
-        select(User.email).where(User.email == user_dict["email"])
+        select(User.email).where(User.email == user.email)
     )
     if email_exists.scalar_one_or_none():
-        raise exceptions.ConflictException.EMAIL_ALREADY_EXISTS
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Пользователь с таким email уже зарегистрирован.",
+        )
+
     new_user = User(
-        email=user_dict["email"],
-        password_hash=hash_password(user_dict["password"]),
+        email=user.email,
+        password_hash=hash_password(user.password),
         is_active=True,
-        permission_level=user_dict["permission_level"],
     )
+    if type(user) == UserCreate:
+        new_user.permission_level = 2
+        session.add(new_user)
 
-    session.add(new_user)
-    try:
-        await session.commit()
-    except IntegrityError:
-        await session.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail="Integrity error.",
+    else:
+        new_user.permission_level = 1
+
+        session.add(new_user)
+        await session.flush()
+
+        profile = CandidateProfile(
+            name=user.name.lower().capitalize(),
+            surname=user.surname.lower().capitalize(),
+            patronymic=user.patronymic.lower().capitalize(),
+            about_candidate=user.about_candidate,
+            education=user.education,
+            birth_date=user.birth_date,
+            work_experience=user.work_experience,
+            user_id=new_user.id,
         )
-
-    return {
-        "id": new_user.id,
-        "email": new_user.email,
-    }
-
-
-async def create_user_with_profile(
-    session: AsyncSession, user_profile: CreateUserWithProfile
-) -> dict:
-    user: dict = await create_user(
-        session=session,
-        user={
-            "email": user_profile.email,
-            "password": user_profile.password,
-        },
-    )
-
-    profile = CandidateProfile(
-        name=user_profile.name.lower().capitalize(),
-        surname=user_profile.surname.lower().capitalize(),
-        patronymic=user_profile.patronymic.lower().capitalize(),
-        about_candidate=user_profile.about_candidate,
-        education=user_profile.education,
-        birth_date=user_profile.birth_date,
-        work_experience=user_profile.work_experience,
-        user_id=user.get("id"),
-    )
-    session.add(profile)
+        session.add(profile)
 
     try:
         await session.commit()
@@ -75,8 +58,7 @@ async def create_user_with_profile(
             status_code=500,
             detail="Integrity error.",
         )
-
-    return profile
+    return {"message": "success"}
 
 
 async def delete_user(
