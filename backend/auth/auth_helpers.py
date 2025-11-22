@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
 import re
 
-from core.models import User, db_helper
+from core.models import User, db_helper, PermissionLevel
 from .utils import validate_password
 from .schemas import UserAuthSchema
 from . import dependencies
@@ -82,7 +82,7 @@ async def get_current_auth_user_for_refresh(
     )
     return await get_user_by_token_sub(payload=payload, session=session)
 
+async def check_permission(user_permission: int, permissions: list[PermissionLevel]):
+    if user_permission not in permissions:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нет доступа к данному ресурсу",)
 
-async def get_user_role(payload: dict, session: AsyncSession):
-    user: User = await get_user_by_token_sub(payload=payload, session=session)
-    return {"role": user.role}

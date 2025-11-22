@@ -7,7 +7,7 @@ from .auth_helpers import (
     create_access_token,
     create_refresh_token,
     get_current_auth_user_for_refresh,
-    get_user_role,
+
 )
 from .schemas import TokenInfo, UserAuthSchema
 from core.models import User
@@ -43,17 +43,6 @@ async def auth_refresh(
 ):
     access_token = create_access_token(user=user)
     return TokenInfo(access_token=access_token)
-
-
-@auth.get("/role/")
-async def get_role(
-    payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-):
-    return await get_user_role(
-        payload=payload,
-        session=session,
-    )
 
 
 router.include_router(router=auth)
