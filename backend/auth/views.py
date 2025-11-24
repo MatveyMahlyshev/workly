@@ -15,9 +15,7 @@ from .dependencies import http_bearer, get_current_token_payload
 from core.models import db_helper
 
 
-router = APIRouter(
-    tags=["Auth"],
-)
+router = APIRouter()
 auth = APIRouter(dependencies=[Depends(http_bearer)])
 
 

@@ -28,6 +28,7 @@ class Settings(BaseSettings):
     auth: AuthJWT = AuthJWT()
     db: DBSettings = DBSettings()
     api_v1_prefix: str = "/api/v1"
+    api_v2_prefix: str = "/api/v2"
 
 
 settings = Settings()

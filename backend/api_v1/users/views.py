@@ -8,7 +8,7 @@ from . import crud
 from api_v1.schemas import SuccessResponse
 from auth.dependencies import get_current_token_payload
 
-router = APIRouter(tags=["Users"])
+router = APIRouter()
 auth = APIRouter(dependencies=[Depends(HTTPBearer(auto_error=False))])
 
 

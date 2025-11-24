@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 
 from api_v1 import router as api_v1_router
+from api_v2 import router as api_v2_router
 from core.config import settings
 
 
@@ -17,6 +18,10 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(
     router=api_v1_router,
     prefix=settings.api_v1_prefix,
+)
+app.include_router(
+    router=api_v2_router,
+    prefix=settings.api_v2_prefix
 )
 
 app.add_middleware(

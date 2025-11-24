@@ -10,7 +10,6 @@ from api_v1.skills.schemas import SkillBase
 
 
 router = APIRouter(
-    tags=["Profile"],
     dependencies=[Depends(http_bearer)],
 )
 

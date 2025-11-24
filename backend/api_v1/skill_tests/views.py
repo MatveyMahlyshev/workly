@@ -6,7 +6,7 @@ from core.models import db_helper
 from api_v1.skill_tests import crud
 from auth.dependencies import get_current_token_payload
 
-router = APIRouter(tags=["Skill tests"])
+router = APIRouter()
 
 
 @router.post("/create/", response_model=SkillTest)

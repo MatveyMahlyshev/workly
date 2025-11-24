@@ -13,7 +13,7 @@ from .schemas import (
 from core.models import db_helper
 from . import crud
 
-router = APIRouter(tags=["Skills"])
+router = APIRouter()
 
 
 @router.get("/", response_model=list[Skill])

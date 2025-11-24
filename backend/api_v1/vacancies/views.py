@@ -8,7 +8,7 @@ from core.models import db_helper
 from .schemas import Vacancy, VacancyBase, VacancyCreate, VacancyB
 from api_v1.vacancies import crud
 
-router = APIRouter(tags=["Vacancy"])
+router = APIRouter()
 
 auth = APIRouter(dependencies=[Depends(http_bearer)])
 
