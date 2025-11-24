@@ -8,7 +8,7 @@ from .setup_data import SetupData
 class TestUserCandidate(SetupData):
     def create_valid_user(self, client: TestClient, response: bool = False):
         result = client.post(
-            "/api/v1/users/register/",
+            "/api/v2/users/register/",
             json={
                 "name": "Test",
                 "surname": "Test",
@@ -28,7 +28,7 @@ class TestUserCandidate(SetupData):
         response = self.create_valid_user(client=client, response=True)
         access_token = (
             client.post(
-                "/api/v1/auth/login/",
+                "/api/v2/auth/login/",
                 data={
                     "email": self.user_data["good_email"],
                     "password": self.user_data["good_password"],
@@ -71,12 +71,12 @@ class TestUserCandidate(SetupData):
             self.candidate_user_data.pop(optional_field)
         else:
             self.candidate_user_data[optional_field] = value
-        response = client.post("/api/v1/users/register/", json=self.candidate_user_data)
+        response = client.post("/api/v2/users/register/", json=self.candidate_user_data)
 
         if response.status_code == 201:
             access_token = (
                 client.post(
-                    "/api/v1/auth/login/",
+                    "/api/v2/auth/login/",
                     data={
                         "email": self.user_data["good_email"],
                         "password": self.user_data["good_password"],
@@ -108,7 +108,7 @@ class TestUserCandidate(SetupData):
             self.candidate_user_data.pop(invalid_data)
         else:
             self.candidate_user_data[invalid_data] = value
-        response = client.post("/api/v1/users/register/", json=self.candidate_user_data)
+        response = client.post("/api/v2/users/register/", json=self.candidate_user_data)
 
         assert response.status_code == 422
         assert response.json().get("detail")

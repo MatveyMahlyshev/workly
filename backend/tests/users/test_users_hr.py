@@ -7,7 +7,7 @@ from .setup_data import SetupData
 class TestUserHr(SetupData):
     def create_valid_user(self, client: TestClient, response: bool = False):
         result = client.post(
-            "/api/v1/users/register/",
+            "/api/v2/users/register/",
             json={
                 "email": self.user_data["good_email"],
                 "password": self.user_data["good_password"],
@@ -20,7 +20,7 @@ class TestUserHr(SetupData):
         response = self.create_valid_user(client=client, response=True)
         access_token = (
             client.post(
-                "/api/v1/auth/login/",
+                "/api/v2/auth/login/",
                 data={
                     "email": self.user_data["good_email"],
                     "password": self.user_data["good_password"],
@@ -43,7 +43,7 @@ class TestUserHr(SetupData):
         response = self.create_valid_user(client=client, response=True)
         access_token = (
             client.post(
-                "/api/v1/auth/login/",
+                "/api/v2/auth/login/",
                 data={
                     "email": self.user_data["good_email"],
                     "password": self.user_data["good_password"],
@@ -80,7 +80,7 @@ class TestUserHr(SetupData):
             self.hr_user_data.pop(invalid_data)
         else:
             self.hr_user_data[invalid_data] = value
-        response = client.post("/api/v1/users/register/", json=self.candidate_user_data)
+        response = client.post("/api/v2/users/register/", json=self.candidate_user_data)
 
         assert response.status_code == 422
         assert response.json().get("detail")
@@ -88,7 +88,7 @@ class TestUserHr(SetupData):
     def test_login_hr_user_success(self, client: TestClient):
         self.create_valid_user(client=client, response=False)
         response = client.post(
-            "/api/v1/auth/login/",
+            "/api/v2/auth/login/",
             data={
                 "email": self.user_data["good_email"],
                 "password": self.user_data["good_password"],
@@ -106,7 +106,7 @@ class TestUserHr(SetupData):
 
     def test_login_hr_user_not_found_404(self, client: TestClient):
         response = client.post(
-            "/api/v1/auth/login/",
+            "/api/v2/auth/login/",
             data={
                 "email": self.user_data["good_email"],
                 "password": self.user_data["good_password"],
