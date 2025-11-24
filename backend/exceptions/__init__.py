@@ -3,7 +3,7 @@ from fastapi import HTTPException, status
 
 class UnauthorizedException:
     INVALID_LOGIN_DATA = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
+        status_code=status.HTTP_404_NOT_FOUND,
         detail="Invalid email or password.",
     )
     INVALID_TOKEN = HTTPException(

@@ -1,12 +1,11 @@
 from pydantic import BaseModel
 from pydantic_settings import BaseSettings
 from pathlib import Path
+import os
 
 BASE_DIR = Path(
     __file__
 ).parent.parent  # абсолютный адрес базовой директории для файла бд
-
-DB_PATH = BASE_DIR / "db.sqlite3"
 
 
 class AuthJWT(BaseModel):
@@ -18,8 +17,10 @@ class AuthJWT(BaseModel):
 
 
 class DBSettings(BaseModel):
-    url: str = "postgresql+asyncpg://postgres:postgres@localhost:5432/fastapi_db"
-    url_test: str = "postgresql+asyncpg://postgres:postgres@localhost:5433/fastapi_db_test"
+    url: str = (
+        os.getenv("DB_URL")
+        or "postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db"
+    )
     echo: bool = False
 
 

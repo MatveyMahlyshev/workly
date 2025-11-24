@@ -17,7 +17,10 @@ class VacancySkillAssociation(Base):
     )
 
     vacancy_id: Mapped[int] = mapped_column(
-        ForeignKey("vacancies.id", ondelete="CASCADE")  # ВАЖНО: ondelete добавлен
+        ForeignKey(
+            "vacancies.id",
+            ondelete="CASCADE",
+        )
     )
     skill_id: Mapped[int] = mapped_column(ForeignKey("skills.id"))
 

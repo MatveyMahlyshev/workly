@@ -8,7 +8,7 @@ from api_v1.skills.schemas import SkillBase
 from api_v1.skills.crud import get_skill
 from api_v1.dependencies import get_user
 from .dependencies import get_statement_for_candidate_profile
-from core.models import UserRole, VacancyResponse, VacancyResponseTest, CandidateProfile
+from core.models import VacancyResponse, VacancyResponseTest, CandidateProfile
 import exceptions
 
 

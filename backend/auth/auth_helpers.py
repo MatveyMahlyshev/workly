@@ -1,8 +1,9 @@
-from fastapi import Form, Depends
+from fastapi import Form, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
+import re
 
-from core.models import User, db_helper
+from core.models import User, db_helper, PermissionLevel
 from .utils import validate_password
 from .schemas import UserAuthSchema
 from . import dependencies
@@ -10,11 +11,23 @@ import exceptions
 from api_v1 import dependencies as apd
 
 
+def validate_email(email: str) -> str:
+    """Валидация email"""
+    email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    if not re.match(email_pattern, email):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Invalid email format. Example: user@example.com",
+        )
+    return email.lower()
+
+
 async def validate_auth_user(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
-    email: str = Form(),
-    password: str = Form(),
+    email: str = Form(...),
+    password: str = Form(...),
 ):
+    email = validate_email(email=email)
 
     stmt = select(User).where(User.email == email)
     result: Result = await session.execute(statement=stmt)
@@ -46,7 +59,7 @@ def create_refresh_token(user: UserAuthSchema) -> str:
     )
 
 
-async def get_user_by_token_sub(payload: dict, session: AsyncSession) -> UserAuthSchema:
+async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     email: str | None = payload.get("sub")
     if not email:
         raise exceptions.UnauthorizedException.NO_EMAIL
@@ -69,7 +82,7 @@ async def get_current_auth_user_for_refresh(
     )
     return await get_user_by_token_sub(payload=payload, session=session)
 
+async def check_permission(user_permission: int, permissions: list[PermissionLevel]):
+    if user_permission not in permissions:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нет доступа к данному ресурсу",)
 
-async def get_user_role(payload: dict, session: AsyncSession):
-    user: User = await get_user_by_token_sub(payload=payload, session=session)
-    return {"role": user.role}

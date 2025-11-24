@@ -5,10 +5,9 @@ __all__ = (
     "Skill",
     "ProfileSkillAssociation",
     "db_helper",
-    "db_helper_test",
     "Vacancy",
     "VacancySkillAssociation",
-    "UserRole",
+    "PermissionLevel",
     "VacancyResponse",
     "CandidateProfile",
     "CandidateProfileSkillAssociation",
@@ -19,11 +18,11 @@ __all__ = (
 
 
 from .base import Base
-from .user import User, UserRole
+from .user import User, PermissionLevel
 from .candidate_profile import CandidateProfile
 from .skill import Skill
 from .candidate_profile_skill_association import CandidateProfileSkillAssociation
-from .db_helper import db_helper, db_helper_test
+from .db_helper import db_helper
 from .vacancy import Vacancy
 from .vacancy_skill_association import VacancySkillAssociation
 from .vacancy_response import VacancyResponse, VacancyResponseStatus

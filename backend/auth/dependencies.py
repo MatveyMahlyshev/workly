@@ -1,13 +1,16 @@
 from fastapi.security import OAuth2PasswordBearer, HTTPBearer
-from fastapi import Depends
+from fastapi import Depends, HTTPException, status
 from jwt.exceptions import InvalidTokenError
 from datetime import timedelta
-
+from sqlalchemy.ext.asyncio import AsyncSession
+from typing import TYPE_CHECKING
 
 from .utils import encode_jwt, decode_jwt
 from core.config import settings
 import exceptions
-from core.models import User
+from core.models import User, db_helper
+
+
 
 
 class TokenTypeFields:
@@ -51,6 +54,3 @@ def validate_token_type(payload: dict, token_type: str) -> bool:
     raise exceptions.UnauthorizedExceptions.ERROR_TOKEN_TYPE
 
 
-def check_access(user: User, role: str):
-    if user.role != role:
-        raise exceptions.AccessDeniesException.ACCESS_DENIED
