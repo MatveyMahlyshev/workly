@@ -34,6 +34,6 @@ class SetupData:
 
     def cleanup_user(self, client: TestClient, access_token: str):
         client.delete(
-            "/api/v1/users/delete/me/",
+            "/api/v2/users/delete/me/",
             headers={"Authorization": f"Bearer {access_token}"},
         )
