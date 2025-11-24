@@ -6,7 +6,6 @@ from .schemas import SkillTestCreate, SkillTestAnswers
 from api_v1.skills.crud import get_skill_by_id
 from core.models import SkillTest, VacancyResponseTest
 import exceptions
-from auth.dependencies import check_access
 from api_v1.dependencies import get_user_by_sub
 
 

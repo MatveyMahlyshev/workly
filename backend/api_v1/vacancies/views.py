@@ -10,22 +10,22 @@ from api_v1.vacancies import crud
 
 router = APIRouter(tags=["Vacancy"])
 
-router_with_auth = APIRouter(dependencies=[Depends(http_bearer)])
-router_without_auth = APIRouter()
+auth = APIRouter(dependencies=[Depends(http_bearer)])
 
 
-@router_with_auth.post("/new/", response_model=VacancyBase)
+@auth.post("/new/", response_model=VacancyBase)
 async def create_vacancy(
     vacancy: VacancyCreate,
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    
 ):
     return await crud.create_vacancy(
         session=session, payload=payload, vacancy_in=vacancy
     )
 
 
-@router_with_auth.get("/company/", response_model=list[VacancyB])
+@auth.get("/company/", response_model=list[VacancyB])
 async def get_vacancies_by_user(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
@@ -33,14 +33,14 @@ async def get_vacancies_by_user(
     return await crud.get_vacancies_by_user(payload=payload, session=session)
 
 
-@router_without_auth.get("/", response_model=list[VacancyB])
+@router.get("/", response_model=list[VacancyB])
 async def get_vacancies(
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
 ):
     return await crud.get_vacanies(session=session)
 
 
-@router_without_auth.get("/id/{vacancy_id}/", response_model=VacancyB)
+@router.get("/id/{vacancy_id}/", response_model=VacancyB)
 async def get_vacancy_by_id(
     vacancy_id: int,
     session: AsyncSession = Depends(db_helper.scoped_session_dependency),
@@ -48,7 +48,7 @@ async def get_vacancy_by_id(
     return await crud.get_vacancy_by_id(vacancy_id=vacancy_id, session=session)
 
 
-@router_with_auth.put("/vacancy/edit/{vacancy_id}/", response_model=Vacancy)
+@auth.put("/vacancy/edit/{vacancy_id}/", response_model=Vacancy)
 async def update_vacancy(
     vacancy_in: VacancyCreate,
     vacancy_id: int,
@@ -60,7 +60,7 @@ async def update_vacancy(
     )
 
 
-@router_with_auth.delete("/vacancy/delete/{vacancy_id}/")
+@auth.delete("/vacancy/delete/{vacancy_id}/")
 async def delete_vacancy(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
@@ -71,7 +71,7 @@ async def delete_vacancy(
     )
 
 
-@router_with_auth.post("/vacancy/{vacancy_id}/respond/")
+@auth.post("/vacancy/{vacancy_id}/respond/")
 async def vacancy_respond(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
@@ -82,7 +82,7 @@ async def vacancy_respond(
     )
 
 
-@router_with_auth.get("/vacancy/{vacancy_id}/responds/")
+@auth.get("/vacancy/{vacancy_id}/responds/")
 async def get_vacancy_responds(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
@@ -93,5 +93,4 @@ async def get_vacancy_responds(
     )
 
 
-router.include_router(router=router_without_auth)
-router.include_router(router=router_with_auth)
+router.include_router(router=auth)
