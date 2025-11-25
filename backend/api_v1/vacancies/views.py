@@ -7,6 +7,7 @@ from core.models import db_helper
 
 from .schemas import Vacancy, VacancyBase, VacancyCreate, VacancyB
 from api_v1.vacancies import crud
+from api_v2.dependencies import get_db
 
 router = APIRouter()
 
@@ -17,7 +18,7 @@ auth = APIRouter(dependencies=[Depends(http_bearer)])
 async def create_vacancy(
     vacancy: VacancyCreate,
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
     
 ):
     return await crud.create_vacancy(
@@ -28,14 +29,14 @@ async def create_vacancy(
 @auth.get("/company/", response_model=list[VacancyB])
 async def get_vacancies_by_user(
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.get_vacancies_by_user(payload=payload, session=session)
 
 
 @router.get("/", response_model=list[VacancyB])
 async def get_vacancies(
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.get_vacanies(session=session)
 
@@ -43,7 +44,7 @@ async def get_vacancies(
 @router.get("/id/{vacancy_id}/", response_model=VacancyB)
 async def get_vacancy_by_id(
     vacancy_id: int,
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.get_vacancy_by_id(vacancy_id=vacancy_id, session=session)
 
@@ -53,7 +54,7 @@ async def update_vacancy(
     vacancy_in: VacancyCreate,
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.update_vacancy(
         vacancy_in, vacancy_id=vacancy_id, payload=payload, session=session
@@ -64,7 +65,7 @@ async def update_vacancy(
 async def delete_vacancy(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.delete_vacancy(
         vacancy_id=vacancy_id, payload=payload, session=session
@@ -75,7 +76,7 @@ async def delete_vacancy(
 async def vacancy_respond(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.vacancy_respond(
         vacancy_id=vacancy_id, payload=payload, session=session
@@ -86,7 +87,7 @@ async def vacancy_respond(
 async def get_vacancy_responds(
     vacancy_id: int,
     payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ):
     return await crud.get_candidates_by_responses(
         vacancy_id=vacancy_id, payload=payload, session=session

@@ -14,7 +14,7 @@ class CandidateProfileBase(BaseModel):
 
     name: str = Field(min_length=2, max_length=50)
     surname: str = Field(min_length=2, max_length=50)
-    patronymic: str = Field(min_length=2, max_length=50)
+    patronymic: str | None = Field(max_length=50)
     about_candidate: str | None = None
     education: str | None = None
     birth_date: date
@@ -33,7 +33,7 @@ class CandidateProfileUser(BaseModel):
     email: Annotated[EmailStr, MinLen(5), MaxLen(25)]
     name: Annotated[str, MinLen(2), MaxLen(50)]
     surname: Annotated[str, MinLen(2), MaxLen(50)]
-    patronymic: Annotated[str, MinLen(2), MaxLen(50)]
+    patronymic: Annotated[str | None, MaxLen(50)]
     age: int
     about_candidate: str
     education: str

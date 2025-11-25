@@ -9,6 +9,7 @@ from .schemas import UserAuthSchema
 from . import dependencies
 import exceptions
 from api_v1 import dependencies as apd
+from api_v2.dependencies import get_db
 
 
 def validate_email(email: str) -> str:
@@ -23,7 +24,7 @@ def validate_email(email: str) -> str:
 
 
 async def validate_auth_user(
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
     email: str = Form(...),
     password: str = Form(...),
 ):
@@ -75,7 +76,7 @@ async def get_user_by_token_sub(payload: dict, session: AsyncSession):
 
 async def get_current_auth_user_for_refresh(
     payload: dict = Depends(dependencies.get_current_token_payload),
-    session: AsyncSession = Depends(db_helper.scoped_session_dependency),
+    session: AsyncSession = Depends(get_db),
 ) -> UserAuthSchema:
     dependencies.validate_token_type(
         payload=payload, token_type=dependencies.TokenTypeFields.REFRESH_TOKEN_TYPE
