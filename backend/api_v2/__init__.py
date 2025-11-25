@@ -9,4 +9,6 @@ router = APIRouter()
 prefix = "api/v2/"
 router.include_router(router=auth_router, prefix="/auth", tags=[f"{prefix}auth"])
 router.include_router(router=users_router, prefix="/users", tags=[f"{prefix}users"])
-router.include_router(router=profiles_router, prefix="/profiles", tags=[f"{prefix}profiles"])
+router.include_router(
+    router=profiles_router, prefix="/profiles", tags=[f"{prefix}profiles"]
+)

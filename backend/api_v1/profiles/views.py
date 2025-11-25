@@ -15,25 +15,6 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=GetCandidateProfileUser)
-async def get_candidate_profile(
-    payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(get_db),
-):
-    return await crud.get_profile(session=session, payload=payload)
-
-
-@router.put("/edit/")
-async def update_candidate_profile(
-    data_to_update: CandidateProfileUpdate,
-    payload: dict = Depends(get_current_token_payload),
-    session: AsyncSession = Depends(get_db),
-) -> CandidateProfileUpdate:
-    return await crud.update_candidate_profile(
-        profile_data=data_to_update, session=session, payload=payload
-    )
-
-
 @router.put("/edit/skills/")
 async def update_candidate_profile_skills(
     skills_in: list[SkillBase],
