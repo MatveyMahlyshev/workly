@@ -28,12 +28,14 @@ async def update_profile(
 ):
     return await crud.update_profile(data_in=data_in, session=session, payload=payload)
 
-@router.get("/skills/")
+
+@router.get("/skills/list/")
 async def get_user_skills(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
 ):
     pass
+
 
 @router.put("/skills/add/")
 async def add_skill_for_user(
@@ -41,6 +43,7 @@ async def add_skill_for_user(
     session: AsyncSession = Depends(get_db),
 ):
     pass
+
 
 @router.delete("/skills/remove/")
 async def remove_skill_from_user(
