@@ -5,7 +5,7 @@ from tests.setup_data import SetupData
 
 
 class TestUserHr(SetupData):
-    def test_create_hr_user_success(self, client: TestClient):
+    def test_create_hr_200(self, client: TestClient):
         response = self.create_valid_user_hr(client=client, response=True)
         access_token = (
             client.post(

@@ -50,7 +50,6 @@ class TestUserCandidate(SetupData):
         assert response.status_code == 201
         assert response.json().get("message") == "success"
 
-
     @pytest.mark.parametrize(
         "field, value",
         [

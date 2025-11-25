@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 
 from tests.confest import client
 from tests.setup_data import SetupData
+from auth.dependencies import TokenTypeFields
 
 
 class TestAuth(SetupData):
@@ -33,3 +34,18 @@ class TestAuth(SetupData):
             },
         )
         assert response.status_code == 404
+
+    def test_refresh_token_200(self, client: TestClient):
+        self.create_valid_user_hr(client=client)
+        payload = self.get_tokens(
+            client=client
+        )
+        response = client.post(
+            "/api/v2/auth/refresh/",
+            headers={"Authorization": f"Bearer {payload.get("refresh_token")}"},
+        )
+        self.cleanup_user(client=client, access_token=payload.get("access_token"))
+
+        assert response.status_code == 200
+        assert response.json().get("access_token")
+        assert response.json().get("token_type") == "bearer"

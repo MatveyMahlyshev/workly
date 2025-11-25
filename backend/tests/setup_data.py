@@ -66,3 +66,16 @@ class SetupData:
         )
         if response:
             return result
+
+    def get_tokens(self, client: TestClient) -> dict:
+        payload = (
+            client.post(
+                "/api/v2/auth/login/",
+                data={
+                    "email": self.user_data["good_email"],
+                    "password": self.user_data["good_password"],
+                },
+            )
+            .json()
+        )
+        return payload
