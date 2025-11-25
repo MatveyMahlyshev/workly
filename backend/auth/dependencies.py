@@ -11,8 +11,6 @@ import exceptions
 from core.models import User, db_helper
 
 
-
-
 class TokenTypeFields:
     TOKEN_TYPE_FIELD = "type"
     ACCESS_TOKEN_TYPE = "access"
@@ -52,5 +50,3 @@ def validate_token_type(payload: dict, token_type: str) -> bool:
     if payload.get(TokenTypeFields.TOKEN_TYPE_FIELD) == token_type:
         return True
     raise exceptions.UnauthorizedExceptions.ERROR_TOKEN_TYPE
-
-

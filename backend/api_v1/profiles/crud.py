@@ -3,7 +3,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 
 from core.models import CandidateProfileSkillAssociation
-from .schemas import CandidateProfileUser, CandidateProfileUpdate
+from .schemas import GetCandidateProfileUser, CandidateProfileUpdate
 from api_v1.skills.schemas import SkillBase
 from api_v1.skills.crud import get_skill
 from api_v1.dependencies import get_user
@@ -12,9 +12,7 @@ from core.models import VacancyResponse, VacancyResponseTest, CandidateProfile
 import exceptions
 
 
-async def get_user_with_profile_by_token(
-    session: AsyncSession, payload: dict
-) -> CandidateProfileUser:
+async def get_profile(session: AsyncSession, payload: dict):
     email = payload.get("sub")
 
     user = await get_user(
@@ -28,13 +26,13 @@ async def get_user_with_profile_by_token(
 
     return {
         "email": user.email,
-        "role": user.role.value,
         "name": user.candidate_profile.name,
         "surname": user.candidate_profile.surname,
         "patronymic": user.candidate_profile.patronymic,
-        "age": user.candidate_profile.age,
         "about_candidate": user.candidate_profile.about_candidate,
         "education": user.candidate_profile.education,
+        "birth_date": user.candidate_profile.birth_date,
+        "work_experience": user.candidate_profile.work_experience,
         "skills": [
             {"title": assoc.skill.title, "id": assoc.skill.id}
             for assoc in user.candidate_profile.profile_skills

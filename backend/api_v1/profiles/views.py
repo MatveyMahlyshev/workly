@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .schemas import CandidateProfileUser, CandidateProfileUpdate
+from .schemas import GetCandidateProfileUser, CandidateProfileUpdate
 from auth.dependencies import get_current_token_payload, http_bearer
 from . import crud
 from core.models import db_helper
@@ -15,15 +15,15 @@ router = APIRouter(
 )
 
 
-@router.get("/candidate/me/")
+@router.get("/", response_model=GetCandidateProfileUser)
 async def get_candidate_profile(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
-) -> CandidateProfileUser:
-    return await crud.get_user_with_profile_by_token(session=session, payload=payload)
+):
+    return await crud.get_profile(session=session, payload=payload)
 
 
-@router.put("/candidate/me/edit/")
+@router.put("/edit/")
 async def update_candidate_profile(
     data_to_update: CandidateProfileUpdate,
     payload: dict = Depends(get_current_token_payload),
@@ -34,7 +34,7 @@ async def update_candidate_profile(
     )
 
 
-@router.put("/candidate/me/edit/skills/")
+@router.put("/edit/skills/")
 async def update_candidate_profile_skills(
     skills_in: list[SkillBase],
     payload: dict = Depends(get_current_token_payload),
@@ -45,7 +45,7 @@ async def update_candidate_profile_skills(
     )
 
 
-@router.get("/candidate/me/tests/")
+@router.get("/me/tests/")
 async def get_candidate_tests(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),

@@ -19,7 +19,6 @@ async def create_vacancy(
     vacancy: VacancyCreate,
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
-    
 ):
     return await crud.create_vacancy(
         session=session, payload=payload, vacancy_in=vacancy

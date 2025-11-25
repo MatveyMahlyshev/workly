@@ -19,10 +19,7 @@ app.include_router(
     router=api_v1_router,
     prefix=settings.api_v1_prefix,
 )
-app.include_router(
-    router=api_v2_router,
-    prefix=settings.api_v2_prefix
-)
+app.include_router(router=api_v2_router, prefix=settings.api_v2_prefix)
 
 app.add_middleware(
     CORSMiddleware,

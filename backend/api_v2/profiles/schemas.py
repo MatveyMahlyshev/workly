@@ -1,13 +1,6 @@
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from typing import Annotated
-from annotated_types import (
-    MinLen,
-    MaxLen,
-)
+from pydantic import BaseModel, ConfigDict, Field, EmailStr
 from datetime import date
-
 from api_v1.skills.schemas import SkillBase
-
 
 class CandidateProfileBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -19,19 +12,6 @@ class CandidateProfileBase(BaseModel):
     birth_date: date
     work_experience: str | None = None
 
-
-class CandidateProfile(CandidateProfileBase):
-    id: int
-
-
-class CandidateProfileCreate(CandidateProfileBase):
-    email: EmailStr
-
-
 class GetCandidateProfileUser(CandidateProfileBase):
     email: EmailStr = Field(min_length=5, max_length=50)
     skills: list[SkillBase]
-
-
-class CandidateProfileUpdate(GetCandidateProfileUser):
-    pass

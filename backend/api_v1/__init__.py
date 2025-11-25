@@ -18,12 +18,8 @@ router.include_router(
     tags=[f"{prefix}profile"],
 )
 router.include_router(
-    router=vacancy_router,
-    prefix="/vacancies",
-    tags=[f"{prefix}vacancies"]
+    router=vacancy_router, prefix="/vacancies", tags=[f"{prefix}vacancies"]
 )
 router.include_router(
-    router=skill_tests_router,
-    prefix="/skill_test",
-    tags=[f"{prefix}skill_tests"]
+    router=skill_tests_router, prefix="/skill_test", tags=[f"{prefix}skill_tests"]
 )

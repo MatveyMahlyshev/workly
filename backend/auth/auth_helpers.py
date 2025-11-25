@@ -83,7 +83,10 @@ async def get_current_auth_user_for_refresh(
     )
     return await get_user_by_token_sub(payload=payload, session=session)
 
+
 async def check_permission(user_permission: int, permissions: list[PermissionLevel]):
     if user_permission not in permissions:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нет доступа к данному ресурсу",)
-
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Нет доступа к данному ресурсу",
+        )

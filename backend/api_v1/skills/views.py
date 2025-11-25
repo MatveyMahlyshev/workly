@@ -33,9 +33,7 @@ async def create_skill(
 
 
 @router.get("/title/{title}/", response_model=Skill)
-async def get_skill(
-    title: str, session: AsyncSession = Depends(get_db)
-):
+async def get_skill(title: str, session: AsyncSession = Depends(get_db)):
     return await crud.get_skill(session=session, title=title)
 
 
