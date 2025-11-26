@@ -99,7 +99,7 @@ class TestUserCandidate(SetupData):
         access_token: str = self.get_tokens(client=client).get("access_token")
         response = client.get(
             "/api/v2/profile/",
-            headers={"Authorization": f"Bearer {access_token + "asdasd"}"},
+            headers={"Authorization": f"Bearer {access_token + "invalid"}"},
         )
         self.cleanup_user(client=client, access_token=access_token)
 

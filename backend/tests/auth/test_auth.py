@@ -46,3 +46,31 @@ class TestAuth(SetupData):
         assert response.status_code == 200
         assert response.json().get("access_token")
         assert response.json().get("token_type") == "bearer"
+
+    def test_refresh_token_no_token_401(self, client: TestClient):
+        response = client.post(
+            "/api/v2/auth/refresh/",
+        )
+
+        assert response.status_code == 401
+        assert response.json().get("detail") == "Not authenticated"
+
+    def test_refresh_token_invalid_token_401(self, client: TestClient):
+        self.create_valid_user_candidate(client=client)
+        payload = self.get_tokens(client=client)
+        response = client.post(
+            "/api/v2/auth/refresh/",
+            headers={"Authorization": f"Bearer {payload.get("refresh_token") + "invalid"}"}
+        )
+        self.cleanup_user(client=client, access_token=payload.get("access_token"))
+
+        assert response.status_code == 401
+        assert response.json().get("detail") == "Invalid token."
+
+    def test_refresh_token_no_token_401(self, client: TestClient):
+        response = client.post(
+            "/api/v2/auth/refresh/",
+        )
+
+        assert response.status_code == 401
+        assert response.json().get("detail") == "Not authenticated"
