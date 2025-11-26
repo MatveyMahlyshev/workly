@@ -4,8 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api_v2.dependencies import get_db
 from .schemas import GetCandidateProfileUser, PutCandidateProfile
+from api_v2.skills.schemas import Skill
 from auth.dependencies import get_current_token_payload, http_bearer
 from . import crud
+from api_v2.schemas import SuccessResponse
 
 router = APIRouter(
     dependencies=[Depends(http_bearer)],
@@ -44,16 +46,30 @@ async def update_profile(
     return await crud.update_profile(data_in=data_in, session=session, payload=payload)
 
 
-@router.get("/skills/list/")
-async def get_user_skills(
+@router.put(
+    "/skills/edit/",
+    response_model=SuccessResponse,
+    responses={
+        200: {"description": "Success request."},
+        401: {"description": "Unauthorized."},
+        404: {"description": "Skill not found."},
+        422: {"description": "Invalid data."},
+    },
+)
+async def edit_skills_for_user(
+    skills_list: list[Skill],
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
 ):
-    pass
+    return await crud.edit_user_skills(
+        skills_list=skills_list,
+        payload=payload,
+        session=session,
+    )
 
 
-@router.put("/skills/add/")
-async def add_skill_for_user(
+@router.get("/skills/list/")
+async def get_user_skills(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
 ):

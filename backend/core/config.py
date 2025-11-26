@@ -21,7 +21,7 @@ class DBSettings(BaseModel):
         os.getenv("DB_URL")
         or "postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db"
     )
-    echo: bool = False
+    echo: bool = True
 
 
 class Settings(BaseSettings):

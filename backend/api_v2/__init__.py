@@ -28,4 +28,3 @@ router.include_router(
     prefix="/skills",
     tags=[f"{prefix}skills"],
 )
-

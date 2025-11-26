@@ -7,6 +7,10 @@ class SkillBase(BaseModel):
     title: str = Field(min_length=1, max_length=25)
 
 
+class Skill(SkillBase):
+    pass
+
+
 class PostSkill(SkillBase):
     pass
 

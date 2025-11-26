@@ -10,11 +10,15 @@ from . import crud
 router = APIRouter()
 
 
-@router.post("/create/", response_model=SuccessResponse, responses={
-    200: {"description": "Success request."},
-    409: {"description": "Skill exists."},
-    422: {"description": "Invalid data."},
-})
+@router.post(
+    "/create/",
+    response_model=SuccessResponse,
+    responses={
+        200: {"description": "Success request."},
+        409: {"description": "Skill exists."},
+        422: {"description": "Invalid data."},
+    },
+)
 async def create_skill(
     skill: PostSkill,
     session: AsyncSession = Depends(get_db),
