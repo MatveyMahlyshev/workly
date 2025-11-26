@@ -20,7 +20,7 @@ class TestUserCandidate(SetupData):
             ("work_experience", ""),
         ],
     )
-    def test_registration_with_fields(
+    def test_create_candidate_with_fields(
         self,
         client: TestClient,
         field,
@@ -35,17 +35,7 @@ class TestUserCandidate(SetupData):
         response = client.post("/api/v2/users/register/", json=self.candidate_user_data)
 
         if response.status_code == 201:
-            access_token = (
-                client.post(
-                    "/api/v2/auth/login/",
-                    data={
-                        "email": self.user_data["good_email"],
-                        "password": self.user_data["good_password"],
-                    },
-                )
-                .json()
-                .get("access_token")
-            )
+            access_token = self.get_tokens(client=client).get("access_token")
             self.cleanup_user(client=client, access_token=access_token)
         assert response.status_code == 201
         assert response.json().get("message") == "success"
@@ -79,3 +69,45 @@ class TestUserCandidate(SetupData):
 
         assert response.status_code == 422
         assert response.json().get("detail")
+
+    def test_get_profile_200(self, client: TestClient):
+        self.candidate_user_data["email"] = self.user_data["good_email"]
+        self.candidate_user_data["password"] = self.user_data["good_password"]
+        client.post("/api/v2/users/register/", json=self.candidate_user_data)
+        access_token: str = self.get_tokens(client=client).get("access_token")
+        response = client.get(
+            "/api/v2/profile/",
+            headers={"Authorization": f"Bearer {access_token}"},
+        )
+        self.cleanup_user(client=client, access_token=access_token)
+
+        assert response.status_code == 200
+        assert response.json().get("name") == "Test"
+        assert response.json().get("surname") == "Test"
+        assert response.json().get("patronymic") == "Test"
+        assert response.json().get("about_candidate") == "Test"
+        assert response.json().get("education") == "Test"
+        assert response.json().get("birth_date") == "2003-05-18"
+        assert response.json().get("work_experience") == "Test"
+        assert response.json().get("email") == "test@example.com"
+        assert response.json().get("skills") == []
+
+    def test_get_profile_invalid_token_401(self, client: TestClient):
+        self.candidate_user_data["email"] = self.user_data["good_email"]
+        self.candidate_user_data["password"] = self.user_data["good_password"]
+        client.post("/api/v2/users/register/", json=self.candidate_user_data)
+        access_token: str = self.get_tokens(client=client).get("access_token")
+        response = client.get(
+            "/api/v2/profile/",
+            headers={"Authorization": f"Bearer {access_token + "asdasd"}"},
+        )
+        self.cleanup_user(client=client, access_token=access_token)
+
+        assert response.status_code == 401
+        assert response.json().get("detail") == "Invalid token."
+
+    def test_get_profile_no_token_401(self, client: TestClient):
+        response = client.get("/api/v2/profile/")
+
+        assert response.status_code == 401
+        assert response.json().get("detail") == "Not authenticated"
