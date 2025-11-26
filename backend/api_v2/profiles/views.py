@@ -31,11 +31,12 @@ async def get_candidate_profile(
 
 @router.put(
     "/update/",
-    response_model=PutCandidateProfile,
+    response_model=SuccessResponse,
     responses={
         200: {"description": "Success request."},
         401: {"description": "Unauthorized."},
         422: {"description": "Invalid data."},
+        500: {"description": "Integrity error."},
     },
 )
 async def update_profile(
@@ -54,6 +55,7 @@ async def update_profile(
         401: {"description": "Unauthorized."},
         404: {"description": "Skill not found."},
         422: {"description": "Invalid data."},
+        500: {"description": "Integrity error."},
     },
 )
 async def edit_skills_for_user(
@@ -68,12 +70,22 @@ async def edit_skills_for_user(
     )
 
 
-@router.get("/skills/list/")
+@router.get(
+    "/skills/list/",
+    response_model=list[Skill],
+    responses={
+        200: {"description": "Success request."},
+        401: {"description": "Unauthorized."},
+    },
+)
 async def get_user_skills(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),
 ):
-    pass
+    return await crud.get_user_skills(
+        payload=payload,
+        session=session,
+    )
 
 
 @router.delete("/skills/remove/")

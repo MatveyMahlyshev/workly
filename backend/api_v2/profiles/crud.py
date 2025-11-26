@@ -5,7 +5,8 @@ from sqlalchemy import select
 
 from .schemas import PutCandidateProfile, GetCandidateProfileUser
 from api_v2.skills.schemas import Skill
-from api_v2.skills.crud import get_skill_by_title
+from api_v2.schemas import SuccessResponse
+
 from core.models import CandidateProfileSkillAssociation, Skill as skill_model
 
 from .helpers import (
@@ -62,20 +63,7 @@ async def update_profile(
         await session.rollback()
         raise HTTPException(status_code=500, detail="Integrity error")
 
-    return PutCandidateProfile(
-        email=user.email,
-        name=profile.name,
-        surname=profile.surname,
-        patronymic=profile.patronymic,
-        about_candidate=profile.about_candidate,
-        education=profile.education,
-        birth_date=profile.birth_date,
-        work_experience=profile.work_experience,
-        skills=[
-            {"title": assoc.skill.title, "id": assoc.skill.id}
-            for assoc in profile.profile_skills
-        ],
-    )
+    return SuccessResponse(message="success")
 
 
 async def edit_user_skills(
@@ -100,25 +88,26 @@ async def edit_user_skills(
     if missing_skills:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Skills not found: {', '.join(missing_skills)}"
+            detail=f"Skills not found: {', '.join(missing_skills)}",
         )
-    
+
     profile_id = user.candidate_profile.id
     skill_ids = [skill.id for skill in existing_skills]
     stmt = select(CandidateProfileSkillAssociation).where(
         CandidateProfileSkillAssociation.candidate_profile_id == profile_id,
-        CandidateProfileSkillAssociation.skill_id.in_(skill_ids)
+        CandidateProfileSkillAssociation.skill_id.in_(skill_ids),
     )
     result = await session.execute(stmt)
     existing_associations = result.scalars().all()
-    
+
     existing_skill_ids = {assoc.skill_id for assoc in existing_associations}
     for skill in existing_skills:
         if skill.id not in existing_skill_ids:
-            association = CandidateProfileSkillAssociation(candidate_profile_id=user.candidate_profile.id,
-                                                           skill_id=skill.id)
+            association = CandidateProfileSkillAssociation(
+                candidate_profile_id=user.candidate_profile.id,
+                skill_id=skill.id,
+            )
             session.add(association)
-    
 
     try:
         await session.commit()
@@ -127,7 +116,18 @@ async def edit_user_skills(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Integrity error",
         )
-    return {"message": "success"}
+    return SuccessResponse(message="success")
 
 
-# get_skill_by_title
+async def get_user_skills(
+    session: AsyncSession,
+    payload: dict,
+):
+
+    user = await get_user_profile(
+        session=session,
+        stmt=get_statement_for_candidate_profile(payload=payload),
+        email=payload.get("sub"),
+    )
+
+    return [skill.skill for skill in user.candidate_profile.profile_skills]
