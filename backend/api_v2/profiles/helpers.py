@@ -11,5 +11,5 @@ def get_statement_for_candidate_profile(payload: dict):
             .selectinload(CandidateProfile.profile_skills)
             .selectinload(CandidateProfileSkillAssociation.skill)
         )
-        .where(User.email == payload["email"])
+        .where(User.email == payload["sub"])
     )

@@ -12,7 +12,14 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=GetCandidateProfileUser)
+@router.get(
+    "/",
+    response_model=GetCandidateProfileUser,
+    responses={
+        200: {"description": "Success request."},
+        401: {"description": "Unauthorized."},
+    },
+)
 async def get_candidate_profile(
     payload: dict = Depends(get_current_token_payload),
     session: AsyncSession = Depends(get_db),

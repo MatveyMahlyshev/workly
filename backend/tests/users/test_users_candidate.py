@@ -8,7 +8,7 @@ from tests.setup_data import SetupData
 class TestUserCandidate(SetupData):
 
     @pytest.mark.parametrize(
-        "optional_field,value",
+        "field,value",
         [
             ("patronymic", None),
             ("patronymic", ""),
@@ -20,18 +20,18 @@ class TestUserCandidate(SetupData):
             ("work_experience", ""),
         ],
     )
-    def test_registration_with_optional_fields(
+    def test_registration_with_fields(
         self,
         client: TestClient,
-        optional_field,
+        field,
         value,
     ):
         self.candidate_user_data["email"] = self.user_data["good_email"]
         self.candidate_user_data["password"] = self.user_data["good_password"]
         if value is None:
-            self.candidate_user_data.pop(optional_field)
+            self.candidate_user_data.pop(field)
         else:
-            self.candidate_user_data[optional_field] = value
+            self.candidate_user_data[field] = value
         response = client.post("/api/v2/users/register/", json=self.candidate_user_data)
 
         if response.status_code == 201:

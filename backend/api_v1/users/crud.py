@@ -3,11 +3,10 @@ from sqlalchemy import select, Result
 from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 
-from auth.auth_helpers import get_user_by_token_sub
+from auth.dependencies import get_user_by_token_sub
 from auth.utils import hash_password
 from .schemas import CreateUserWithProfile, UserCreate
 from core.models import User, CandidateProfile
-import exceptions
 
 
 async def create_user(
@@ -20,7 +19,7 @@ async def create_user(
     if email_exists.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Пользователь с таким email уже зарегистрирован.",
+            detail="Email exists.",
         )
 
     new_user = User(
