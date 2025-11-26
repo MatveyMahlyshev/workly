@@ -32,7 +32,7 @@ def get_current_token_payload(
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail=f"Invalid token.",
+            detail="Invalid token",
         )
     return payload
 
@@ -57,7 +57,7 @@ def validate_token_type(payload: dict, token_type: str) -> bool:
         return True
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Error type of token.",
+        detail="Error type of token",
     )
 
 
@@ -81,7 +81,7 @@ async def validate_auth_user(
     ):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invalid email or password.",
+            detail="Invalid email or password",
         )
     return user
 
@@ -102,7 +102,7 @@ async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     if not email:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invalid email or password.",
+            detail="Invalid email or password",
         )
 
     stmt = select(User).where(User.email == email)
@@ -112,6 +112,6 @@ async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invalid email or password.",
+            detail="Invalid email or password",
         )
     return user

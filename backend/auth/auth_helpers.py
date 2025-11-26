@@ -26,5 +26,5 @@ async def check_permission(user_permission: int, permissions: list[PermissionLev
     if user_permission not in permissions:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access error.",
+            detail="Access denied",
         )

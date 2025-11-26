@@ -2,6 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Select
 from typing import Tuple, Any
 from sqlalchemy import select
+from fastapi import HTTPException, status
 
 from core.models import User
 from exceptions import UnauthorizedException
@@ -16,7 +17,10 @@ async def get_user(
     user = result.scalar_one_or_none()
 
     if not user:
-        raise UnauthorizedException.INVALID_LOGIN_DATA
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Invalid email or password.",
+        )
     return user
 
 

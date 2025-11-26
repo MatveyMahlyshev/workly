@@ -19,7 +19,7 @@ async def create_user(
     if email_exists.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
-            detail="Email exists.",
+            detail="Email exists",
         )
 
     new_user = User(
@@ -55,7 +55,7 @@ async def create_user(
         await session.rollback()
         raise HTTPException(
             status_code=500,
-            detail="Integrity error.",
+            detail="Integrity error",
         )
     return {"message": "success"}
 

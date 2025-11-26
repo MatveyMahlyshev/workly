@@ -95,7 +95,7 @@ class TestUserCandidate(SetupData):
     @pytest.mark.parametrize(
         "header,message",
         [
-            ({"Authorization": "Bearer invalid"}, "Invalid token."),
+            ({"Authorization": "Bearer invalid"}, "Invalid token"),
             (None, "Not authenticated"),
         ],
     )
@@ -114,7 +114,7 @@ class TestUserCandidate(SetupData):
     @pytest.mark.parametrize(
         "header,message",
         [
-            ({"Authorization": "Bearer invalid"}, "Invalid token."),
+            ({"Authorization": "Bearer invalid"}, "Invalid token"),
             (None, "Not authenticated"),
         ],
     )

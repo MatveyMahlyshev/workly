@@ -51,7 +51,7 @@ async def update_profile(
 
     if not user.candidate_profile:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found."
+            status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found"
         )
 
     user.candidate_profile.name = data_in.name
@@ -67,7 +67,7 @@ async def update_profile(
     except IntegrityError:
         await session.rollback()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Integrity error."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Integrity error"
         )
 
     return {

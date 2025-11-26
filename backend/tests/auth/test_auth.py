@@ -62,7 +62,7 @@ class TestAuth(SetupData):
         )
 
         assert response.status_code == 401
-        assert response.json().get("detail") == "Invalid token."
+        assert response.json().get("detail") == "Invalid token"
 
     def test_refresh_token_no_token_401(self, client: TestClient):
         response = client.post(
