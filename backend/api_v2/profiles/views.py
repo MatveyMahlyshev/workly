@@ -27,7 +27,15 @@ async def get_candidate_profile(
     return await crud.get_profile(session=session, payload=payload)
 
 
-@router.put("/update/", response_model=PutCandidateProfile)
+@router.put(
+    "/update/",
+    response_model=PutCandidateProfile,
+    responses={
+        200: {"description": "Success request."},
+        401: {"description": "Unauthorized."},
+        422: {"description": "Invalid data."},
+    },
+)
 async def update_profile(
     data_in: PutCandidateProfile,
     payload: dict = Depends(get_current_token_payload),

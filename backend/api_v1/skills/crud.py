@@ -35,21 +35,6 @@ async def get_skill_by_id(session: AsyncSession, skill_id: int) -> Skill:
     return skill
 
 
-async def update_skill(
-    session: AsyncSession, title: str, new_title: str
-) -> Skill | None:
-    new_title = to_capitalize(new_title)
-    stmt = select(Skill).where(Skill.title == new_title)
-    updated_skill: Skill | None = await session.scalar(statement=stmt)
-    if updated_skill is not None:
-        raise exceptions.ConflictException.SKILL_ALREADY_EXISTS
-    skill = await get_skill(session=session, title=title)
-    new_title = to_capitalize(new_title)
-    skill.title = new_title
-    await session.commit()
-    return skill
-
-
 async def create_skill(session: AsyncSession, skill_in: SkillBase) -> Skill:
     stmt = select(Skill).where(Skill.title == skill_in.title)
     exists: Skill | None = await session.scalar(statement=stmt)

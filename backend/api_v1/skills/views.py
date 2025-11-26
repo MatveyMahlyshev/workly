@@ -8,9 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .schemas import (
     Skill,
     SkillBase,
-    SkillUpdate,
 )
-from core.models import db_helper
+
 from . import crud
 from api_v2.dependencies import get_db
 
@@ -35,16 +34,6 @@ async def create_skill(
 @router.get("/title/{title}/", response_model=Skill)
 async def get_skill(title: str, session: AsyncSession = Depends(get_db)):
     return await crud.get_skill(session=session, title=title)
-
-
-@router.patch("/edit/{title}/", response_model=Skill)
-async def update_skill(
-    skill_update: SkillUpdate,
-    session: AsyncSession = Depends(get_db),
-):
-    return await crud.update_skill(
-        session=session, title=skill_update.title, new_title=skill_update.new_title
-    )
 
 
 @router.delete("/delete/{title}/")

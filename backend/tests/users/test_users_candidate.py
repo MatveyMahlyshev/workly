@@ -92,22 +92,40 @@ class TestUserCandidate(SetupData):
         assert response.json().get("email") == "test@example.com"
         assert response.json().get("skills") == []
 
-    def test_get_profile_invalid_token_401(self, client: TestClient):
-        self.candidate_user_data["email"] = self.user_data["good_email"]
-        self.candidate_user_data["password"] = self.user_data["good_password"]
-        client.post("/api/v2/users/register/", json=self.candidate_user_data)
-        access_token: str = self.get_tokens(client=client).get("access_token")
-        response = client.get(
-            "/api/v2/profile/",
-            headers={"Authorization": f"Bearer {access_token + "invalid"}"},
-        )
-        self.cleanup_user(client=client, access_token=access_token)
+    @pytest.mark.parametrize(
+        "header,message",
+        [
+            ({"Authorization": "Bearer invalid"}, "Invalid token."),
+            (None, "Not authenticated"),
+        ],
+    )
+    def test_get_profile_401(self, client: TestClient, header, message):
+        if header is None:
+            response = client.get("/api/v2/profile/")
+        else:
+            response = client.get(
+                "/api/v2/profile/",
+                headers=header,
+            )
 
         assert response.status_code == 401
-        assert response.json().get("detail") == "Invalid token."
+        assert response.json().get("detail") == message
 
-    def test_get_profile_no_token_401(self, client: TestClient):
-        response = client.get("/api/v2/profile/")
+    @pytest.mark.parametrize(
+        "header,message",
+        [
+            ({"Authorization": "Bearer invalid"}, "Invalid token."),
+            (None, "Not authenticated"),
+        ],
+    )
+    def test_update_profile_401(self, client: TestClient, header, message):
+        if header is None:
+            response = client.put("/api/v2/profile/update/")
+        else:
+            response = client.put(
+                "/api/v2/profile/update/",
+                headers=header,
+            )
 
         assert response.status_code == 401
-        assert response.json().get("detail") == "Not authenticated"
+        assert response.json().get("detail") == message
