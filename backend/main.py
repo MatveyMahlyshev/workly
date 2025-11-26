@@ -2,11 +2,12 @@ from fastapi import FastAPI
 import uvicorn
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
-
+from pydantic import ValidationError
 
 from api_v1 import router as api_v1_router
 from api_v2 import router as api_v2_router
 from core.config import settings
+from exception_handlers import validation_exception_handler
 
 
 @asynccontextmanager
@@ -15,12 +16,18 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+
 app.include_router(
     router=api_v1_router,
     prefix=settings.api_v1_prefix,
 )
-app.include_router(router=api_v2_router, prefix=settings.api_v2_prefix)
+app.include_router(
+    router=api_v2_router,
+    prefix=settings.api_v2_prefix,
+)
 
+app.add_exception_handler(ValidationError, validation_exception_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -41,4 +48,7 @@ def index():
 
 
 if __name__ == "__main__":
-    uvicorn.run(app="main:app", reload=True)
+    uvicorn.run(
+        app="main:app",
+        reload=True,
+    )
