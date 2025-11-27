@@ -4,13 +4,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api_v2.dependencies import get_db
 from api_v2.schemas import SuccessResponse
+from auth.dependencies import http_bearer, require_hr_or_admin
 from .schemas import PostSkill
 from . import crud
 
 router = APIRouter()
+auth = APIRouter(
+    dependencies=[Depends(http_bearer), Depends(require_hr_or_admin)],
+)
 
 
-@router.post(
+@auth.post(
     "/create/",
     response_model=SuccessResponse,
     responses={
@@ -24,3 +28,6 @@ async def create_skill(
     session: AsyncSession = Depends(get_db),
 ):
     return await crud.create_skill(skill=skill, session=session)
+
+
+router.include_router(auth)

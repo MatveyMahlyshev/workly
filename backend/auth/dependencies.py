@@ -6,12 +6,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Result, select
 
 
-from .utils import encode_jwt, decode_jwt
+from .utils import encode_jwt, decode_jwt, validate_password
 from core.config import settings
-from core.models import User
+from core.models import User, PermissionLevel
 from .schemas import UserAuthSchema
 from api_v2.dependencies import get_db
-from .utils import validate_password
 
 
 class TokenTypeFields:
@@ -27,6 +26,7 @@ http_bearer = HTTPBearer(auto_error=False)
 def get_current_token_payload(
     token: str = Depends(oauth2_scheme),
 ) -> dict:
+    print(token)
     try:
         payload = decode_jwt(token=token)
     except InvalidTokenError:
@@ -102,7 +102,7 @@ async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     if not email:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invalid email or password",
+            detail="Not found",
         )
 
     stmt = select(User).where(User.email == email)
@@ -112,6 +112,22 @@ async def get_user_by_token_sub(payload: dict, session: AsyncSession):
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Invalid email or password",
+            detail="Not found",
         )
     return user
+
+
+async def get_permission(
+    payload: dict = Depends(get_current_token_payload),
+    session: AsyncSession = Depends(get_db),
+) -> int:
+    user = await get_user_by_token_sub(payload=payload, session=session)
+    print(user.permission_level)
+    return user.permission_level
+
+
+async def require_hr_or_admin(user_permission: int = Depends(get_permission)) -> int:
+    if user_permission not in [PermissionLevel.HR, PermissionLevel.ADMIN]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Access denied"
+        )

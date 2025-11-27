@@ -1,9 +1,11 @@
-from fastapi import HTTPException, status
-
+from fastapi import HTTPException, status, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from functools import wraps
 
 from core.models import PermissionLevel
 from .schemas import UserAuthSchema
 from . import dependencies
+from api_v2.dependencies import get_db
 
 
 def create_access_token(user: UserAuthSchema) -> str:
@@ -20,11 +22,3 @@ def create_refresh_token(user: UserAuthSchema) -> str:
         token_type=dependencies.TokenTypeFields.REFRESH_TOKEN_TYPE,
         token_data=jwt_payload,
     )
-
-
-async def check_permission(user_permission: int, permissions: list[PermissionLevel]):
-    if user_permission not in permissions:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied",
-        )
