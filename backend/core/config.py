@@ -21,13 +21,14 @@ class DBSettings(BaseModel):
         os.getenv("DB_URL")
         or "postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db"
     )
-    echo: bool = False
+    echo: bool = True
 
 
 class Settings(BaseSettings):
     auth: AuthJWT = AuthJWT()
     db: DBSettings = DBSettings()
     api_v1_prefix: str = "/api/v1"
+    api_v2_prefix: str = "/api/v2"
 
 
 settings = Settings()

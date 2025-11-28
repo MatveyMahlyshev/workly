@@ -5,7 +5,7 @@ from typing import TypedDict
 class SkillTestBase(BaseModel):
     skill_id: int
     question: str
-    options: list[str] = Field(..., min_items=2)
+    options: list[str] = Field(..., min_length=2)
 
 
 class SkillTest(SkillTestBase):

@@ -22,14 +22,14 @@ import exceptions
 from api_v1.dependencies import get_user_by_sub
 from api_v1.profiles.dependencies import get_statement_for_candidate_profile
 from api_v1.skills.crud import get_skill, get_skill_by_id
-from auth.auth_helpers import check_permission
+
 
 
 async def create_vacancy(
     session: AsyncSession, payload: dict, vacancy_in: VacancyCreate
 ):
     user = await get_user_by_sub(payload=payload, session=session)
-    await check_permission(user.permission_level, [PermissionLevel.HR])
+   
 
     vacancy_data = vacancy_in.model_dump()
     skills_data = vacancy_data.pop("vacancy_skills", [])
