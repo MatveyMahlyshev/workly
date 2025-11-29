@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 
 from application.use_cases.user import UserUseCase
 from presentation.schemas import UserCreate, SuccessfullResponse
+from domain.exceptions import EmailAlreadyExists
 from .dependencies import get_user_use_cases
 
-router = APIRouter(tags=["Users"], prefix="/hr")
+router = APIRouter(tags=["HR"], prefix="/hr")
 
 
 @router.post(
@@ -21,10 +22,12 @@ router = APIRouter(tags=["Users"], prefix="/hr")
 async def create_hr(
     user_data: UserCreate, use_cases: UserUseCase = Depends(get_user_use_cases)
 ):
-    return await use_cases.create_user(
-        surname=user_data.surname,
-        name=user_data.name,
-        patronymic=user_data.patronymic,
-        email=user_data.email,
-        password=user_data.password,
-    )
+    try:
+        await use_cases.create_user(**user_data.model_dump())
+        return SuccessfullResponse()
+    except EmailAlreadyExists:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already registered",
+        )
+    

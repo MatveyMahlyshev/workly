@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
-from .users.user_controllers import router as users_router
+from .hrs.controllers import router as hrs_router
+from .candidates.controllers import router as candidate_router
 
 router = APIRouter()
 
-router.include_router(router=users_router)
+router.include_router(router=hrs_router)
+router.include_router(router=candidate_router)
