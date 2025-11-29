@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from . import User
+from .user import User, PermissionLevel
 
 
 @dataclass
@@ -10,3 +10,4 @@ class Candidate(User):
     work_experience: str = ""
     education: str = ""
     about_candidate: str = ""
+    permission_level = PermissionLevel.CANDIDATE.value

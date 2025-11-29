@@ -8,9 +8,15 @@ class UserBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     name: str = Field(min_length=2, max_length=50)
     surname: str = Field(min_length=2, max_length=50)
-    patronymic: str | None = Field(max_length=50)
+    patronymic: str | None = Field(max_length=50, default="")
     email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
 
+    @field_validator("name", "surname", "patronymic")
+    @classmethod
+    def capitalize_names(cls, v: str | None) -> str | None:
+        if v and isinstance(v, str):
+            return v.strip().lower().capitalize()
+        return v
 
 class User(UserBase):
     id: int

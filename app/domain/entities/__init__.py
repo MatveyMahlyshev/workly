@@ -5,5 +5,6 @@ __all__ = (
 )
 
 from .user import User
+
 from .candidate import Candidate
 from .response import SuccessResponseEntity

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 
 from application.use_cases.user import UserUseCase
 from presentation.schemas import UserCreate, SuccessResponse
-from presentation.dependencies import get_user_use_cases
+from .dependencies import get_user_use_cases
 
 router = APIRouter(tags=["Users"], prefix="/users")
 

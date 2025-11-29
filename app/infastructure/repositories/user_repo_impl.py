@@ -5,7 +5,10 @@ from sqlalchemy import select
 
 from application.interfaces.user_repo import IUserRepository
 from infastructure.database.models import User as user_model
-from domain.entities import User as user_domain_entity, SuccessResponseEntity as success_response
+from domain.entities import (
+    User as user_domain_entity,
+    SuccessResponseEntity as success_response,
+)
 
 
 class UserRepositoryImpl(IUserRepository):

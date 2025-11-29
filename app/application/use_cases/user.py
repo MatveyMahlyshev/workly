@@ -1,5 +1,5 @@
 from ..interfaces.user_repo import IUserRepository
-from domain.entities.user import User
+from domain.entities import User
 from utils import hash_password
 
 
