@@ -18,6 +18,7 @@ class UserBase(BaseModel):
             return v.strip().lower().capitalize()
         return v
 
+
 class User(UserBase):
     id: int
 

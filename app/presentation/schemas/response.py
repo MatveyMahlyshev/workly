@@ -1,5 +1,5 @@
 from pydantic import BaseModel
 
 
-class SuccessResponse(BaseModel):
+class SuccessfullResponse(BaseModel):
     message: str
