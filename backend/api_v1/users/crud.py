@@ -4,7 +4,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.exc import IntegrityError
 
 from auth.dependencies import get_user_by_token_sub
-from auth.utils import hash_password
+from app.utils import hash_password
 from .schemas import CreateUserWithProfile, UserCreate
 from core.models import User, CandidateProfile
 

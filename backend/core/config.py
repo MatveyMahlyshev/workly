@@ -5,7 +5,7 @@ import os
 
 BASE_DIR = Path(
     __file__
-).parent.parent  # абсолютный адрес базовой директории для файла бд
+).parent.parent  
 
 
 class AuthJWT(BaseModel):

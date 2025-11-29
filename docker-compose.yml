@@ -12,6 +12,20 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  arch:
+    image: postgres:17
+    container_name: arch_database
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: arch_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data_arch:/var/lib/postgresql/data
+
+
   backend:
     build:
       context: ./backend
@@ -32,3 +46,4 @@ services:
       - ./backend:/app
 volumes:
   postgres_data:
+  postgres_data_arch:

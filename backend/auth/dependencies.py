@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Result, select
 
 
-from .utils import encode_jwt, decode_jwt, validate_password
+from ...app.utils import encode_jwt, decode_jwt, validate_password
 from core.config import settings
 from core.models import User, PermissionLevel
 from .schemas import UserAuthSchema

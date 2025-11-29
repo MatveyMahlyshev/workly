@@ -3,9 +3,7 @@ from pydantic_settings import BaseSettings
 from pathlib import Path
 import os
 
-BASE_DIR = Path(
-    __file__
-).parent.parent  
+BASE_DIR = Path(__file__).parent.parent
 
 
 class AuthJWT(BaseModel):
@@ -19,7 +17,7 @@ class AuthJWT(BaseModel):
 class DBSettings(BaseModel):
     url: str = (
         os.getenv("DB_URL")
-        or "postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db"
+        or "postgresql+asyncpg://postgres:postgres@localhost:5432/arch_db"
     )
     echo: bool = True
 
