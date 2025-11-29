@@ -4,10 +4,10 @@ from fastapi import HTTPException, status
 from sqlalchemy import select
 
 from application.interfaces.user_repo import IUserRepository
-from infastructure.database.models import User as user_model
+from infastructure.database.models import User
 from domain.entities import (
-    User as user_domain_entity,
-    SuccessResponseEntity as success_response,
+    UserEntity,
+    SuccessResponseEntity,
 )
 
 
@@ -15,11 +15,11 @@ class UserRepositoryImpl(IUserRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    def _message_response(self) -> success_response:
-        return success_response()
+    def _message_response(self) -> SuccessResponseEntity:
+        return SuccessResponseEntity()
 
-    def _to_entity(self, model: user_model) -> user_domain_entity:
-        return user_domain_entity(
+    def _to_entity(self, model: User) -> UserEntity:
+        return UserEntity(
             surname=model.surname,
             name=model.name,
             patronymic=model.patronymic,
@@ -29,8 +29,8 @@ class UserRepositoryImpl(IUserRepository):
             permission_level=model.permission_level,
         )
 
-    def _to_model(self, entity: user_domain_entity) -> user_model:
-        return user_model(
+    def _to_model(self, entity: UserEntity) -> User:
+        return User(
             surname=entity.surname,
             name=entity.name,
             patronymic=entity.patronymic,
@@ -40,9 +40,9 @@ class UserRepositoryImpl(IUserRepository):
             permission_level=2,
         )
 
-    async def create_user(self, user_entity: user_domain_entity):
+    async def create_user(self, user_entity: UserEntity):
         user_exists = await self.session.execute(
-            select(user_model).where(user_model.email == user_entity.email)
+            select(User).where(User.email == user_entity.email)
         )
         if user_exists.scalar_one_or_none():
             raise HTTPException(

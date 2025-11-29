@@ -9,7 +9,7 @@ class PermissionLevel(IntEnum):
 
 
 @dataclass
-class User:
+class UserEntity:
     surname: str = ""
     name: str = ""
     patronymic: str = ""

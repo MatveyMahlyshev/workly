@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from .user import User, PermissionLevel
+from .user import UserEntity, PermissionLevel
 
 
 @dataclass
-class Candidate(User):
+class CandidateEntity(UserEntity):
     birth_date: datetime = date.today()
     work_experience: str = ""
     education: str = ""

@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 
-from domain.entities import User
+from domain.entities import UserEntity
 
 
 class IUserRepository(ABC):
     @abstractmethod
-    async def create_user(self, user: User) -> User:
+    async def create_user(self, user: UserEntity) -> UserEntity:
         pass
 
     # @abstractmethod

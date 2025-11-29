@@ -1,10 +1,9 @@
 __all__ = (
-    "User",
-    "Candidate",
+    "UserEntity",
+    "CandidateEntity",
     "SuccessResponseEntity",
 )
 
-from .user import User
-
-from .candidate import Candidate
+from .user import UserEntity
+from .candidate import CandidateEntity
 from .response import SuccessResponseEntity

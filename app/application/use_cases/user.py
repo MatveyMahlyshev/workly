@@ -1,5 +1,5 @@
 from ..interfaces.user_repo import IUserRepository
-from domain.entities import User
+from domain.entities import UserEntity
 from utils import hash_password
 
 
@@ -14,8 +14,8 @@ class UserUseCase:
         patronymic: str,
         email: str,
         password: str,
-    ) -> User:
-        user = User(
+    ) -> UserEntity:
+        user = UserEntity(
             surname=surname,
             name=name,
             patronymic=patronymic,
