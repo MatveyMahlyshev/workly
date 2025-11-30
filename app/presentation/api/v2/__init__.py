@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .hrs.controllers import router as hrs_router
+from .recruiters.controllers import router as hrs_router
 from .candidates.controllers import router as candidate_router
 
 router = APIRouter()

@@ -20,6 +20,8 @@ class Candidate(UserRelationMixin, Base):
         default=default_18_years_ago,
         nullable=False,
     )
-    work_experience: Mapped[str | None] = mapped_column(Text, default="")
-    education: Mapped[str | None] = mapped_column(Text, default="")
-    about_candidate: Mapped[str | None] = mapped_column(Text, default="")
+    work_experience: Mapped[str | None] = mapped_column(Text, default=None)
+    education: Mapped[str | None] = mapped_column(Text, default=None)
+    about_candidate: Mapped[str | None] = mapped_column(Text, default=None)
+    
+    location: Mapped[str | None] = mapped_column(String(100), default=None)

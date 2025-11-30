@@ -11,15 +11,11 @@ if TYPE_CHECKING:
 
 class User(Base):
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     email: Mapped[str] = mapped_column(
-        String(50), unique=True, index=True, nullable=False
+        String(254), unique=True, index=True, nullable=False
     )
-    surname: Mapped[str] = mapped_column(String(50))
-    name: Mapped[str] = mapped_column(String(50))
-    patronymic: Mapped[str | None] = mapped_column(String(50), default="")
     password_hash: Mapped[str] = mapped_column(String(60), nullable=False)
-    is_active: Mapped[bool]
+    is_active: Mapped[bool] = mapped_column(default=True)
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.CANDIDATE.value
     )

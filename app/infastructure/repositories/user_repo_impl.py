@@ -47,7 +47,7 @@ class UserRepositoryImpl(IUserRepository):
         return self._to_entity(model=model)
 
     async def get_user_by_email(self, email) -> UserEntity | None:
-        stmt = select(User).where(User.email==email)
+        stmt = select(User).where(User.email == email)
         result: Result = await self.session.execute(statement=stmt)
         user = result.scalar_one_or_none()
         if user:

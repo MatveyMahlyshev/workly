@@ -30,4 +30,3 @@ async def create_hr(
             status_code=status.HTTP_409_CONFLICT,
             detail="Email already registered",
         )
-    
