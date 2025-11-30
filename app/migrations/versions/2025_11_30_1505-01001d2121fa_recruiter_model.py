@@ -34,9 +34,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(["user_id"], ["users.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
     )
-    op.add_column(
-        "candidates", sa.Column("phone", sa.String(length=20), nullable=True)
-    )
+    op.add_column("candidates", sa.Column("phone", sa.String(length=20), nullable=True))
     op.add_column(
         "candidates",
         sa.Column("location", sa.String(length=100), nullable=True),
@@ -88,9 +86,7 @@ def downgrade() -> None:
     )
     op.add_column(
         "users",
-        sa.Column(
-            "name", sa.VARCHAR(length=50), autoincrement=False, nullable=False
-        ),
+        sa.Column("name", sa.VARCHAR(length=50), autoincrement=False, nullable=False),
     )
     op.alter_column(
         "users",

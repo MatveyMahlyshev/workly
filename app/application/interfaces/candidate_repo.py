@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
 
-from domain.entities import Candidate
+from domain.entities import CandidateEntity
+from .user_repo import IUserRepository
 
 
-class ICandidateRepository:
-    @abstractmethod
-    async def create_user(self, candidate_profile: Candidate) -> Candidate:
-        pass
-
-    @abstractmethod
-    async def delete_user(self, payload: dict) -> None:
-        pass
+class ICandidateRepository(IUserRepository, ABC):
+    pass

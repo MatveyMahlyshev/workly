@@ -10,6 +10,7 @@ class UserBase(BaseModel):
     surname: str = Field(min_length=2, max_length=50, default="Фамилия")
     patronymic: str | None = Field(max_length=50, default="Отчество")
     email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
+    phone: str = Field(min_length=10, max_length=20, default="71234567890")
 
     @field_validator("name", "surname", "patronymic")
     @classmethod
@@ -17,6 +18,21 @@ class UserBase(BaseModel):
         if v and isinstance(v, str):
             return v.strip().lower().capitalize()
         return v
+
+    @field_validator("phone")
+    @classmethod
+    def phone_number_validation(cls, v: str) -> str:
+        valid_number = "".join(filter(str.isdigit, v))
+        length_of_number = len(valid_number)
+        if (length_of_number < 10 or length_of_number > 11) or (
+            (length_of_number == 11) and (valid_number[0] not in ["7", "8"])
+        ):
+            raise ValueError("Invalid phone number")
+        elif length_of_number == 11:
+            valid_number = "7" + valid_number[1:]
+        elif length_of_number == 10:
+            valid_number = "7" + valid_number
+        return valid_number
 
 
 class User(UserBase):

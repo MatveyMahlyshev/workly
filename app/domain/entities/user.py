@@ -14,9 +14,10 @@ class UserEntity:
     name: str = ""
     patronymic: str = ""
     email: str = ""
+    phone: str = ""
     password_hash: str = ""
     is_active: bool = True
-    permission_level: PermissionLevel = PermissionLevel.HR.value
+    permission_level: PermissionLevel = PermissionLevel.CANDIDATE.value
 
     def set_password(self, password_hash: str) -> None:
         if len(password_hash) != 60:

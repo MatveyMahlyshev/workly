@@ -14,14 +14,14 @@ class UserRelationMixin:
 
     @declared_attr
     def phone(cls) -> Mapped[str | None]:
-        return mapped_column(String(20), default=None)
+        return mapped_column(String(20), default=None, unique=True)
 
     @declared_attr
-    def surname(cls) -> Mapped[int]:
+    def surname(cls) -> Mapped[str]:
         return mapped_column(String(100))
 
     @declared_attr
-    def name(cls) -> Mapped[int]:
+    def name(cls) -> Mapped[str]:
         return mapped_column(String(100))
 
     @declared_attr

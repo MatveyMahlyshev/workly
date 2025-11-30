@@ -1,6 +1,6 @@
 __all__ = (
     "SuccessfullResponse",
-    "UserCreate",
+    "RecruiterCreate",
 )
 from .response import SuccessfullResponse
-from .user import UserCreate
+from .recruiter import RecruiterCreate
