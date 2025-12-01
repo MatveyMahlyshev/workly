@@ -11,15 +11,7 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
-    async def _get_user_by_email(
-        self, email: str
-    ) -> RecruiterEntity | CandidateEntity | None:
-        pass
-
-    @abstractmethod
-    async def _get_user_by_phone(
-        self, phone: str
-    ) -> RecruiterEntity | CandidateEntity | None:
+    async def _user_exists(self, email: str | None, phone: str | None) -> dict:
         pass
 
     @abstractmethod

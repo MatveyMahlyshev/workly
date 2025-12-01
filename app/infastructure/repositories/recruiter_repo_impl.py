@@ -1,6 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select, Result
+from sqlalchemy import select, Result, or_, literal
 from sqlalchemy.orm import selectinload
 
 from domain.exceptions import EmailAlreadyExists
@@ -62,6 +62,7 @@ class RecruiterRepositoryImpl(IUserRepository):
     def _to_model(self, entity: RecruiterEntity):
         user = User(
             email=entity.email,
+            phone=entity.phone,
             password_hash=entity.password_hash,
             is_active=entity.is_active,
             permission_level=2,
@@ -72,7 +73,6 @@ class RecruiterRepositoryImpl(IUserRepository):
             surname=entity.surname,
             name=entity.name,
             patronymic=entity.patronymic,
-            phone=entity.phone,
         )
         return user, recruiter
 
@@ -90,30 +90,18 @@ class RecruiterRepositoryImpl(IUserRepository):
 
         return None
 
-    async def _get_user_by_email(self, email) -> RecruiterEntity | None:
-        stmt = (
-            select(User)
-            .options(selectinload(User.recruiter))
-            .where(User.email == email)
+    async def _user_exists(self, email: str = None, phone: str = None) -> dict:
+        stmt = select(
+            select(literal(1)).where(User.email == email if email else False).exists().label("email_exists"),
+            select(literal(1)).where(User.phone == phone if phone else False).exists().label("phone_exists"),
         )
-        result: Result = await self.session.execute(statement=stmt)
-        user: User = result.scalar_one_or_none()
-        print(user)
-        if user:
-            return self._user_model_to_recruiter_entity(model=user)
-        return None
+        result: Result = await self.session.execute(stmt)
+        row = result.first()
 
-    async def _get_user_by_phone(self, phone: str) -> RecruiterEntity | None:
-        stmt = (
-            select(Recruiter)
-            .options(selectinload(Recruiter.user))
-            .where(Recruiter.phone == phone)
-        )
-        result: Result = await self.session.execute(statement=stmt)
-        recruiter: Recruiter = result.scalar_one_or_none()
-        if recruiter:
-            return self._user_model_to_recruiter_entity(model=recruiter)
-        return None
+        return {
+            "email": bool(row.email_exists) if email else False,
+            "phone": bool(row.phone_exists) if phone else False,
+        }
 
     async def _delete_user(self):
         pass

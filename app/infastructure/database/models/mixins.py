@@ -13,10 +13,6 @@ class UserRelationMixin:
     _user_back_populates: str | None = None
 
     @declared_attr
-    def phone(cls) -> Mapped[str | None]:
-        return mapped_column(String(20), default=None, unique=True)
-
-    @declared_attr
     def surname(cls) -> Mapped[str]:
         return mapped_column(String(100))
 

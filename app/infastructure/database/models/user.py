@@ -15,6 +15,7 @@ class User(Base):
     email: Mapped[str] = mapped_column(
         String(254), unique=True, index=True, nullable=False
     )
+    phone: Mapped[str] = mapped_column(String(20), default=None, unique=True)
     password_hash: Mapped[str] = mapped_column(String(60), nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True)
     permission_level: Mapped[PermissionLevel] = mapped_column(

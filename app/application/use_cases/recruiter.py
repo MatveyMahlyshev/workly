@@ -10,9 +10,13 @@ class RecruiterUseCase(BaseUserUseCase):
         self,
         **user_data,
     ) -> RecruiterEntity:
-        if await self.repo._get_user_by_email(email=user_data["email"]):
+        exists = await self.repo._user_exists(
+            email=user_data["email"],
+            phone=user_data["phone"],
+        )
+        if exists["email"]:
             raise EmailAlreadyExists()
-        if await self.repo._get_user_by_phone(phone=user_data["phone"]):
+        if exists["phone"]:
             raise PhoneAlreadyExists()
 
         user = RecruiterEntity(

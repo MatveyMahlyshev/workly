@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-from application.interfaces import PasswordHasher
+from application.interfaces import PasswordHasher, IUserRepository
 
 
 class BaseUserUseCase(ABC):
     def __init__(
         self,
-        repo,
+        repo: IUserRepository,
         password_hasher: PasswordHasher,
     ):
         self.repo = repo
