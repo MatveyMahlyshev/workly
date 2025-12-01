@@ -76,7 +76,7 @@ class RecruiterRepositoryImpl(IUserRepository):
         )
         return user, recruiter
 
-    async def _create_user(self, recruiter_entity: RecruiterEntity) -> RecruiterEntity:
+    async def _create_user(self, recruiter_entity: RecruiterEntity) -> None:
         user_model, recruiter_model = self._to_model(entity=recruiter_entity)
         try:
             self.session.add(user_model)
@@ -88,7 +88,7 @@ class RecruiterRepositoryImpl(IUserRepository):
             await self.session.rollback()
             raise EmailAlreadyExists
 
-        return self._to_entity(recruiter_model=recruiter_model, user_model=user_model)
+        return None
 
     async def _get_user_by_email(self, email) -> RecruiterEntity | None:
         stmt = (

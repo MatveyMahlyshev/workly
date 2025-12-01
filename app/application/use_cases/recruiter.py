@@ -2,12 +2,10 @@ from ..interfaces.recruiter_repo import IUserRepository
 from domain.entities import RecruiterEntity
 from domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
 from utils import hash_password
+from .base_user import BaseUserUseCase
 
 
-class RecruiterUseCase:
-    def __init__(self, repo: IUserRepository):
-        self.repo = repo
-
+class RecruiterUseCase(BaseUserUseCase):
     async def create_user(
         self,
         **user_data,
@@ -23,7 +21,7 @@ class RecruiterUseCase:
             name=user_data["name"],
             patronymic=user_data["patronymic"],
             phone=user_data["phone"],
-            password_hash=hash_password(password=user_data["password"]),
+            password_hash=self._hash_password(password=user_data["password"]),
             company=user_data["company"],
             position=user_data["position"],
         )
