@@ -13,18 +13,6 @@ class UserRelationMixin:
     _user_back_populates: str | None = None
 
     @declared_attr
-    def surname(cls) -> Mapped[str]:
-        return mapped_column(String(100))
-
-    @declared_attr
-    def name(cls) -> Mapped[str]:
-        return mapped_column(String(100))
-
-    @declared_attr
-    def patronymic(cls) -> Mapped[str | None]:
-        return mapped_column(String(100), default=None)
-
-    @declared_attr
     def user_id(cls) -> Mapped[int]:
         return mapped_column(
             ForeignKey("users.id", ondelete="CASCADE"),

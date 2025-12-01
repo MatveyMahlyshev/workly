@@ -22,6 +22,8 @@ class UserBase(BaseModel):
     @field_validator("phone")
     @classmethod
     def phone_number_validation(cls, v: str) -> str:
+        if any(char.isalpha() for char in v):
+            raise ValueError("Invalid phone number")
         valid_number = "".join(filter(str.isdigit, v))
         length_of_number = len(valid_number)
         if (length_of_number < 10 or length_of_number > 11) or (

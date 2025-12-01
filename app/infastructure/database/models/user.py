@@ -16,6 +16,9 @@ class User(Base):
         String(254), unique=True, index=True, nullable=False
     )
     phone: Mapped[str] = mapped_column(String(20), default=None, unique=True)
+    surname: Mapped[str] = mapped_column(String(100))
+    name: Mapped[str] = mapped_column(String(100))
+    patronymic: Mapped[str] = mapped_column(String(100), default=None)
     password_hash: Mapped[str] = mapped_column(String(60), nullable=False)
     is_active: Mapped[bool] = mapped_column(default=True)
     permission_level: Mapped[PermissionLevel] = mapped_column(

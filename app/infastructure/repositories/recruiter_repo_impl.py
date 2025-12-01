@@ -6,10 +6,10 @@ from sqlalchemy.orm import selectinload
 from domain.exceptions import EmailAlreadyExists
 from infastructure.database.models import Recruiter, User
 from domain.entities import RecruiterEntity
-from application.interfaces import IUserRepository
+from application.interfaces import IRecruiterRepo
 
 
-class RecruiterRepositoryImpl(IUserRepository):
+class RecruiterRepositoryImpl(IRecruiterRepo):
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -62,6 +62,9 @@ class RecruiterRepositoryImpl(IUserRepository):
     def _to_model(self, entity: RecruiterEntity):
         user = User(
             email=entity.email,
+            surname=entity.surname,
+            name=entity.name,
+            patronymic=entity.patronymic,
             phone=entity.phone,
             password_hash=entity.password_hash,
             is_active=entity.is_active,
@@ -70,9 +73,7 @@ class RecruiterRepositoryImpl(IUserRepository):
         recruiter = Recruiter(
             company=entity.company,
             position=entity.position,
-            surname=entity.surname,
-            name=entity.name,
-            patronymic=entity.patronymic,
+            
         )
         return user, recruiter
 
