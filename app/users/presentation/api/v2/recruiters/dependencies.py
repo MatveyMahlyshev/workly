@@ -3,7 +3,8 @@ from fastapi import Depends
 
 from users.infrastructure.repositories import RecruiterRepositoryImpl
 from users.application.use_cases import RecruiterUseCase
-from users.presentation.dependencies import get_db, get_password_hasher
+from users.presentation.dependencies import  get_password_hasher
+from dependencies.db import get_db
 
 
 def get_recruiter_repository(session=Depends(get_db)):
