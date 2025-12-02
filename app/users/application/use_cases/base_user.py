@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from users.application.interfaces import PasswordHasher, IUserRepository
 
 
-class BaseUserUseCase(ABC):
+class BaseUserUseCase:
     def __init__(
         self,
         repo: IUserRepository,

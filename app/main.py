@@ -2,10 +2,12 @@ from fastapi import FastAPI
 import uvicorn
 from contextlib import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import ValidationError
 
 
 from users.presentation.api.v2 import router as users_router
-
+from auth.presentation.api import router as auth_router
+from exception_handlers import validation_exception_handler
 
 from core.config import settings
 
@@ -21,6 +23,14 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(
     router=users_router,
     prefix=settings.api_v2_prefix,
+)
+app.include_router(
+    router=auth_router,
+    prefix=settings.api_v2_prefix,
+)
+app.add_exception_handler(
+    ValidationError,
+    validation_exception_handler,
 )
 
 app.add_middleware(

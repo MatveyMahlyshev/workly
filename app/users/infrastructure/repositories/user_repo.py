@@ -20,10 +20,9 @@ class UserRepo:
 
             await self.session.commit()
 
-        except IntegrityError as e:
+        except IntegrityError:
 
             await self.session.rollback()
-            print(e)
             raise CreateObjectException()
 
         return None
