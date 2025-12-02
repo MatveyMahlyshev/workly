@@ -10,7 +10,7 @@ class RecruiterUseCase(BaseUserUseCase):
         self,
         **user_data,
     ) -> RecruiterEntity:
-        exists = await self.repo._user_exists(
+        exists = await self.repo.user_exists(
             email=user_data["email"],
             phone=user_data["phone"],
         )
@@ -29,6 +29,6 @@ class RecruiterUseCase(BaseUserUseCase):
             company=user_data["company"],
             position=user_data["position"],
         )
-        return await self.repo._create_user(entity=user)
+        return await self.repo.create_user(entity=user)
 
     # async def delete_user()

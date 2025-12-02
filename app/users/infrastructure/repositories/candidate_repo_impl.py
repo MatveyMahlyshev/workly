@@ -30,8 +30,11 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
         )
         return user, candidate
 
-    def _create_user(self, entity):
+    def create_user(self, entity):
         return super()._create_user(entity=entity)
+    
+    def user_exists(self, email = None, phone = None):
+        return super()._user_exists(email=email, phone=phone)
 
-    def _delete_user(self):
+    def delete_user(self):
         pass

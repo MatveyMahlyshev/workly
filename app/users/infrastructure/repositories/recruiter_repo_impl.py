@@ -77,11 +77,11 @@ class RecruiterRepositoryImpl(UserRepo, IRecruiterRepo):
         )
         return user, recruiter
 
-    async def _user_exists(self, email: str = None, phone: str = None):
+    async def user_exists(self, email: str = None, phone: str = None):
         return await super()._user_exists(email=email, phone=phone)
 
-    async def _create_user(self, entity):
+    async def create_user(self, entity):
         return await super()._create_user(entity=entity)
 
-    async def _delete_user(self):
+    async def delete_user(self):
         pass

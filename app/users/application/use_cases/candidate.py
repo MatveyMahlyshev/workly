@@ -5,7 +5,7 @@ from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
 
 class CandidateUseCase(BaseUserUseCase):
     async def create_user(self, **user_data) -> CandidateEntity:
-        exists = await self.repo._user_exists(
+        exists = await self.repo.user_exists(
             email=user_data["email"],
             phone=user_data["phone"],
         )
@@ -28,4 +28,4 @@ class CandidateUseCase(BaseUserUseCase):
             about_candidate=user_data["about_candidate"],
             location=user_data["location"],
         )
-        return await self.repo._create_user(entity=user)
+        return await self.repo.create_user(entity=user)

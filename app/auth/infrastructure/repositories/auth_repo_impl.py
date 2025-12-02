@@ -17,7 +17,7 @@ class AuthRepositoryImpl(TokenRepo, IAuthRepo):
         jwt_payload = {"sub": entity.email}
         return super()._create_token(token_type=token_type, token_data=jwt_payload)
 
-    def _validate_password(self, password: str, hashed_password: str) -> bool:
+    def validate_password(self, password: str, hashed_password: str) -> bool:
         return bcrypt.checkpw(password.encode(), hashed_password.encode())
 
     async def _get_user(self, entity: AuthEntity) -> User | None:
@@ -26,7 +26,7 @@ class AuthRepositoryImpl(TokenRepo, IAuthRepo):
         user: User = result.scalar_one_or_none()
         return user
 
-    async def _login(self, entity: AuthEntity) -> TokenEntity:
+    async def login(self, entity: AuthEntity) -> TokenEntity:
         access_token = self._create_token(
             entity=entity,
             token_type=TokenTypeFields.ACCESS_TOKEN_TYPE,
@@ -40,5 +40,5 @@ class AuthRepositoryImpl(TokenRepo, IAuthRepo):
             refresh_token=refresh_token,
         )
 
-    def _refresh(*args):
+    def refresh(*args):
         pass
