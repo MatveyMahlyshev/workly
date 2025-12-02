@@ -1,6 +1,8 @@
 from datetime import timedelta, datetime, timezone
 import jwt
 
+
+from auth.application.interfaces import ITokenRepo
 from core.config import settings
 
 
@@ -10,8 +12,8 @@ class TokenTypeFields:
     REFRESH_TOKEN_TYPE = "refresh"
 
 
-class TokenRepo:
-    def _encode_jwt(
+class TokenRepoImpl(ITokenRepo):
+    def encode_jwt(
         self,
         payload: dict,
         private_key: str = settings.auth.private_key.read_text(),
@@ -33,16 +35,16 @@ class TokenRepo:
 
         return encoded
 
-    def _decode_jwt(
+    def decode_jwt(
         self,
-        token,
+        token: str,
         public_key: str = settings.auth.public_key.read_text(),
         algorithm: str = settings.auth.algorithm,
     ):
         decoded = jwt.decode(token, public_key, algorithms=[algorithm])
         return decoded
 
-    def _create_token(
+    def create_token(
         self,
         token_type: str,
         token_data: dict,
@@ -51,7 +53,7 @@ class TokenRepo:
     ):
         jwt_payload = {TokenTypeFields.TOKEN_TYPE_FIELD: token_type}
         jwt_payload.update(token_data)
-        return self._encode_jwt(
+        return self.encode_jwt(
             payload=jwt_payload,
             expire_minutes=expire_minutes,
             expire_timedelta=expire_timedelta,

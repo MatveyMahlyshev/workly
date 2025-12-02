@@ -32,8 +32,8 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
 
     def create_user(self, entity):
         return super()._create_user(entity=entity)
-    
-    def user_exists(self, email = None, phone = None):
+
+    def user_exists(self, email=None, phone=None):
         return super()._user_exists(email=email, phone=phone)
 
     def delete_user(self):

@@ -7,7 +7,7 @@ from users.infrastructure.database.models import User
 class IAuthRepo(ABC):
 
     @abstractmethod
-    async def login(self, entity: AuthEntity) -> TokenEntity:
+    async def login(self, access_token: str, refresh_token: str) -> TokenEntity:
         pass
 
     @abstractmethod

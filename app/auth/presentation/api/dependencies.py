@@ -2,7 +2,7 @@ from fastapi import Depends, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from dependencies.db import get_db
-from auth.infrastructure.repositories import AuthRepositoryImpl
+from auth.infrastructure.repositories import AuthRepositoryImpl, TokenRepoImpl
 from ..schemas import UserAuth
 from auth.application.use_cases import AuthUseCases
 
@@ -19,6 +19,6 @@ def get_auth_repository(session: AsyncSession = Depends(get_db)):
 
 
 def get_auth_use_cases(
-    user_repo: AuthRepositoryImpl = Depends(get_auth_repository),
+    auth_repo: AuthRepositoryImpl = Depends(get_auth_repository),
 ):
-    return AuthUseCases(repo=user_repo)
+    return AuthUseCases(auth_repo=auth_repo, token_repo=TokenRepoImpl())
