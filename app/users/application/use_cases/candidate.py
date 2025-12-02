@@ -1,0 +1,31 @@
+from .base_user import BaseUserUseCase
+from users.domain.entities import CandidateEntity
+from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
+
+
+class CandidateUseCase(BaseUserUseCase):
+    async def create_user(self, **user_data) -> CandidateEntity:
+        exists = await self.repo._user_exists(
+            email=user_data["email"],
+            phone=user_data["phone"],
+        )
+
+        if exists["email"]:
+            raise EmailAlreadyExists()
+        if exists["phone"]:
+            raise PhoneAlreadyExists()
+
+        user = CandidateEntity(
+            surname=user_data["surname"],
+            name=user_data["name"],
+            patronymic=user_data["patronymic"],
+            email=user_data["email"],
+            phone=user_data["phone"],
+            password_hash=self._hash_password(user_data["password"]),
+            birth_date=user_data["birth_date"],
+            work_experience=user_data["work_experience"],
+            education=user_data["education"],
+            about_candidate=user_data["about_candidate"],
+            location=user_data["location"],
+        )
+        return await self.repo._create_user(entity=user)
