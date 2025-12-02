@@ -18,8 +18,8 @@ class User(Base):
     phone: Mapped[str] = mapped_column(String(20), default=None, unique=True)
     surname: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(100))
-    patronymic: Mapped[str] = mapped_column(String(100), default=None)
-    password_hash: Mapped[str] = mapped_column(String(60), nullable=False)
+    patronymic: Mapped[str] = mapped_column(String(100), default=None, nullable=True)
+    password_hash: Mapped[str] = mapped_column(String(60))
     is_active: Mapped[bool] = mapped_column(default=True)
     permission_level: Mapped[PermissionLevel] = mapped_column(
         Integer, default=PermissionLevel.CANDIDATE.value

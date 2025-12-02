@@ -28,12 +28,8 @@ def upgrade() -> None:
     op.drop_column("recruiters", "patronymic")
     op.drop_column("recruiters", "surname")
     op.drop_column("recruiters", "name")
-    op.add_column(
-        "users", sa.Column("surname", sa.String(length=100), nullable=False)
-    )
-    op.add_column(
-        "users", sa.Column("name", sa.String(length=100), nullable=False)
-    )
+    op.add_column("users", sa.Column("surname", sa.String(length=100), nullable=False))
+    op.add_column("users", sa.Column("name", sa.String(length=100), nullable=False))
     op.add_column(
         "users", sa.Column("patronymic", sa.String(length=100), nullable=False)
     )
@@ -48,9 +44,7 @@ def downgrade() -> None:
     op.drop_column("users", "surname")
     op.add_column(
         "recruiters",
-        sa.Column(
-            "name", sa.VARCHAR(length=100), autoincrement=False, nullable=False
-        ),
+        sa.Column("name", sa.VARCHAR(length=100), autoincrement=False, nullable=False),
     )
     op.add_column(
         "recruiters",
@@ -72,9 +66,7 @@ def downgrade() -> None:
     )
     op.add_column(
         "candidates",
-        sa.Column(
-            "name", sa.VARCHAR(length=100), autoincrement=False, nullable=False
-        ),
+        sa.Column("name", sa.VARCHAR(length=100), autoincrement=False, nullable=False),
     )
     op.add_column(
         "candidates",

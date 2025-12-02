@@ -6,11 +6,11 @@ from annotated_types import MinLen, MaxLen
 
 class UserBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
-    name: str = Field(min_length=2, max_length=50, default="Имя")
-    surname: str = Field(min_length=2, max_length=50, default="Фамилия")
-    patronymic: str | None = Field(max_length=50, default="Отчество")
+    name: str = Field(min_length=2, max_length=50)
+    surname: str = Field(min_length=2, max_length=50)
+    patronymic: str | None = Field(min_length=2, max_length=50, default=None)
     email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
-    phone: str = Field(min_length=10, max_length=20, default="71234567890")
+    phone: str = Field(min_length=10, max_length=20)
 
     @field_validator("name", "surname", "patronymic")
     @classmethod

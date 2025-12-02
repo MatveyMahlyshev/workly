@@ -29,6 +29,6 @@ class RecruiterUseCase(BaseUserUseCase):
             company=user_data["company"],
             position=user_data["position"],
         )
-        return await self.repo._create_user(user)
+        return await self.repo._create_user(entity=user)
 
     # async def delete_user()

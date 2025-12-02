@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, status
 
 
-from presentation.schemas import SuccessfullResponse
-
+from presentation.schemas import SuccessfullResponse, CandidateCreate
+from application.use_cases import CandidateUseCase
+from .dependencies import get_candidate_use_cases
+from ..helpers import create_user
 
 router = APIRouter(tags=["Candidates"], prefix="/candidate")
 
@@ -19,13 +21,7 @@ router = APIRouter(tags=["Candidates"], prefix="/candidate")
     summary="Register candidate",
 )
 async def create_candidate(
-    # user_data: UserCreate, use_cases: UserUseCase = Depends(get_user_use_cases)
+    user_data: CandidateCreate, use_cases: CandidateUseCase = Depends(get_candidate_use_cases)
 ):
-    pass
-    # return await use_cases.create_user(
-    #     surname=user_data.surname,
-    #     name=user_data.name,
-    #     patronymic=user_data.patronymic,
-    #     email=user_data.email,
-    #     password=user_data.password,
-    # )
+    
+    return await create_user(use_cases=use_cases, user_data=user_data)

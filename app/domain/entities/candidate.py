@@ -10,6 +10,4 @@ class CandidateEntity(UserEntity):
     work_experience: str = ""
     education: str = ""
     about_candidate: str = ""
-    permission_level = PermissionLevel.CANDIDATE.value
     location: str = ""
-    user_id: int = 0

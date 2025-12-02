@@ -1,15 +1,16 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select, Result, or_, literal
-from sqlalchemy.orm import selectinload
+from sqlalchemy import select, Result, literal
+
 
 from domain.exceptions import EmailAlreadyExists
 from infastructure.database.models import Recruiter, User
 from domain.entities import RecruiterEntity
 from application.interfaces import IRecruiterRepo
+from .user_repo import UserRepo
 
 
-class RecruiterRepositoryImpl(IRecruiterRepo):
+class RecruiterRepositoryImpl(UserRepo, IRecruiterRepo):
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -73,36 +74,14 @@ class RecruiterRepositoryImpl(IRecruiterRepo):
         recruiter = Recruiter(
             company=entity.company,
             position=entity.position,
-            
         )
         return user, recruiter
 
-    async def _create_user(self, recruiter_entity: RecruiterEntity) -> None:
-        user_model, recruiter_model = self._to_model(entity=recruiter_entity)
-        try:
-            self.session.add(user_model)
-            await self.session.flush()
-            recruiter_model.user_id = user_model.id
-            self.session.add(recruiter_model)
-            await self.session.commit()
-        except IntegrityError:
-            await self.session.rollback()
-            raise EmailAlreadyExists
+    async def _user_exists(self, email: str = None, phone: str = None):
+        return await super()._user_exists(email=email, phone=phone)
 
-        return None
-
-    async def _user_exists(self, email: str = None, phone: str = None) -> dict:
-        stmt = select(
-            select(literal(1)).where(User.email == email if email else False).exists().label("email_exists"),
-            select(literal(1)).where(User.phone == phone if phone else False).exists().label("phone_exists"),
-        )
-        result: Result = await self.session.execute(stmt)
-        row = result.first()
-
-        return {
-            "email": bool(row.email_exists) if email else False,
-            "phone": bool(row.phone_exists) if phone else False,
-        }
+    async def _create_user(self, entity):
+        return await super()._create_user(entity=entity)
 
     async def _delete_user(self):
         pass

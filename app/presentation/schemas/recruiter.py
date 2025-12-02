@@ -8,5 +8,5 @@ class RecruiterBase(UserBase):
 
 
 class RecruiterCreate(UserCreate):
-    company: str = Field(min_length=2, max_length=100, default="Название компании")
-    position: str = Field(min_length=2, max_length=100, default="Занимаемая должность")
+    company: str = Field(min_length=2, max_length=100)
+    position: str = Field(min_length=2, max_length=100)

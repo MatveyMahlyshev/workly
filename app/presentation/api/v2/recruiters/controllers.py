@@ -1,9 +1,11 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 
 from application.use_cases import RecruiterUseCase
 from presentation.schemas import SuccessfullResponse, RecruiterCreate
-from domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
+
 from .dependencies import get_recruiter_use_cases
+
+from ..helpers import create_user
 
 router = APIRouter(tags=["Recruiter"], prefix="/recruiter")
 
@@ -23,16 +25,4 @@ async def create_hr(
     user_data: RecruiterCreate,
     use_cases: RecruiterUseCase = Depends(get_recruiter_use_cases),
 ):
-    try:
-        await use_cases.create_user(**user_data.model_dump())
-        return SuccessfullResponse()
-    except EmailAlreadyExists:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Email already registered",
-        )
-    except PhoneAlreadyExists:
-        raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT,
-            detail="Phone number already registered",
-        )
+    return await create_user(use_cases=use_cases, user_data=user_data)
