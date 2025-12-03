@@ -1,7 +1,7 @@
 from fastapi import Depends, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dependencies.db import get_db
+from shared.dependencies.db import get_db
 from auth.infrastructure.repositories import AuthRepositoryImpl, TokenRepoImpl
 from ..schemas import UserAuth
 from auth.application.use_cases import AuthUseCases

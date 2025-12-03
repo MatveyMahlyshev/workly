@@ -4,7 +4,7 @@ from fastapi import Depends
 from users.infrastructure.repositories import SQLCandidateRepositoryImpl
 from users.application.use_cases import CandidateUseCase
 from users.presentation.dependencies import get_password_hasher
-from dependencies.db import get_db
+from shared.dependencies.db import get_db
 
 
 def get_candidate_repository(session=Depends(get_db)):

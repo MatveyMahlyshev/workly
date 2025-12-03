@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from users.infrastructure.repositories import SQLRecruiterRepositoryImpl
 from users.application.use_cases import RecruiterUseCase
 from users.presentation.dependencies import get_password_hasher
-from dependencies.db import get_db
+from shared.dependencies.db import get_db
 
 
 def get_recruiter_repository(session: AsyncSession = Depends(get_db)):

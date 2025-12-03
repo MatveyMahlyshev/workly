@@ -3,7 +3,7 @@ import jwt
 
 
 from auth.application.interfaces import ITokenRepository
-from config.settings import settings
+from shared.config.settings import settings
 
 
 class TokenTypeFields:

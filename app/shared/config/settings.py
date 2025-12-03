@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 from pathlib import Path
 import os
 
-BASE_DIR = Path(__file__).parent.parent
+BASE_DIR = Path(__file__).parent.parent.parent
 
 
 class AuthJWT(BaseModel):

@@ -7,9 +7,9 @@ from pydantic import ValidationError
 
 from users.presentation.api import router as users_router
 from auth.presentation.api import router as auth_router
-from handlers.exception_handlers import validation_exception_handler
+from users.handlers.exception_handlers import validation_exception_handler
 
-from config.settings import settings
+from shared.config.settings import settings
 
 
 @asynccontextmanager
