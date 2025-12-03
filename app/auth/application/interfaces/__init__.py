@@ -1,7 +1,7 @@
 __all__ = (
-    "IAuthRepo",
-    "ITokenRepo",
+    "IAuthRepository",
+    "ITokenRepository",
 )
 
-from .auth_repo import IAuthRepo
-from .token_repo import ITokenRepo
+from .auth_repo import IAuthRepository
+from .token_repo import ITokenRepository

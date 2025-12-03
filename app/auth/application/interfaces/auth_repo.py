@@ -4,7 +4,7 @@ from auth.domain.entities import AuthEntity, TokenEntity
 from users.infrastructure.database.models import User
 
 
-class IAuthRepo(ABC):
+class IAuthRepository(ABC):
 
     @abstractmethod
     async def login(self, access_token: str, refresh_token: str) -> TokenEntity:

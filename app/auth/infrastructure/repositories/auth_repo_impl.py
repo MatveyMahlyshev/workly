@@ -2,12 +2,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, Result
 import bcrypt
 
-from auth.application.interfaces import IAuthRepo
+from auth.application.interfaces import IAuthRepository
 from auth.domain.entities import AuthEntity, TokenEntity
 from users.infrastructure.database.models import User
 
 
-class AuthRepositoryImpl(IAuthRepo):
+class AuthRepositoryImpl(IAuthRepository):
 
     def __init__(self, session: AsyncSession):
         self.session = session

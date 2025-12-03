@@ -1,10 +1,10 @@
-from auth.application.interfaces import IAuthRepo, ITokenRepo
+from auth.application.interfaces import IAuthRepository, ITokenRepository
 from auth.domain.entities import AuthEntity
 from auth.domain.exceptions import UserNotFound, InvalidLoginData
 
 
 class AuthUseCases:
-    def __init__(self, auth_repo: IAuthRepo, token_repo: ITokenRepo):
+    def __init__(self, auth_repo: IAuthRepository, token_repo: ITokenRepository):
         self.auth_repo = auth_repo
         self.token_repo = token_repo
 

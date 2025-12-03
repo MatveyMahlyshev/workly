@@ -6,8 +6,8 @@ from ..database.models import User
 
 class UserRepoMixin:
     def __init__(self, session: AsyncSession):
-        self.session=session
-    
+        self.session = session
+
     async def _user_exists(self, email: str = None, phone: str = None) -> dict:
         stmt = select(
             select(literal(1))

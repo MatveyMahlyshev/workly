@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 
 
-from users.presentation.api.v2 import router as users_router
+from users.presentation.api import router as users_router
 from auth.presentation.api import router as auth_router
 from handlers.exception_handlers import validation_exception_handler
 
@@ -19,15 +19,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.include_router(
+    router=auth_router,
+    prefix=settings.api_v2_prefix,
+)
 
 app.include_router(
     router=users_router,
     prefix=settings.api_v2_prefix,
 )
-app.include_router(
-    router=auth_router,
-    prefix=settings.api_v2_prefix,
-)
+
 app.add_exception_handler(
     ValidationError,
     validation_exception_handler,

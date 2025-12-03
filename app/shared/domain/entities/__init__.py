@@ -1,5 +1,3 @@
-__all__ = (
-    "SuccessfullRequestEntity"
-)
+__all__ = "SuccessfullRequestEntity"
 
 from .response import SuccessfullRequestEntity

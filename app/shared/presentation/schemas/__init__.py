@@ -1,5 +1,3 @@
-__all__ = (
-    "SuccessfullResponse",
-)
+__all__ = ("SuccessfullResponse",)
 
 from .response import SuccessfullResponse

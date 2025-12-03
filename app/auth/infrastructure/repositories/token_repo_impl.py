@@ -2,7 +2,7 @@ from datetime import timedelta, datetime, timezone
 import jwt
 
 
-from auth.application.interfaces import ITokenRepo
+from auth.application.interfaces import ITokenRepository
 from config.settings import settings
 
 
@@ -12,7 +12,7 @@ class TokenTypeFields:
     REFRESH_TOKEN_TYPE = "refresh"
 
 
-class TokenRepoImpl(ITokenRepo):
+class TokenRepoImpl(ITokenRepository):
     def encode_jwt(
         self,
         payload: dict,

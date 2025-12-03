@@ -9,7 +9,6 @@ from shared.domain.entities import SuccessfullRequestEntity
 from .user_repo_mixin import UserRepoMixin
 
 
-
 class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
     def __init__(self, session: AsyncSession):
         super().__init__(session=session)

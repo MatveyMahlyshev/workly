@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import timedelta
 
 
-class ITokenRepo(ABC):
+class ITokenRepository(ABC):
     @abstractmethod
     def create_token(self, token_data: dict, token_type: str) -> str:
         pass

@@ -5,11 +5,12 @@ from sqlalchemy.exc import IntegrityError
 from users.domain.exceptions import CreateObjectException
 from users.infrastructure.database.models import Recruiter, User
 from users.domain.entities import RecruiterEntity, PermissionLevel
-from users.application.interfaces import IRecruiterRepo
+from users.application.interfaces import IRecruiterRepository
 from .user_repo_mixin import UserRepoMixin
 from shared.domain.entities import SuccessfullRequestEntity
 
-class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepo):
+
+class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):
     def __init__(self, session: AsyncSession):
         super().__init__(session=session)
 
@@ -25,9 +26,7 @@ class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepo):
             permission_level=PermissionLevel.RECRUITER.value,
         )
         recruiter = Recruiter(
-            company=entity.company,
-            position=entity.position,
-            user=user
+            company=entity.company, position=entity.position, user=user
         )
         return user, recruiter
 
@@ -46,9 +45,8 @@ class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepo):
         except IntegrityError:
             await self.session.rollback()
             raise CreateObjectException()
-        
-        return SuccessfullRequestEntity()
 
+        return SuccessfullRequestEntity()
 
     async def delete_user(self):
         pass
