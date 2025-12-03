@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status
 
-from users.presentation.schemas import SuccessfullResponse
+from shared.presentation.schemas import SuccessfullResponse
 from users.domain.exceptions import (
     EmailAlreadyExists,
     PhoneAlreadyExists,

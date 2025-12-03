@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, status
 
 
-from users.presentation.schemas import SuccessfullResponse, CandidateCreate
+from users.presentation.schemas import CandidateCreate
 from users.application.use_cases import CandidateUseCase
+from shared.presentation.schemas import SuccessfullResponse
 from .dependencies import get_candidate_use_cases
 from ..helpers import create_user
 
