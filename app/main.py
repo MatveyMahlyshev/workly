@@ -9,7 +9,7 @@ from users.presentation.api.v2 import router as users_router
 from auth.presentation.api import router as auth_router
 from exception_handlers import validation_exception_handler
 
-from core.config import settings
+from config.settings import settings
 
 
 @asynccontextmanager
