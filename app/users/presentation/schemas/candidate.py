@@ -1,6 +1,8 @@
 from datetime import date
 
 from .user import UserBase, UserCreate
+from .education import Education
+from .experience import Experience
 
 
 class CandidateBase(UserBase):
@@ -9,7 +11,7 @@ class CandidateBase(UserBase):
 
 class CandidateCreate(UserCreate):
     birth_date: date
-    work_experience: str | None = None
-    education: str | None = None
+    work_experience: list[Experience] | None = None
+    education: list[Education] | None = None
     about_candidate: str | None = None
     location: str | None = None

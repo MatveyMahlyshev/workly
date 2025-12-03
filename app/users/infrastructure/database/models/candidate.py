@@ -1,9 +1,15 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Text, String, Date
 from datetime import date, timedelta
+from typing import TYPE_CHECKING
 
 from .base import Base
 from .mixins import UserRelationMixin
+
+
+if TYPE_CHECKING:
+    from .experience import Experience
+    from .education import Education
 
 
 def default_18_years_ago():
@@ -20,14 +26,24 @@ class Candidate(UserRelationMixin, Base):
         default=default_18_years_ago,
         nullable=False,
     )
-    work_experience: Mapped[str | None] = mapped_column(
-        Text, default=None, nullable=True
-    )
-    education: Mapped[str | None] = mapped_column(Text, default=None, nullable=True)
     about_candidate: Mapped[str | None] = mapped_column(
         Text, default=None, nullable=True
     )
 
     location: Mapped[str | None] = mapped_column(
         String(100), default=None, nullable=True
+    )
+
+    experiences: Mapped[list["Experience"]] = relationship(
+        "Experience",
+        back_populates="candidate",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+    educations: Mapped[list["Education"]] = relationship(
+        "Education",
+        back_populates="candidate",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )

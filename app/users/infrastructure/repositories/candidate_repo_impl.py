@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from users.application.interfaces import ICandidateRepository
 from users.domain.entities import CandidateEntity
-from users.infrastructure.database.models import User, Candidate
+from users.infrastructure.database.models import User, Candidate, Education, Experience
 from .user_repo import UserRepo
 
 
@@ -23,12 +23,26 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
         )
         candidate = Candidate(
             birth_date=entity.birth_date,
-            work_experience=entity.work_experience,
-            education=entity.education,
             about_candidate=entity.about_candidate,
             location=entity.location,
         )
-        return user, candidate
+        educations = [
+            Education(
+                educational_institution_title=education["educational_institution_title"],
+                stage=education["stage"],
+                direction=education["direction"],
+            )
+            for education in entity.education
+        ]
+
+        experiences = [
+            Experience(
+                company=experience["company"],
+                description=experience["description"],
+            )
+            for experience in entity.work_experience
+        ]
+        return user, candidate, experiences, educations
 
     def create_user(self, entity):
         return super()._create_user(entity=entity)
