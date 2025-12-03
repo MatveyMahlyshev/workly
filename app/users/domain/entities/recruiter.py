@@ -7,4 +7,3 @@ from .user import UserEntity
 class RecruiterEntity(UserEntity):
     company: str = ""
     position: str = ""
-    permission_level = 2

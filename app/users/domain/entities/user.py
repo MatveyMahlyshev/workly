@@ -4,7 +4,7 @@ from enum import IntEnum
 
 class PermissionLevel(IntEnum):
     CANDIDATE = 1
-    HR = 2
+    RECRUITER = 2
     ADMIN = 3
 
 
@@ -17,7 +17,6 @@ class UserEntity:
     phone: str = ""
     password_hash: str = ""
     is_active: bool = True
-    permission_level: PermissionLevel = PermissionLevel.CANDIDATE.value
 
     def set_password(self, password_hash: str) -> None:
         if len(password_hash) != 60:

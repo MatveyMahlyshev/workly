@@ -15,4 +15,3 @@ class CandidateCreate(UserCreate):
     location: str | None = None
     work_experience: list[Experience] | None = None
     education: list[Education] | None = None
-    

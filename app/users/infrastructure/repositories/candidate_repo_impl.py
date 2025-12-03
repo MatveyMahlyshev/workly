@@ -2,16 +2,17 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
 from users.application.interfaces import ICandidateRepository
-from users.domain.entities import CandidateEntity
+from users.domain.entities import CandidateEntity, PermissionLevel
 from users.infrastructure.database.models import User, Candidate, Education, Experience
 from users.domain.exceptions import CreateObjectException
-from .user_repo import UserRepo
+from shared.domain.entities import SuccessfullRequestEntity
+from .user_repo_mixin import UserRepoMixin
 
 
 
-class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
+class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
     def __init__(self, session: AsyncSession):
-        self.session = session
+        super().__init__(session=session)
 
     def _to_model(self, entity: CandidateEntity):
         user = User(
@@ -22,18 +23,22 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
             phone=entity.phone,
             password_hash=entity.password_hash,
             is_active=entity.is_active,
-            permission_level=1,
+            permission_level=PermissionLevel.CANDIDATE.value,
         )
         candidate = Candidate(
             birth_date=entity.birth_date,
             about_candidate=entity.about_candidate,
             location=entity.location,
+            user=user,
         )
         educations = [
             Education(
-                educational_institution_title=education["educational_institution_title"],
+                educational_institution_title=education[
+                    "educational_institution_title"
+                ],
                 stage=education["stage"],
                 direction=education["direction"],
+                candidate=candidate,
             )
             for education in entity.education
         ]
@@ -42,6 +47,7 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
             Experience(
                 company=experience["company"],
                 description=experience["description"],
+                candidate=candidate,
             )
             for experience in entity.work_experience
         ]
@@ -53,22 +59,19 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
         candidate_model: Candidate
         experiences: list[Experience]
         educations: list[Education]
-        user_model, candidate_model, experiences, educations = self._to_model(entity=entity)
+        user_model, candidate_model, experiences, educations = self._to_model(
+            entity=entity
+        )
 
         try:
             self.session.add(user_model)
+            self.session.add(candidate_model)
             await self.session.flush()
 
-            candidate_model.user_id = user_model.id
-            self.session.add(candidate_model)
-            await self.session.flush() 
-
             for experience in experiences:
-                experience.candidate_id = candidate_model.id
                 self.session.add(experience)
 
             for education in educations:
-                education.candidate_id = candidate_model.id
                 self.session.add(education)
 
             await self.session.commit()
@@ -78,7 +81,7 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
             await self.session.rollback()
             raise CreateObjectException()
 
-        return None
+        return SuccessfullRequestEntity()
 
     def user_exists(self, email=None, phone=None):
         return super()._user_exists(email=email, phone=phone)

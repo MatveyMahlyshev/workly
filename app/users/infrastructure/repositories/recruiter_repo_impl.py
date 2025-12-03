@@ -4,60 +4,14 @@ from sqlalchemy.exc import IntegrityError
 
 from users.domain.exceptions import CreateObjectException
 from users.infrastructure.database.models import Recruiter, User
-from users.domain.entities import RecruiterEntity
+from users.domain.entities import RecruiterEntity, PermissionLevel
 from users.application.interfaces import IRecruiterRepo
-from .user_repo import UserRepo
+from .user_repo_mixin import UserRepoMixin
+from shared.domain.entities import SuccessfullRequestEntity
 
-
-class RecruiterRepositoryImpl(UserRepo, IRecruiterRepo):
+class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepo):
     def __init__(self, session: AsyncSession):
-        self.session = session
-
-    def _user_model_to_recruiter_entity(
-        self, model: User | Recruiter
-    ) -> RecruiterEntity:
-        if isinstance(model, User):
-            return RecruiterEntity(
-                email=model.email,
-                password_hash=model.password_hash,
-                is_active=model.is_active,
-                permission_level=model.permission_level,
-                company=model.recruiter.company,
-                position=model.recruiter.position,
-                surname=model.recruiter.surname,
-                name=model.recruiter.name,
-                patronymic=model.recruiter.patronymic,
-                phone=model.recruiter.phone,
-            )
-        if isinstance(model, Recruiter):
-            return RecruiterEntity(
-                email=model.user.email,
-                password_hash=model.user.password_hash,
-                is_active=model.user.is_active,
-                permission_level=model.user.permission_level,
-                company=model.company,
-                position=model.position,
-                surname=model.surname,
-                name=model.name,
-                patronymic=model.patronymic,
-                phone=model.phone,
-            )
-
-    def _to_entity(
-        self, recruiter_model: Recruiter, user_model: User
-    ) -> RecruiterEntity:
-        return RecruiterEntity(
-            email=user_model.email,
-            password_hash=user_model.password_hash,
-            is_active=user_model.is_active,
-            permission_level=user_model.permission_level,
-            company=recruiter_model.company,
-            position=recruiter_model.position,
-            surname=recruiter_model.surname,
-            name=recruiter_model.name,
-            patronymic=recruiter_model.patronymic,
-            phone=recruiter_model.phone,
-        )
+        super().__init__(session=session)
 
     def _to_model(self, entity: RecruiterEntity):
         user = User(
@@ -68,36 +22,33 @@ class RecruiterRepositoryImpl(UserRepo, IRecruiterRepo):
             phone=entity.phone,
             password_hash=entity.password_hash,
             is_active=entity.is_active,
-            permission_level=2,
+            permission_level=PermissionLevel.RECRUITER.value,
         )
         recruiter = Recruiter(
             company=entity.company,
             position=entity.position,
+            user=user
         )
         return user, recruiter
 
     async def user_exists(self, email: str = None, phone: str = None):
         return await super()._user_exists(email=email, phone=phone)
 
-    async def create_user(self, entity: RecruiterEntity) -> None:
+    async def create_user(self, entity: RecruiterEntity) -> SuccessfullRequestEntity:
 
         user_model, recruiter_model = self._to_model(entity=entity)
 
         try:
             self.session.add(user_model)
-            await self.session.flush()
-
-            recruiter_model.user_id = user_model.id
             self.session.add(recruiter_model)
-
             await self.session.commit()
 
         except IntegrityError:
-
             await self.session.rollback()
             raise CreateObjectException()
+        
+        return SuccessfullRequestEntity()
 
-        return None
 
     async def delete_user(self):
         pass

@@ -1,4 +1,7 @@
-__all__ = ("RecruiterRepositoryImpl", "CandidateRepositoryImpl")
+__all__ = (
+    "SQLRecruiterRepositoryImpl",
+    "SQLCandidateRepositoryImpl",
+)
 
-from .recruiter_repo_impl import RecruiterRepositoryImpl
-from .candidate_repo_impl import CandidateRepositoryImpl
+from .recruiter_repo_impl import SQLRecruiterRepositoryImpl
+from .candidate_repo_impl import SQLCandidateRepositoryImpl

@@ -1,11 +1,13 @@
-
 from sqlalchemy import select, Result, literal
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..database.models import User
 
 
-
-class UserRepo:
+class UserRepoMixin:
+    def __init__(self, session: AsyncSession):
+        self.session=session
+    
     async def _user_exists(self, email: str = None, phone: str = None) -> dict:
         stmt = select(
             select(literal(1))
