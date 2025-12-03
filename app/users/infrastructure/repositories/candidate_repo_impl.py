@@ -1,9 +1,12 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import IntegrityError
 
 from users.application.interfaces import ICandidateRepository
 from users.domain.entities import CandidateEntity
 from users.infrastructure.database.models import User, Candidate, Education, Experience
+from users.domain.exceptions import CreateObjectException
 from .user_repo import UserRepo
+
 
 
 class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
@@ -44,8 +47,38 @@ class CandidateRepositoryImpl(UserRepo, ICandidateRepository):
         ]
         return user, candidate, experiences, educations
 
-    def create_user(self, entity):
-        return super()._create_user(entity=entity)
+    async def create_user(self, entity: CandidateEntity) -> None:
+
+        user_model: User
+        candidate_model: Candidate
+        experiences: list[Experience]
+        educations: list[Education]
+        user_model, candidate_model, experiences, educations = self._to_model(entity=entity)
+
+        try:
+            self.session.add(user_model)
+            await self.session.flush()
+
+            candidate_model.user_id = user_model.id
+            self.session.add(candidate_model)
+            await self.session.flush() 
+
+            for experience in experiences:
+                experience.candidate_id = candidate_model.id
+                self.session.add(experience)
+
+            for education in educations:
+                education.candidate_id = candidate_model.id
+                self.session.add(education)
+
+            await self.session.commit()
+
+        except IntegrityError:
+
+            await self.session.rollback()
+            raise CreateObjectException()
+
+        return None
 
     def user_exists(self, email=None, phone=None):
         return super()._user_exists(email=email, phone=phone)

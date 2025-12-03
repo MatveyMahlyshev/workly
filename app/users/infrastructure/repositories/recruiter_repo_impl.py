@@ -1,9 +1,8 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import select, Result, literal
 
 
-from users.domain.exceptions import EmailAlreadyExists
+from users.domain.exceptions import CreateObjectException
 from users.infrastructure.database.models import Recruiter, User
 from users.domain.entities import RecruiterEntity
 from users.application.interfaces import IRecruiterRepo
@@ -80,8 +79,25 @@ class RecruiterRepositoryImpl(UserRepo, IRecruiterRepo):
     async def user_exists(self, email: str = None, phone: str = None):
         return await super()._user_exists(email=email, phone=phone)
 
-    async def create_user(self, entity):
-        return await super()._create_user(entity=entity)
+    async def create_user(self, entity: RecruiterEntity) -> None:
+
+        user_model, recruiter_model = self._to_model(entity=entity)
+
+        try:
+            self.session.add(user_model)
+            await self.session.flush()
+
+            recruiter_model.user_id = user_model.id
+            self.session.add(recruiter_model)
+
+            await self.session.commit()
+
+        except IntegrityError:
+
+            await self.session.rollback()
+            raise CreateObjectException()
+
+        return None
 
     async def delete_user(self):
         pass
