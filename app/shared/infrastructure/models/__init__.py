@@ -3,6 +3,5 @@ __all__ = (
 
 )
 
-from typing import TYPE_CHECKING
 from .base import Base
 
