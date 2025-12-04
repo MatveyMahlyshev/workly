@@ -1,11 +1,14 @@
 import asyncio
 from logging.config import fileConfig
+import sys
+from pathlib import Path
 
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -15,6 +18,16 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+project_root = Path(__file__).parent.parent.parent.parent  # Настройте путь в зависимости от структуры
+sys.path.insert(0, str(project_root))
+
+from shared.infrastructure.models import Base
+from users.infrastructure.database.models import User, Recruiter, Education, Experience
+from recruiting.infrastructure.database.models import Skill
+
+from shared.config.settings import settings
+from shared.infrastructure.models import Base
 
 # add your model's MetaData object here
 # for 'autogenerate' support

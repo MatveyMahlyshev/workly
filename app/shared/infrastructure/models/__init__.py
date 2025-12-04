@@ -1,16 +1,8 @@
 __all__ = (
     "Base",
-    "User",
-    "Candidate",
-    "Recruiter",
-    "Education",
-    "Experience",
+
 )
+
+from typing import TYPE_CHECKING
 from .base import Base
-from users.infrastructure.database.models import (
-    User,
-    Candidate,
-    Recruiter,
-    Education,
-    Experience,
-)
+
