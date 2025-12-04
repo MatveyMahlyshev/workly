@@ -1,2 +1,5 @@
-__all__ = "SkillCreate"
-from .skill import SkillCreate
+__all__ = (
+    "SkillCreate",
+    "SkillGet",
+)
+from .skill import SkillCreate, SkillGet
