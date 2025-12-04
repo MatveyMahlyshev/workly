@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Text, ForeignKey
 
-from .....shared.infrastructure.models.base import Base
+from shared.infrastructure.models.base import Base
 from .candidate import Candidate
 
 

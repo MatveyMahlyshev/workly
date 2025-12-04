@@ -3,11 +3,12 @@ from sqlalchemy import String, Integer
 from typing import TYPE_CHECKING, Optional
 
 from users.domain.entities.user import PermissionLevel
-from .....shared.infrastructure.models.base import Base
+from shared.infrastructure.models import Base
 
 if TYPE_CHECKING:
     from .candidate import Candidate
     from .recruiter import Recruiter
+    
 
 
 class User(Base):
