@@ -1,5 +1,3 @@
-__all__ = (
-    "Skill"
-)
+__all__ = "Skill"
 
 from .skill import Skill

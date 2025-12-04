@@ -1,0 +1,2 @@
+class SkillAlreadyExists(Exception):
+    pass

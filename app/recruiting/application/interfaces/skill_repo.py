@@ -2,12 +2,14 @@ from abc import ABC, abstractmethod
 
 
 from recruiting.domain.entities import SkillEntity
+from recruiting.infrastructure.database.models import Skill
+from shared.domain.entities import SuccessfullRequestEntity
 
 
 class ISkillRepository(ABC):
 
     @abstractmethod
-    async def create_skill(self, title: str) -> SkillEntity:
+    async def create_skill(self, entity: SkillEntity) -> SuccessfullRequestEntity:
         pass
 
     @abstractmethod
@@ -15,7 +17,7 @@ class ISkillRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_skills(self, title: str) -> SkillEntity:
+    async def get_skills(self, title: str) -> list[SkillEntity]:
         pass
 
     @abstractmethod

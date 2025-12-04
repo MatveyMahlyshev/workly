@@ -8,7 +8,6 @@ from shared.infrastructure.models import Base
 if TYPE_CHECKING:
     from .candidate import Candidate
     from .recruiter import Recruiter
-    
 
 
 class User(Base):
