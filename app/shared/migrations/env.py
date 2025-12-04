@@ -18,8 +18,8 @@ if config.config_file_name is not None:
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-from app.config.settings import settings
-from users.infrastructure.database.models import Base
+from shared.config.settings import settings
+from shared.infrastructure.models import Base
 
 target_metadata = Base.metadata
 

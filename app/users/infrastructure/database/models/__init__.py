@@ -1,5 +1,4 @@
 __all__ = (
-    "Base",
     "User",
     "Candidate",
     "Recruiter",
@@ -7,7 +6,6 @@ __all__ = (
     "Experience",
 )
 
-from .base import Base
 from .user import User
 from .candidate import Candidate
 from .recruiter import Recruiter

@@ -3,7 +3,7 @@ from sqlalchemy import Text, String, Date
 from datetime import date, timedelta
 from typing import TYPE_CHECKING
 
-from .base import Base
+from .....shared.infrastructure.models.base import Base
 from .mixins import UserRelationMixin
 
 
