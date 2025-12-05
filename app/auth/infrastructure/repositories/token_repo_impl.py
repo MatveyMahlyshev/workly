@@ -20,7 +20,7 @@ class TokenRepoImpl(ITokenRepository):
         algorithm: str = settings.auth.algorithm,
         expire_timedelta: timedelta | None = None,
         expire_minutes: int = settings.auth.access_token_expire_minutes,
-    ):
+    ) -> str:
         to_encode = payload.copy()
         now = datetime.now(timezone.utc)
         if expire_timedelta:

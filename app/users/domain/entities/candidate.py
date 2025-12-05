@@ -9,7 +9,8 @@ from .experience import ExperienceEntity
 @dataclass
 class CandidateEntity(UserEntity):
     birth_date: datetime = date.today()
-    work_experience: list[ExperienceEntity] | None = None
-    education: list[EducationEntity] | None = None
     about_candidate: str | None = None
     location: str | None = None
+    work_experience: list[ExperienceEntity] | None = None
+    education: list[EducationEntity] | None = None
+    

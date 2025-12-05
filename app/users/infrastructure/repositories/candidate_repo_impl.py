@@ -1,5 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import select, Result
+from sqlalchemy.orm import selectinload, joinedload, load_only
 
 from users.application.interfaces import ICandidateRepository
 from users.domain.entities import CandidateEntity, PermissionLevel
@@ -52,6 +54,20 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
         ]
         return user, candidate, experiences, educations
 
+    def _to_entity(self, model: User) -> CandidateEntity:
+        return CandidateEntity(
+            id=model.id,
+            surname=model.surname,
+            name=model.name,
+            patronymic=model.patronymic,
+            phone=model.phone,
+            birth_date=model.candidate.birth_date,
+            about_candidate=model.candidate.about_candidate,
+            location=model.candidate.location,
+            work_experience=model.candidate.experiences,
+            education=model.candidate.educations,
+        )
+
     async def create_user(self, entity: CandidateEntity) -> None:
 
         user_model: User
@@ -82,8 +98,45 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
 
         return SuccessfullRequestEntity()
 
-    def user_exists(self, email=None, phone=None):
-        return super()._user_exists(email=email, phone=phone)
+    async def get_profile(self, payload: dict = {}) -> CandidateEntity:
+        email = "user@exaadqewmple.com"
+        stmt = (
+            select(User)
+            .options(
+                joinedload(User.candidate).options(
+                    selectinload(Candidate.educations).options(
+                        load_only(
+                            Education.educational_institution_title,
+                            Education.stage,
+                            Education.direction,
+                        )
+                    ),
+                    selectinload(Candidate.experiences).options(
+                        load_only(Experience.company, Experience.description)
+                    ),
+                    load_only(
+                        Candidate.about_candidate,
+                        Candidate.location,
+                        Candidate.birth_date,
+                    ),
+                ),
+                load_only(
+                    User.surname,
+                    User.name,
+                    User.patronymic,
+                    User.email,
+                    User.phone,
+                ),
+            )
+            .where(User.email == email)
+        )
+        result: Result = await self.session.execute(statement=stmt)
+        user: User = result.scalar_one()
+    
+        return self._to_entity(model=user)
+
+    async def user_exists(self, email=None, phone=None):
+        return await super()._user_exists(email=email, phone=phone)
 
     def delete_user(self):
         pass

@@ -12,5 +12,13 @@ class IUserRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_profile(self, payload: dict) -> RecruiterEntity | CandidateEntity:
+        pass
+
+    @abstractmethod
+    async def user_exists(self, email: str = None, phone: str = None) -> dict:
+        pass
+
+    @abstractmethod
     async def delete_user(self) -> None:
         pass

@@ -27,3 +27,10 @@ async def create_candidate(
 ):
 
     return await create_user(use_cases=use_cases, user_data=user_data)
+
+
+@router.get("/profile/")
+async def get_candidate_profile(
+    use_cases: CandidateUseCase = Depends(get_candidate_use_cases),
+):
+    return await use_cases.get_profile()
