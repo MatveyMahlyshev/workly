@@ -2,6 +2,9 @@ from .base_user import BaseUserUseCase
 from users.domain.entities import CandidateEntity
 from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
 from shared.domain.entities import SuccessfullRequestEntity
+from shared.utils.token import validate_token_type
+from shared.infrastructure import TokenTypeFields
+from shared.domain.exceptions import InvalidTokenType
 
 
 class CandidateUseCase(BaseUserUseCase):
@@ -32,5 +35,6 @@ class CandidateUseCase(BaseUserUseCase):
         return await self.repo.create_user(entity=user)
 
     async def get_profile(self, payload: dict) -> CandidateEntity:
-        
+        if not validate_token_type(payload=payload, token_type=TokenTypeFields.ACCESS_TOKEN_TYPE):
+            raise InvalidTokenType()
         return await self.repo.get_profile(payload=payload)

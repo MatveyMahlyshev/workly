@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, HTTPException
 
 
 
@@ -7,7 +7,8 @@ from users.application.use_cases import CandidateUseCase
 from shared.presentation.schemas import SuccessfullResponse
 from .dependencies import get_candidate_use_cases
 from ..helpers import create_user
-from shared.dependencies.tokens import get_current_token_payload, http_bearer
+from shared.dependencies.token import get_current_token_payload, http_bearer
+from shared.domain.exceptions import InvalidTokenType
 
 
 router = APIRouter()
@@ -37,4 +38,10 @@ async def get_candidate_profile(
     payload: dict = Depends(get_current_token_payload),
     use_cases: CandidateUseCase = Depends(get_candidate_use_cases),
 ):
-    return await use_cases.get_profile(payload=payload)
+    try:
+        return await use_cases.get_profile(payload=payload)
+    except InvalidTokenType:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token type",
+        )
