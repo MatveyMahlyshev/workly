@@ -1,3 +1,7 @@
-__all__ = "Skill"
+__all__ = (
+    "Skill",
+    "Vacancy",
+)
 
 from .skill import Skill
+from .vacancy import Vacancy

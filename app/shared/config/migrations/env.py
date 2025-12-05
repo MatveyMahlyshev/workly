@@ -26,7 +26,7 @@ sys.path.insert(0, str(project_root))
 
 from shared.infrastructure.models import Base
 from users.infrastructure.database.models import User, Recruiter, Education, Experience
-from recruiting.infrastructure.database.models import Skill
+from recruiting.infrastructure.database.models import Skill, Vacancy
 
 from shared.config.settings import settings
 from shared.infrastructure.models import Base
