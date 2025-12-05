@@ -98,8 +98,8 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
 
         return SuccessfullRequestEntity()
 
-    async def get_profile(self, payload: dict = {}) -> CandidateEntity:
-        email = "user@exaadqewmple.com"
+    async def get_profile(self, payload: dict) -> CandidateEntity:
+        email = payload.get("sub")
         stmt = (
             select(User)
             .options(

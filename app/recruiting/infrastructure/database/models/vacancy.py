@@ -1,5 +1,5 @@
 from sqlalchemy.orm import mapped_column, Mapped
-from sqlalchemy import String, CheckConstraint, Enum as SQLEnum, Text
+from sqlalchemy import String, CheckConstraint, Enum as SQLEnum, Text, Boolean
 from recruiting.domain.entities import Period, WorkExperience
 
 from shared.infrastructure.models import Base
@@ -30,3 +30,4 @@ class Vacancy(Base):
         SQLEnum(WorkExperience), default=WorkExperience.NO_EXPERIENCE
     )
     description: Mapped[str] = mapped_column(Text, default=None, nullable=True)
+    is_published: Mapped[bool] = mapped_column(Boolean, default=False)

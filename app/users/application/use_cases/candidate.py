@@ -31,5 +31,6 @@ class CandidateUseCase(BaseUserUseCase):
         )
         return await self.repo.create_user(entity=user)
 
-    async def get_profile(self) -> CandidateEntity:
-        return await self.repo.get_profile()
+    async def get_profile(self, payload: dict) -> CandidateEntity:
+        
+        return await self.repo.get_profile(payload=payload)
