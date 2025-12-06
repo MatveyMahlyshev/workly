@@ -15,3 +15,11 @@ class CandidateCreate(UserCreate):
     location: str | None = None
     work_experience: list[Experience] | None = None
     education: list[Education] | None = None
+
+
+class CandidateGet(UserBase):
+    birth_date: date
+    about_candidate: str
+    location: str
+    work_experience: list[Experience]
+    education: list[Education]

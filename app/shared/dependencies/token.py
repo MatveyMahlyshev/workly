@@ -8,7 +8,8 @@ from auth.infrastructure.repositories import TokenRepoImpl, TokenTypeFields
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v2/auth/login/")
 http_bearer = HTTPBearer(auto_error=False)
 
-def get_current_token_payload(
+
+def get_token_payload(
     token: str = Depends(oauth2_scheme),
 ) -> dict:
     print(token)

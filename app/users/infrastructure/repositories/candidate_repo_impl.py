@@ -60,6 +60,7 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
             surname=model.surname,
             name=model.name,
             patronymic=model.patronymic,
+            email=model.email,
             phone=model.phone,
             birth_date=model.candidate.birth_date,
             about_candidate=model.candidate.about_candidate,
@@ -131,8 +132,11 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
             .where(User.email == email)
         )
         result: Result = await self.session.execute(statement=stmt)
-        user: User = result.scalar_one()
-    
+        user: User = result.scalar_one_or_none()
+
+        if not user:
+            return None
+
         return self._to_entity(model=user)
 
     async def user_exists(self, email=None, phone=None):

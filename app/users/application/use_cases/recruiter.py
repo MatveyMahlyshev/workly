@@ -1,6 +1,13 @@
 from ..interfaces.recruiter_repo import IUserRepository
 from users.domain.entities import RecruiterEntity
 from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
+from shared.infrastructure import TokenTypeFields
+from shared.utils.token import validate_token_type
+from shared.domain.exceptions import (
+    InvalidTokenType,
+    InvalidTokenStructure,
+    UserNotFound,
+)
 
 from .base_user import BaseUserUseCase
 
@@ -31,4 +38,14 @@ class RecruiterUseCase(BaseUserUseCase):
         )
         return await self.repo.create_user(entity=user)
 
-    # async def delete_user()
+    async def get_profile(self, payload: dict) -> RecruiterEntity:
+        if not payload.get("sub"):
+            raise InvalidTokenStructure()
+        if not validate_token_type(
+            payload=payload, token_type=TokenTypeFields.ACCESS_TOKEN_TYPE
+        ):
+            raise InvalidTokenType()
+        profile = await self.repo.get_profile(payload=payload)
+        if not profile:
+            raise UserNotFound()
+        return profile

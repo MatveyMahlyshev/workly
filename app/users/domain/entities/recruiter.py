@@ -5,5 +5,4 @@ from .user import UserEntity
 
 @dataclass
 class RecruiterEntity(UserEntity):
-    company: str = ""
     position: str = ""

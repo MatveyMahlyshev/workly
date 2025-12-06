@@ -13,4 +13,3 @@ class CandidateEntity(UserEntity):
     location: str | None = None
     work_experience: list[ExperienceEntity] | None = None
     education: list[EducationEntity] | None = None
-    
