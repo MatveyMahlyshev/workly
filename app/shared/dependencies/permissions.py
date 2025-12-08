@@ -36,3 +36,12 @@ async def only_recruiter_permission(user_permission: int = Depends(get_permissio
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied",
         )
+    
+async def only_candidate_permission(user_permission: int = Depends(get_permission)):
+    if user_permission != PermissionLevel.CANDIDATE.value:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Access denied",
+        )
+
+# async def

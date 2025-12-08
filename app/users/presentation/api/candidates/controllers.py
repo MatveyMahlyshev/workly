@@ -8,6 +8,7 @@ from .dependencies import get_candidate_use_cases
 from ..helpers import create_user
 from shared.dependencies.token import get_token_payload, http_bearer
 from shared.domain.exceptions import InvalidTokenType
+from shared.dependencies.permissions import only_candidate_permission
 
 from shared.domain.exceptions import (
     InvalidTokenType,
@@ -40,7 +41,7 @@ async def create_candidate(
 
 @router.get(
     "/profile/",
-    dependencies=[Depends(http_bearer)],
+    dependencies=[Depends(http_bearer), Depends(only_candidate_permission)],
     response_model=CandidateGet,
     responses={
         status.HTTP_200_OK: {"description": "Successfull request"},
