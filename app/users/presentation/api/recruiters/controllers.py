@@ -4,6 +4,7 @@ from users.application.use_cases import RecruiterUseCase
 from users.presentation.schemas import RecruiterCreate, RecruiterGet
 from shared.presentation.schemas import SuccessfullResponse
 from shared.dependencies.token import get_token_payload, http_bearer
+from shared.dependencies.permissions import only_recruiter_permission
 from shared.domain.exceptions import (
     InvalidTokenType,
     InvalidTokenStructure,
@@ -39,7 +40,7 @@ async def create_hr(
 @router.post(
     "/profile/",
     response_model=RecruiterGet,
-    dependencies=[Depends(http_bearer)],
+    dependencies=[Depends(http_bearer), Depends(only_recruiter_permission)],
     responses={
         status.HTTP_200_OK: {"description": "Successfull request"},
         status.HTTP_401_UNAUTHORIZED: {"description": "Unauthorized"},

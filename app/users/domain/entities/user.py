@@ -2,12 +2,6 @@ from dataclasses import dataclass
 from enum import IntEnum
 
 
-class PermissionLevel(IntEnum):
-    CANDIDATE = 1
-    RECRUITER = 2
-    ADMIN = 3
-
-
 @dataclass
 class UserEntity:
     id: int | None = None

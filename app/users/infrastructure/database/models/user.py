@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer
 from typing import TYPE_CHECKING, Optional
 
-from users.domain.entities.user import PermissionLevel
+from shared.dependencies.permissions import PermissionLevel
 from shared.infrastructure.models import Base
 
 if TYPE_CHECKING:

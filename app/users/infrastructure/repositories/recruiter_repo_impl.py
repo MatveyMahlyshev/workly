@@ -5,7 +5,7 @@ from sqlalchemy.orm import joinedload, selectinload, load_only
 
 from users.domain.exceptions import CreateObjectException
 from users.infrastructure.database.models import Recruiter, User
-from users.domain.entities import RecruiterEntity, PermissionLevel
+from users.domain.entities import RecruiterEntity
 from users.application.interfaces import IRecruiterRepository
 from .user_repo_mixin import UserRepoMixin
 from shared.domain.entities import SuccessfullRequestEntity

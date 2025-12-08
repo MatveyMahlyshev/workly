@@ -4,7 +4,7 @@ from sqlalchemy import select, Result
 from sqlalchemy.orm import selectinload, joinedload, load_only
 
 from users.application.interfaces import ICandidateRepository
-from users.domain.entities import CandidateEntity, PermissionLevel
+from users.domain.entities import CandidateEntity
 from users.infrastructure.database.models import User, Candidate, Education, Experience
 from users.domain.exceptions import CreateObjectException
 from shared.domain.entities import SuccessfullRequestEntity
