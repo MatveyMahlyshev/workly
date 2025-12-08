@@ -16,7 +16,7 @@ class SkillUseCases:
         entity = SkillEntity(title=title)
         skill = await self.repo.get_skill(entity=entity)
         if not skill:
-            raise SkillNotFound(message=f"Skill '{title}' not found" )
+            raise SkillNotFound(message=f"Skill '{title}' not found")
         return skill
 
     async def get_skills(self) -> list[SkillEntity]:

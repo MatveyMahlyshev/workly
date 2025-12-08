@@ -9,7 +9,7 @@ from users.domain.entities import RecruiterEntity
 from users.application.interfaces import IRecruiterRepository
 from .user_repo_mixin import UserRepoMixin
 from shared.domain.entities import SuccessfullRequestEntity
-from shared.dependencies.permissions import PermissionLevel
+from shared.infrastructure.users.models import PermissionLevel
 
 
 class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):

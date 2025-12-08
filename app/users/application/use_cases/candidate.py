@@ -3,7 +3,7 @@ from users.domain.entities import CandidateEntity
 from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
 from shared.domain.entities import SuccessfullRequestEntity
 from shared.utils.token import validate_token_type
-from shared.infrastructure import TokenTypeFields
+from shared.infrastructure.auth.repositories import TokenTypeFields
 from shared.domain.exceptions import (
     InvalidTokenType,
     UserNotFound,

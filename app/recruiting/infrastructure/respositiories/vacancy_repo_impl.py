@@ -10,10 +10,9 @@ class SQLVacancyRepository(IVacancyRepository):
 
     async def create_vacancy(self, entity):
         pass
-    
+
     async def get_vacancy(self, vacancy_id):
         pass
-    
+
     async def delete_vacancy(self, vacancy_id):
         pass
-    

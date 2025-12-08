@@ -1,9 +1,15 @@
 from sqlalchemy.orm import mapped_column, Mapped
-from sqlalchemy import String, CheckConstraint, Enum as SQLEnum, Text, Boolean, ForeignKey
+from sqlalchemy import (
+    String,
+    CheckConstraint,
+    Enum as SQLEnum,
+    Text,
+    Boolean,
+    ForeignKey,
+)
 from recruiting.domain.entities import Period, WorkExperience
 
-from shared.infrastructure.models.base import Base
-
+from shared.infrastructure.base import Base
 
 
 class Vacancy(Base):

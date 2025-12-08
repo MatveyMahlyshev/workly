@@ -1,13 +1,19 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer
 from typing import TYPE_CHECKING, Optional
+from enum import IntEnum
 
-from shared.dependencies.permissions import PermissionLevel
-from shared.infrastructure.models.base import Base
+from shared.infrastructure.base import Base
 
 if TYPE_CHECKING:
     from .candidate import Candidate
     from .recruiter import Recruiter
+
+class PermissionLevel(IntEnum):
+    CANDIDATE = 1
+    RECRUITER = 2
+    ADMIN = 3
+
 
 
 class User(Base):

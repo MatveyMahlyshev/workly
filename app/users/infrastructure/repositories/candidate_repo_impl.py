@@ -9,7 +9,7 @@ from users.infrastructure.database.models import User, Candidate, Education, Exp
 from users.domain.exceptions import CreateObjectException
 from shared.domain.entities import SuccessfullRequestEntity
 from .user_repo_mixin import UserRepoMixin
-from shared.dependencies.permissions import PermissionLevel
+from shared.infrastructure.users.models import PermissionLevel
 
 
 class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):

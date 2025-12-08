@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String
 
 
-from shared.infrastructure.models.base import Base
+from shared.infrastructure.base import Base
 
 
 class Skill(Base):

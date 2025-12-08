@@ -1,24 +1,18 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from enum import IntEnum
+
 from sqlalchemy import select, Result
 from sqlalchemy.orm import load_only
 
 from .token import get_token_payload
 from .db import get_db
-
-
-class PermissionLevel(IntEnum):
-    CANDIDATE = 1
-    RECRUITER = 2
-    ADMIN = 3
+from shared.infrastructure.users.models import User, PermissionLevel
 
 
 async def get_permission(
     payload: dict = Depends(get_token_payload),
     session: AsyncSession = Depends(get_db),
 ) -> int:
-    from users.infrastructure.database.models import User
 
     stmt = (
         select(User)
