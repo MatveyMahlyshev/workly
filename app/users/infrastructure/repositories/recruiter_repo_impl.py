@@ -9,6 +9,7 @@ from users.domain.entities import RecruiterEntity
 from users.application.interfaces import IRecruiterRepository
 from .user_repo_mixin import UserRepoMixin
 from shared.domain.entities import SuccessfullRequestEntity
+from shared.dependencies.permissions import PermissionLevel
 
 
 class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):
@@ -37,9 +38,7 @@ class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):
             is_active=entity.is_active,
             permission_level=PermissionLevel.RECRUITER.value,
         )
-        recruiter = Recruiter(
-            company=entity.company, position=entity.position, user=user
-        )
+        recruiter = Recruiter(position=entity.position, user=user)
         return user, recruiter
 
     async def user_exists(self, email: str = None, phone: str = None):
@@ -78,23 +77,6 @@ class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):
         if not user:
             return None
         return self._to_entity(model=user)
-
-    """{
-  "surname": "String",
-  "email": "usqeer@example.com",
-  "patronymic": "String",
-  "is_active": true,
-  "id": 65,
-  "phone": "71244567890",
-  "name": "String",
-  "password_hash": "$2b$12$Uvto6u4g.Lbi4v/C7iqkFeH5xK4QMJbaLoQe/LYvHp9lQfOWqZ5U.",
-  "permission_level": 2,
-  "recruiter": {
-    "user_id": 65,
-    "id": 24,
-    "position": "string"
-  }
-}"""
 
     async def delete_user(self):
         pass

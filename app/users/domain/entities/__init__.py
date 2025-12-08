@@ -7,4 +7,3 @@ __all__ = (
 
 from .candidate import CandidateEntity
 from .recruiter import RecruiterEntity
-

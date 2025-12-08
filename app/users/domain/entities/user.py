@@ -10,6 +10,8 @@ class UserEntity:
     patronymic: str = ""
     email: str = ""
     phone: str = ""
+    password_hash: str = ""
+    is_active: bool = True
 
     def set_password(self, password_hash: str) -> None:
         if len(password_hash) != 60:

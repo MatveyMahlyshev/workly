@@ -6,7 +6,11 @@ from .experience import Experience
 
 
 class CandidateBase(UserBase):
-    pass
+    birth_date: date
+    about_candidate: str
+    location: str
+    work_experience: list[Experience]
+    education: list[Education]
 
 
 class CandidateCreate(UserCreate):
@@ -17,9 +21,5 @@ class CandidateCreate(UserCreate):
     education: list[Education] | None = None
 
 
-class CandidateGet(UserBase):
-    birth_date: date
-    about_candidate: str
-    location: str
-    work_experience: list[Experience]
-    education: list[Education]
+class CandidateGet(CandidateBase):
+    pass

@@ -33,7 +33,6 @@ class RecruiterUseCase(BaseUserUseCase):
             patronymic=user_data["patronymic"],
             phone=user_data["phone"],
             password_hash=self._hash_password(password=user_data["password"]),
-            company=user_data["company"],
             position=user_data["position"],
         )
         return await self.repo.create_user(entity=user)

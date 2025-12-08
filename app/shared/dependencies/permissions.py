@@ -8,7 +8,6 @@ from .token import get_token_payload
 from .db import get_db
 
 
-
 class PermissionLevel(IntEnum):
     CANDIDATE = 1
     RECRUITER = 2
@@ -20,6 +19,7 @@ async def get_permission(
     session: AsyncSession = Depends(get_db),
 ) -> int:
     from users.infrastructure.database.models import User
+
     stmt = (
         select(User)
         .options(load_only(User.permission_level))

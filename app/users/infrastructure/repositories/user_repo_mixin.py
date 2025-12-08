@@ -21,6 +21,7 @@ class UserRepoMixin:
         )
         result: Result = await self.session.execute(stmt)
         row = result.first()
+        print(row)
 
         return {
             "email": bool(row.email_exists) if email else False,
