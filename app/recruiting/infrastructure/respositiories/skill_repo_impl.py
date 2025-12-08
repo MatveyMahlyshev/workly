@@ -29,12 +29,12 @@ class SQLSkillREpository(ISkillRepository):
             await self.session.rollback()
             raise SkillAlreadyExists()
 
-    async def get_skill(self, entity: SkillEntity) -> SkillEntity:
+    async def get_skill(self, entity: SkillEntity) -> SkillEntity | None:
         stmt = select(Skill).where(Skill.title == entity.title)
         result: Result = await self.session.execute(statement=stmt)
         skill = result.scalar_one_or_none()
         if not skill:
-            raise SkillNotFound()
+            return None
         return self._to_entity(model=skill)
 
     async def get_skills(self) -> list[SkillEntity]:

@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 
 from auth.domain.entities import AuthEntity, TokenEntity
-from users.infrastructure.database.models import User
+from shared.infrastructure.models import User
+
 
 
 class IAuthRepository(ABC):

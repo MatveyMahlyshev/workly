@@ -1,5 +1,6 @@
 from recruiting.application.interfaces import ISkillRepository
 from recruiting.domain.entities import SkillEntity
+from recruiting.domain.exceptions import SkillNotFound
 from shared.domain.entities import SuccessfullRequestEntity
 
 
@@ -13,7 +14,10 @@ class SkillUseCases:
 
     async def get_skill(self, title: str) -> SkillEntity:
         entity = SkillEntity(title=title)
-        return await self.repo.get_skill(entity=entity)
+        skill = await self.repo.get_skill(entity=entity)
+        if not skill:
+            raise SkillNotFound(message=f"Skill '{title}' not found" )
+        return skill
 
     async def get_skills(self) -> list[SkillEntity]:
         return await self.repo.get_skills()

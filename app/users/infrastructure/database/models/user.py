@@ -3,7 +3,7 @@ from sqlalchemy import String, Integer
 from typing import TYPE_CHECKING, Optional
 
 from shared.dependencies.permissions import PermissionLevel
-from shared.infrastructure.models import Base
+from shared.infrastructure.models.base import Base
 
 if TYPE_CHECKING:
     from .candidate import Candidate

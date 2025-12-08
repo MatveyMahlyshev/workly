@@ -1,8 +1,9 @@
 from sqlalchemy.orm import mapped_column, Mapped
-from sqlalchemy import String, CheckConstraint, Enum as SQLEnum, Text, Boolean
+from sqlalchemy import String, CheckConstraint, Enum as SQLEnum, Text, Boolean, ForeignKey
 from recruiting.domain.entities import Period, WorkExperience
 
-from shared.infrastructure.models import Base
+from shared.infrastructure.models.base import Base
+
 
 
 class Vacancy(Base):
@@ -18,7 +19,6 @@ class Vacancy(Base):
             name="min_not_greater_than_max",
         ),
     )
-    # recruiter_id: int
     company: Mapped[str] = mapped_column(String(100))
     title: Mapped[str] = mapped_column(String(100))
     min_salary: Mapped[int | None] = mapped_column(default=None, nullable=True)
@@ -31,3 +31,7 @@ class Vacancy(Base):
     )
     description: Mapped[str] = mapped_column(Text, default=None, nullable=True)
     is_published: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    # recruiter_id: Mapped[int] = mapped_column(ForeignKey("recruiters.id"))
+
+    # recruiter: Mapped[""]

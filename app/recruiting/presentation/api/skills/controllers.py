@@ -40,8 +40,8 @@ async def get_skill(
 ) -> SkillGet:
     try:
         return await use_cases.get_skill(title=title)
-    except SkillNotFound:
+    except SkillNotFound as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Skill not found",
+            detail=e.message,
         )

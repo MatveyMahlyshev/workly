@@ -23,18 +23,16 @@ project_root = Path(
     __file__
 ).parent.parent.parent.parent  # Настройте путь в зависимости от структуры
 sys.path.insert(0, str(project_root))
-
-from shared.infrastructure.models import Base
-from users.infrastructure.database.models import User, Recruiter, Education, Experience
+from shared.infrastructure.models.base import Base
+from shared.infrastructure.models import User, Recruiter, Education, Experience, Candidate
 from recruiting.infrastructure.database.models import Skill, Vacancy
 
 from shared.config.settings import settings
-from shared.infrastructure.models import Base
+
 
 # add your model's MetaData object here
 # for 'autogenerate' support
 from shared.config.settings import settings
-from shared.infrastructure.models import Base
 
 target_metadata = Base.metadata
 
