@@ -5,7 +5,7 @@ import bcrypt
 
 from auth.application.interfaces import IAuthRepository
 from auth.domain.entities import AuthEntity, TokenEntity
-from shared.infrastructure.users.models import User
+from shared.infrastructure.models import User
 
 
 class AuthRepositoryImpl(IAuthRepository):

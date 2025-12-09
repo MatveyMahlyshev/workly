@@ -1,4 +1,4 @@
-from shared.infrastructure.auth.repositories import TokenTypeFields
+from shared.infrastructure.repositories import TokenTypeFields
 
 
 def validate_token_type(payload: dict, token_type: str) -> bool:

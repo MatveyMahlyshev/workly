@@ -27,17 +27,36 @@ class Vacancy(Base):
     )
     company: Mapped[str] = mapped_column(String(100))
     title: Mapped[str] = mapped_column(String(100))
-    min_salary: Mapped[int | None] = mapped_column(default=None, nullable=True)
-    max_salary: Mapped[int | None] = mapped_column(default=None, nullable=True)
+    min_salary: Mapped[int | None] = mapped_column(
+        default=None,
+        nullable=True,
+    )
+    max_salary: Mapped[int | None] = mapped_column(
+        default=None,
+        nullable=True,
+    )
     salary_period: Mapped[Period] = mapped_column(
-        SQLEnum(Period), default=Period.MONTH, nullable=True
+        SQLEnum(Period),
+        default=Period.MONTH,
+        nullable=True,
     )
     experience: Mapped[WorkExperience] = mapped_column(
-        SQLEnum(WorkExperience), default=WorkExperience.NO_EXPERIENCE
+        SQLEnum(WorkExperience),
+        default=WorkExperience.NO_EXPERIENCE,
     )
-    description: Mapped[str] = mapped_column(Text, default=None, nullable=True)
-    is_published: Mapped[bool] = mapped_column(Boolean, default=False)
+    description: Mapped[str] = mapped_column(
+        Text,
+        default=None,
+        nullable=True,
+    )
+    is_published: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+    )
 
-    # recruiter_id: Mapped[int] = mapped_column(ForeignKey("recruiters.id"))
+    recruiter_id: Mapped[int] = mapped_column(
+        ForeignKey("recruiters.id"),
+        unique=False,
+    )
 
     # recruiter: Mapped[""]

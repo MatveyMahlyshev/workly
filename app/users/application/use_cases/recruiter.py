@@ -1,7 +1,7 @@
 from ..interfaces.recruiter_repo import IUserRepository
 from users.domain.entities import RecruiterEntity
 from users.domain.exceptions import EmailAlreadyExists, PhoneAlreadyExists
-from shared.infrastructure.auth.repositories import TokenTypeFields
+from shared.infrastructure.repositories import TokenTypeFields
 from shared.utils.token import validate_token_type
 from shared.domain.exceptions import (
     InvalidTokenType,

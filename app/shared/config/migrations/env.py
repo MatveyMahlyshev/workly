@@ -24,7 +24,7 @@ project_root = Path(
 ).parent.parent.parent.parent  # Настройте путь в зависимости от структуры
 sys.path.insert(0, str(project_root))
 from app.shared.infrastructure.base import Base
-from shared.infrastructure.users.models import (
+from app.shared.infrastructure.models import (
     User,
     Recruiter,
     Education,

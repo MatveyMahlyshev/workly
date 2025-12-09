@@ -6,7 +6,7 @@ from sqlalchemy.orm import load_only
 
 from .token import get_token_payload
 from .db import get_db
-from shared.infrastructure.users.models import User, PermissionLevel
+from shared.infrastructure.models import User, PermissionLevel
 
 
 async def get_permission_with_token(
