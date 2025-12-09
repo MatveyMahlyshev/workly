@@ -1,4 +1,4 @@
-from pydantic import ConfigDict, BaseModel
+from pydantic import ConfigDict, BaseModel, field_validator
 
 from recruiting.domain.entities import WorkExperience, Period, SkillEntity
 from shared.presentation.schemas.validators import create_text_validator
@@ -17,6 +17,24 @@ class VacancyBase(BaseModel):
     skills: list[SkillEntity] | None = None
 
     validate_field = create_text_validator(["title", "company"])
+
+    @field_validator("max_salary")
+    @classmethod
+    def validate_salary(cls, value, info):
+        if value is not None:
+            min_salary = info.data.get("min_salary")
+            if min_salary is None:
+                return value
+            if min_salary > value:
+                raise ValueError("min_salary must be <= max_salary")
+        return value
+
+    @field_validator("min_salary", "max_salary")
+    @classmethod
+    def validate_min_max_salary(cls, value):
+        if value <= 0:
+            return None
+        return value
 
 
 class VacancyCreate(VacancyBase):

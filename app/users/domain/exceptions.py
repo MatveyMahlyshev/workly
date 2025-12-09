@@ -4,4 +4,3 @@ class EmailAlreadyExists(Exception):
 
 class PhoneAlreadyExists(Exception):
     pass
-

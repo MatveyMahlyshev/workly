@@ -26,17 +26,17 @@ class SQLVacancyRepository(IVacancyRepository):
             is_published=entity.is_published,
             recruiter_id=entity.recruiter_id,
         )
+
     async def create_vacancy(self, entity: VacancyEntity):
         model = self._to_model(entity=entity)
         self.session.add(model)
-        
+
         try:
             await self.session.commit()
         except IntegrityError:
             raise CreateObjectException()
-        
+
         return SuccessfullRequestEntity()
-        
 
     async def get_vacancy(self, vacancy_id):
         pass

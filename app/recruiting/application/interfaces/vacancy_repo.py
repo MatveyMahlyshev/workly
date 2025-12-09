@@ -8,9 +8,7 @@ from shared.domain.entities import SuccessfullRequestEntity
 class IVacancyRepository(ABC):
 
     @abstractmethod
-    async def create_vacancy(
-        self, entity: VacancyEntity
-    ) -> SuccessfullRequestEntity:
+    async def create_vacancy(self, entity: VacancyEntity) -> SuccessfullRequestEntity:
         pass
 
     @abstractmethod

@@ -13,4 +13,7 @@ if TYPE_CHECKING:
 class Recruiter(UserRelationMixin, Base):
     position: Mapped[str] = mapped_column(String(100))
 
-    vacancies: Mapped[list["Vacancy"]] = relationship("Vacancy", back_populates="recruiter",)
+    vacancies: Mapped[list["Vacancy"]] = relationship(
+        "Vacancy",
+        back_populates="recruiter",
+    )

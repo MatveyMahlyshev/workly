@@ -21,16 +21,6 @@ if TYPE_CHECKING:
 class Vacancy(Base):
     __tablename__ = "vacancies"
 
-    __table_args__ = (
-        CheckConstraint("min_salary >= 0", name="min_salary_non_negative"),
-        CheckConstraint(
-            "max_salary IS NULL OR max_salary >= 0", name="max_salary_non_negative"
-        ),
-        CheckConstraint(
-            "max_salary IS NULL OR max_salary >= min_salary",
-            name="min_not_greater_than_max",
-        ),
-    )
     company: Mapped[str] = mapped_column(String(100))
     title: Mapped[str] = mapped_column(String(100))
     min_salary: Mapped[int | None] = mapped_column(
