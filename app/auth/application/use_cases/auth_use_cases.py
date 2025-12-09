@@ -1,6 +1,7 @@
 from auth.application.interfaces import IAuthRepository, ITokenRepository
 from auth.domain.entities import AuthEntity
-from auth.domain.exceptions import UserNotFound, InvalidLoginData
+from auth.domain.exceptions import InvalidLoginData
+from shared.domain.exceptions import UserNotFound
 
 
 class AuthUseCases:

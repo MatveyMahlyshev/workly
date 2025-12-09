@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select, Result
 from sqlalchemy.orm import joinedload, load_only
 
-from users.domain.exceptions import CreateObjectException
+from shared.domain.exceptions import CreateObjectException
 from users.infrastructure.database.models import Recruiter, User
 from users.domain.entities import RecruiterEntity
 from users.application.interfaces import IRecruiterRepository

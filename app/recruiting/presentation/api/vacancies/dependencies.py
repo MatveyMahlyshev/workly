@@ -11,4 +11,4 @@ def get_vacancy_repo(session: AsyncSession = Depends(get_db)):
 
 
 def get_vacancy_use_cases(repo: SQLVacancyRepository = Depends(get_vacancy_repo)):
-    return VacancyUseCases(repo=SQLVacancyRepository)
+    return VacancyUseCases(repo=repo)

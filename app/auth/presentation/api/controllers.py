@@ -3,7 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from ..schemas import UserAuth, Token
 from .dependencies import user_auth_form, get_auth_use_cases
 from auth.application.use_cases import AuthUseCases
-from auth.domain.exceptions import InvalidLoginData, UserNotFound, AuthError
+from auth.domain.exceptions import InvalidLoginData, AuthError
+from shared.domain.exceptions import UserNotFound
 
 router = APIRouter(tags=["Auth"], prefix="/auth")
 

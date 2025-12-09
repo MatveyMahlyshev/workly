@@ -4,8 +4,8 @@ from shared.presentation.schemas import SuccessfullResponse
 from users.domain.exceptions import (
     EmailAlreadyExists,
     PhoneAlreadyExists,
-    CreateObjectException,
 )
+from shared.domain.exceptions import CreateObjectException
 
 
 async def create_user(use_cases, user_data):

@@ -5,6 +5,3 @@ class EmailAlreadyExists(Exception):
 class PhoneAlreadyExists(Exception):
     pass
 
-
-class CreateObjectException(Exception):
-    pass

@@ -8,3 +8,7 @@ class InvalidTokenStructure(Exception):
 
 class UserNotFound(Exception):
     pass
+
+
+class CreateObjectException(Exception):
+    pass

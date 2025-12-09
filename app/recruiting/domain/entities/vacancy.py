@@ -28,4 +28,6 @@ class VacancyEntity:
     salary_period: Period = Period.MONTH
     experience: WorkExperience = WorkExperience.NO_EXPERIENCE.value
     description: str | None = None
+    is_published: bool = False
     skills: list[SkillEntity] | None = None
+    recruiter_id: int = 0

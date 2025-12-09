@@ -9,7 +9,7 @@ class IVacancyRepository(ABC):
 
     @abstractmethod
     async def create_vacancy(
-        self, payload: dict, entity: VacancyEntity
+        self, entity: VacancyEntity
     ) -> SuccessfullRequestEntity:
         pass
 

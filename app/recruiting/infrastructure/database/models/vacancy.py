@@ -10,7 +10,6 @@ from sqlalchemy import (
 from typing import TYPE_CHECKING
 
 
-
 from recruiting.domain.entities import Period, WorkExperience
 from shared.infrastructure.base import Base
 
@@ -67,6 +66,5 @@ class Vacancy(Base):
     )
 
     recruiter: Mapped["Recruiter"] = relationship(
-        "Recruiter",
-        back_populates="vacancies"
+        "Recruiter", back_populates="vacancies"
     )
