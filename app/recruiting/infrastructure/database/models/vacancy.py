@@ -1,4 +1,4 @@
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import (
     String,
     CheckConstraint,
@@ -7,9 +7,16 @@ from sqlalchemy import (
     Boolean,
     ForeignKey,
 )
-from recruiting.domain.entities import Period, WorkExperience
+from typing import TYPE_CHECKING
 
+
+
+from recruiting.domain.entities import Period, WorkExperience
 from shared.infrastructure.base import Base
+
+
+if TYPE_CHECKING:
+    from shared.infrastructure.models import Recruiter
 
 
 class Vacancy(Base):
@@ -59,4 +66,7 @@ class Vacancy(Base):
         unique=False,
     )
 
-    # recruiter: Mapped[""]
+    recruiter: Mapped["Recruiter"] = relationship(
+        "Recruiter",
+        back_populates="vacancies"
+    )
