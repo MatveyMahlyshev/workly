@@ -1,7 +1,16 @@
-from pydantic import BaseModel, ConfigDict, field_validator, Field, EmailStr
+from pydantic import BaseModel, ConfigDict, field_validator, Field, EmailStr, ValidationInfo
 import re
+import random
 from typing import Annotated
 from annotated_types import MinLen, MaxLen
+from shared.presentation.schemas.validators import create_text_validator
+
+def generate_phone_number() -> str:
+    random_number = ""
+    while len(random_number) != 10:
+        random_number += str(random.randint(0, 9))
+    return "7" + random_number
+
 
 
 class UserBase(BaseModel):
@@ -10,21 +19,25 @@ class UserBase(BaseModel):
     surname: str = Field(min_length=2, max_length=50)
     patronymic: str | None = Field(min_length=2, max_length=50, default=None)
     email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
-    phone: str = Field(min_length=10, max_length=20, default="71234567890")
+    phone: str = Field(min_length=10, max_length=20, default=generate_phone_number())
 
-    @field_validator("name", "surname", "patronymic")
-    @classmethod
-    def capitalize_names(cls, v: str | None) -> str | None:
-        if v and isinstance(v, str):
-            return v.strip().lower().capitalize()
-        return v
+    validate_field = create_text_validator(["name", "surname", "patronymic"], with_digits=False, to_lower=True)
+    # @field_validator("name", "surname", "patronymic")
+    # @classmethod
+    # def capitalize_names(cls, value: str | None, info: ValidationInfo) -> str | None:
+    #     value = value.strip()
+    #     if value == "":
+    #         raise ValueError()
+    #     if value and isinstance(value, str):
+    #         return value.lower().capitalize()
+    #     return value
 
     @field_validator("phone")
     @classmethod
-    def phone_number_validation(cls, v: str) -> str:
-        if any(char.isalpha() for char in v):
+    def phone_number_validation(cls, value: str) -> str:
+        if any(char.isalpha() for char in value):
             raise ValueError("Invalid phone number")
-        valid_number = "".join(filter(str.isdigit, v))
+        valid_number = "".join(filter(str.isdigit, value))
         length_of_number = len(valid_number)
         if (length_of_number < 10 or length_of_number > 11) or (
             (length_of_number == 11) and (valid_number[0] not in ["7", "8"])
@@ -45,9 +58,9 @@ class UserCreate(UserBase):
     password: str = Field(min_length=10, max_length=50, default="Stringstri11")
 
     @field_validator("password")
-    def validate_password(cls, v):
-        if not re.search(r"[A-Z]", v):
-            raise ValueError("Пароль должен содержать хотя бы одну заглавную букву")
-        if not re.search(r"\d", v):
-            raise ValueError("Пароль должен содержать хотя бы одну цифру")
-        return v
+    def validate_password(cls, value):
+        if not re.search(r"[A-Z]", value):
+            raise ValueError("The password must contain at least one capital letter")
+        if not re.search(r"\d", value):
+            raise ValueError("The password must contain at least one number")
+        return value

@@ -16,7 +16,7 @@ class VacancyBase(BaseModel):
     description: str | None = None
     skills: list[SkillEntity] | None = None
 
-    validate_field = create_text_validator(["title", "company"])
+    validate_field = create_text_validator(["title", "company"], with_digits=False, to_lower=False)
 
     @field_validator("max_salary")
     @classmethod
