@@ -16,4 +16,3 @@ router.include_router(
     tags=["Vacancies"],
     prefix="/vacancies",
 )
-

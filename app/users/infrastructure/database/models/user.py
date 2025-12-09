@@ -9,11 +9,11 @@ if TYPE_CHECKING:
     from .candidate import Candidate
     from .recruiter import Recruiter
 
+
 class PermissionLevel(IntEnum):
     CANDIDATE = 1
     RECRUITER = 2
     ADMIN = 3
-
 
 
 class User(Base):

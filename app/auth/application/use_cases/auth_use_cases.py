@@ -10,6 +10,13 @@ class AuthUseCases:
 
     async def login(self, login_data: AuthEntity):
         user = await self.auth_repo.get_user(entity=login_data)
+
+        if user.recruiter:
+            print(user.recruiter)
+            role_id = user.recruiter.id
+        else:
+            role_id = user.candidate.id
+
         if not user:
             raise UserNotFound()
         if not self.auth_repo.validate_password(
@@ -17,12 +24,22 @@ class AuthUseCases:
             hashed_password=user.password_hash,
         ):
             raise InvalidLoginData()
+        token_data = {
+            "sub": login_data.email,
+            "user_id": role_id,
+        }
+
         access_token = self.token_repo.create_token(
-            token_data={"sub": login_data.email}, token_type="access"
+            token_data=token_data,
+            token_type="access",
         )
+
         refresh_token = self.token_repo.create_token(
-            token_data={"sub": login_data.email}, token_type="refresh"
+            token_data=token_data,
+            token_type="refresh",
         )
-        return await self.auth_repo.login(
-            access_token=access_token, refresh_token=refresh_token
+
+        return self.auth_repo.login(
+            access_token=access_token,
+            refresh_token=refresh_token,
         )

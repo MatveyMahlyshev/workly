@@ -1,6 +1,4 @@
-__all__ = (
-    "TokenRepoImpl"
-)
+__all__ = "TokenRepoImpl"
 
 
 from .repositories import TokenRepoImpl

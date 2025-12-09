@@ -9,10 +9,10 @@ from .db import get_db
 from shared.infrastructure.users.models import User, PermissionLevel
 
 
-async def get_permission(
+async def get_permission_with_token(
     payload: dict = Depends(get_token_payload),
     session: AsyncSession = Depends(get_db),
-) -> int:
+) -> tuple:
 
     stmt = (
         select(User)
@@ -21,23 +21,25 @@ async def get_permission(
     )
     result: Result = await session.execute(statement=stmt)
     user: User = result.scalar_one_or_none()
-    return user.permission_level
+    return (user.permission_level, payload)
 
 
-async def only_recruiter_permission(user_permission: int = Depends(get_permission)):
-    if user_permission != PermissionLevel.RECRUITER:
+async def verify_recruiter_auth(auth_data: tuple = Depends(get_permission_with_token)):
+    if auth_data[0] != PermissionLevel.RECRUITER.value:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied",
         )
+    return auth_data[1]
 
 
-async def only_candidate_permission(user_permission: int = Depends(get_permission)):
-    if user_permission != PermissionLevel.CANDIDATE.value:
+async def verify_candidate_auth(auth_data: tuple = Depends(get_permission_with_token)):
+    if auth_data[0] != PermissionLevel.CANDIDATE.value:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied",
         )
+    return auth_data[1]
 
 
 # async def

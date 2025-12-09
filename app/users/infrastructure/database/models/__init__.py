@@ -12,4 +12,3 @@ from .candidate import Candidate
 from .recruiter import Recruiter
 from .education import Education
 from .experience import Experience
-
