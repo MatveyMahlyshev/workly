@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, Field
 
+from shared.presentation.schemas.validators import create_text_validator
+
 
 class ExperienceBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -8,6 +10,12 @@ class ExperienceBase(BaseModel):
         max_length=100,
     )
     description: str | None = Field(min_length=2)
+
+    validate_company = create_text_validator(
+        ["company"],
+        with_digits=False,
+        to_lower=False,
+    )
 
 
 class Experience(ExperienceBase):

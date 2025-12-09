@@ -1,16 +1,23 @@
-from pydantic import BaseModel, ConfigDict, field_validator, Field, EmailStr, ValidationInfo
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    field_validator,
+    Field,
+    EmailStr,
+    ValidationInfo,
+)
 import re
 import random
 from typing import Annotated
 from annotated_types import MinLen, MaxLen
 from shared.presentation.schemas.validators import create_text_validator
 
+
 def generate_phone_number() -> str:
     random_number = ""
     while len(random_number) != 10:
         random_number += str(random.randint(0, 9))
     return "7" + random_number
-
 
 
 class UserBase(BaseModel):
@@ -21,16 +28,9 @@ class UserBase(BaseModel):
     email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
     phone: str = Field(min_length=10, max_length=20, default=generate_phone_number())
 
-    validate_field = create_text_validator(["name", "surname", "patronymic"], with_digits=False, to_lower=True)
-    # @field_validator("name", "surname", "patronymic")
-    # @classmethod
-    # def capitalize_names(cls, value: str | None, info: ValidationInfo) -> str | None:
-    #     value = value.strip()
-    #     if value == "":
-    #         raise ValueError()
-    #     if value and isinstance(value, str):
-    #         return value.lower().capitalize()
-    #     return value
+    validate_field = create_text_validator(
+        ["name", "surname", "patronymic"], with_digits=False, to_lower=True
+    )
 
     @field_validator("phone")
     @classmethod

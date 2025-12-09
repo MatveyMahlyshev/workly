@@ -22,7 +22,7 @@ def create_text_validator(fields: list[str], with_digits: bool, to_lower: bool):
 
         if to_lower:
             value = value.lower()
-            
+
         return value.capitalize()
 
     return validator

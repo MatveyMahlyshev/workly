@@ -9,9 +9,9 @@ class UserAuth(BaseModel):
     password: str = Field(min_length=10, max_length=50, default="Stringstri11")
 
     @field_validator("password")
-    def validate_password(cls, v):
-        if not re.search(r"[A-Z]", v):
+    def validate_password(cls, value):
+        if not re.search(r"[A-Z]", value):
             raise ValueError("The password must contain at least one uppercase letter")
-        if not re.search(r"\d", v):
+        if not re.search(r"\d", value):
             raise ValueError("The password must contain at least one number.")
-        return v
+        return value
