@@ -60,7 +60,7 @@ class Vacancy(Base):
         "Recruiter", back_populates="vacancies"
     )
 
-    skills: Mapped[list["VacancySkillAssociation"]] = relationship(
+    skill_associations: Mapped[list["VacancySkillAssociation"]] = relationship(
         back_populates="vacancy",
         cascade="all, delete-orphan",
         passive_deletes=True,

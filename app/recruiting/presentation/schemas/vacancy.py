@@ -37,7 +37,7 @@ class VacancyBase(BaseModel):
     @field_validator("min_salary", "max_salary")
     @classmethod
     def validate_min_max_salary(cls, value):
-        if value <= 0:
+        if value is None or value <= 0:
             return None
         return value
 
@@ -54,3 +54,7 @@ class VacancyBase(BaseModel):
 
 class VacancyCreate(VacancyBase):
     pass
+
+
+class VacancyGet(VacancyBase):
+    recruiter_id: int

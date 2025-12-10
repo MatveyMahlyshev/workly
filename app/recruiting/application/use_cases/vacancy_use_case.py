@@ -37,3 +37,6 @@ class VacancyUseCases:
         )
 
         return await self.vacancy_repo.create_vacancy(entity=entity)
+
+    async def get_vacancies_list(self):
+        return await self.vacancy_repo.get_vacancies_list()

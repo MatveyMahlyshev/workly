@@ -12,14 +12,14 @@ class AuthUseCases:
     async def login(self, login_data: AuthEntity):
         user = await self.auth_repo.get_user(entity=login_data)
 
+        if not user:
+            raise UserNotFound()
+
         if user.recruiter:
-            print(user.recruiter)
             role_id = user.recruiter.id
         else:
             role_id = user.candidate.id
 
-        if not user:
-            raise UserNotFound()
         if not self.auth_repo.validate_password(
             password=login_data.password,
             hashed_password=user.password_hash,

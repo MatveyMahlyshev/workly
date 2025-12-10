@@ -32,5 +32,5 @@ class VacancySkillAssociation(Base):
         )
     )
 
-    vacancy: Mapped["Vacancy"] = relationship(back_populates="skills")
-    skill: Mapped["Skill"] = relationship(back_populates="vacancies")
+    vacancy: Mapped["Vacancy"] = relationship(back_populates="skill_associations")
+    skill: Mapped["Skill"] = relationship(back_populates="vacancy_associations")

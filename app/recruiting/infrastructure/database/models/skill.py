@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class Skill(Base):
     title: Mapped[str] = mapped_column(String(100), unique=True, index=True)
 
-    vacancies: Mapped[list["VacancySkillAssociation"]] = relationship(
+    vacancy_associations: Mapped[list["VacancySkillAssociation"]] = relationship(
         back_populates="skill",
         cascade="all, delete-orphan",
         passive_deletes=True,

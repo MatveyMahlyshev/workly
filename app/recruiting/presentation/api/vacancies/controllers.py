@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 
 
-from recruiting.presentation.schemas import VacancyCreate
+from recruiting.presentation.schemas import VacancyCreate, VacancyGet
 from recruiting.application.use_cases import VacancyUseCases
 from .dependencies import get_vacancy_use_cases
 from shared.dependencies.token import http_bearer, get_token_payload
@@ -39,3 +39,11 @@ async def create_vacancy(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error",
         )
+
+
+@router.get(
+    "/list/",
+    response_model=list[VacancyGet],
+)
+async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)):
+    return await use_cases.get_vacancies_list()

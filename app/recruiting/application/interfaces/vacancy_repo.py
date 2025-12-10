@@ -16,5 +16,9 @@ class IVacancyRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_vacancies_list(self) -> list[VacancyEntity]:
+        pass
+
+    @abstractmethod
     async def delete_vacancy(self, vacancy_id: int) -> None:
         pass
