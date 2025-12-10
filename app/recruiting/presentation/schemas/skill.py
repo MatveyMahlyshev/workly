@@ -18,12 +18,12 @@ class SkillBase(BaseModel):
 
 
 class Skill(SkillBase):
-    pass
+    id: int
 
 
 class SkillCreate(SkillBase):
     pass
 
 
-class SkillGet(SkillBase):
+class SkillGet(Skill):
     pass

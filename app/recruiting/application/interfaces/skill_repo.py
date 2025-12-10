@@ -12,7 +12,11 @@ class ISkillRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_skill(self, entity: SkillEntity) -> SkillEntity | None:
+    async def get_skill_by_title(self, entity: SkillEntity) -> SkillEntity | None:
+        pass
+
+    @abstractmethod
+    async def get_skill_by_id(self, ids: list[int]) -> SkillEntity | None:
         pass
 
     @abstractmethod

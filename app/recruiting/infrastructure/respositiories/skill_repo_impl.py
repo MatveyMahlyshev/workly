@@ -17,7 +17,7 @@ class SQLSkillREpository(ISkillRepository):
         return Skill(title=entity.title)
 
     def _to_entity(self, model: Skill) -> SkillEntity:
-        return SkillEntity(title=model.title)
+        return SkillEntity(id=model.id, title=model.title)
 
     async def create_skill(self, entity: SkillEntity) -> SuccessfullRequestEntity:
         skill_model: Skill = self._to_model(entity=entity)
@@ -30,13 +30,18 @@ class SQLSkillREpository(ISkillRepository):
             await self.session.rollback()
             raise SkillAlreadyExists()
 
-    async def get_skill(self, entity: SkillEntity) -> SkillEntity | None:
+    async def get_skill_by_title(self, entity: SkillEntity) -> SkillEntity | None:
         stmt = select(Skill).where(Skill.title == entity.title)
         result: Result = await self.session.execute(statement=stmt)
         skill = result.scalar_one_or_none()
         if not skill:
             return None
         return self._to_entity(model=skill)
+
+    async def get_skill_by_id(self, ids: list[int]):
+        stmt = select(Skill).where(Skill.id.in_(ids))
+        result: Result = await self.session.execute(statement=stmt)
+        return [self._to_entity(skill) for skill in result.scalars().all()]
 
     async def get_skills(self) -> list[SkillEntity]:
         stmt = select(Skill).order_by(asc(Skill.id))

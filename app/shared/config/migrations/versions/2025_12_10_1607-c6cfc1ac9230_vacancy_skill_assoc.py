@@ -27,16 +27,10 @@ def upgrade() -> None:
         sa.Column("vacancy_id", sa.Integer(), nullable=False),
         sa.Column("skill_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
-        sa.ForeignKeyConstraint(
-            ["skill_id"], ["skills.id"], ondelete="CASCADE"
-        ),
-        sa.ForeignKeyConstraint(
-            ["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"
-        ),
+        sa.ForeignKeyConstraint(["skill_id"], ["skills.id"], ondelete="CASCADE"),
+        sa.ForeignKeyConstraint(["vacancy_id"], ["vacancies.id"], ondelete="CASCADE"),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint(
-            "vacancy_id", "skill_id", name="idx_unique_vacancy_skill"
-        ),
+        sa.UniqueConstraint("vacancy_id", "skill_id", name="idx_unique_vacancy_skill"),
     )
     # ### end Alembic commands ###
 

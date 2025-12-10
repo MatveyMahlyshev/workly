@@ -19,9 +19,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-project_root = Path(
-    __file__
-).parent.parent.parent.parent  
+project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 from shared.infrastructure.base import Base
 from shared.infrastructure import models

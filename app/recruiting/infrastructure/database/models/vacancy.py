@@ -16,6 +16,7 @@ from shared.infrastructure.base import Base
 
 if TYPE_CHECKING:
     from shared.infrastructure.models import Recruiter
+    from .vacancy_skill_association import VacancySkillAssociation
 
 
 class Vacancy(Base):
@@ -57,4 +58,10 @@ class Vacancy(Base):
 
     recruiter: Mapped["Recruiter"] = relationship(
         "Recruiter", back_populates="vacancies"
+    )
+
+    skills: Mapped[list["VacancySkillAssociation"]] = relationship(
+        back_populates="vacancy",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
