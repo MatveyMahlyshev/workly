@@ -38,12 +38,10 @@ class CandidateBase(UserBase):
         if value > min_date:
             raise ValueError(f"User must be at least {min_age} years old")
 
-        # Проверка на максимальный возраст (например, 120 лет)
-        max_age = 120
+        max_age = 100
         max_date = date.today() - timedelta(days=max_age * 365.25)
         if value < max_date:
-            raise ValueError(f"Age cannot be more than {max_age} years")
-
+            raise ValueError(f"Age can't be more than {max_age} years")
         return value
 
 

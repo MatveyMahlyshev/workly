@@ -2,6 +2,7 @@ from pydantic import ConfigDict, BaseModel, field_validator
 
 from recruiting.domain.entities import WorkExperience, Period, SkillEntity
 from shared.presentation.schemas.validators import create_text_validator
+from .skill import Skill
 
 
 class VacancyBase(BaseModel):
@@ -14,7 +15,7 @@ class VacancyBase(BaseModel):
     salary_period: Period = Period.MONTH
     experience: WorkExperience = WorkExperience.NO_EXPERIENCE.value
     description: str | None = None
-    skills: list[SkillEntity] | None = None
+    skills: list[Skill] | None = None
 
     validate_field = create_text_validator(
         ["title", "company"], with_digits=False, to_lower=False
@@ -37,6 +38,16 @@ class VacancyBase(BaseModel):
         if value <= 0:
             return None
         return value
+
+    @field_validator("skills")
+    @classmethod
+    def validate_skills(cls, value: list[Skill]):
+        skills = set()
+        return [
+            skill
+            for skill in value
+            if skill.title not in skills and not skills.add(skill.title)
+        ]
 
 
 class VacancyCreate(VacancyBase):

@@ -7,7 +7,11 @@ class SkillBase(BaseModel):
 
     title: str = Field(min_length=1, max_length=100)
 
-    validate_field = create_text_validator(["title"], with_digits=True, to_lower=False)
+    validate_title = create_text_validator(["title"], with_digits=True, to_lower=False)
+
+
+class Skill(SkillBase):
+    pass
 
 
 class SkillCreate(SkillBase):
