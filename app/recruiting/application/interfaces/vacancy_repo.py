@@ -12,7 +12,7 @@ class IVacancyRepository(ABC):
         pass
 
     @abstractmethod
-    async def get_vacancy(self, vacancy_id: int) -> VacancyEntity:
+    async def get_vacancy_by_id(self, vacancy_id: int) -> VacancyEntity:
         pass
 
     @abstractmethod

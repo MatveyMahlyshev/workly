@@ -7,13 +7,21 @@ from sqlalchemy.orm import load_only
 from .token import get_token_payload
 from .db import get_db
 from shared.infrastructure.models import User, PermissionLevel
+from shared.utils.token import validate_token_type
+from .token import TokenTypeFields
 
 
 async def get_permission_with_token(
     payload: dict = Depends(get_token_payload),
     session: AsyncSession = Depends(get_db),
 ) -> tuple:
-
+    if not validate_token_type(
+        payload=payload,
+        token_type=TokenTypeFields.ACCESS_TOKEN_TYPE,
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
     stmt = (
         select(User)
         .options(load_only(User.permission_level))

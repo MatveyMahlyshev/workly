@@ -40,3 +40,6 @@ class VacancyUseCases:
 
     async def get_vacancies_list(self):
         return await self.vacancy_repo.get_vacancies_list()
+
+    async def get_vacancy_by_id(self, vacancy_id: int):
+        return await self.vacancy_repo.get_vacancy_by_id(vacancy_id=vacancy_id)

@@ -12,3 +12,8 @@ class UserNotFound(Exception):
 
 class CreateObjectException(Exception):
     pass
+
+
+class ObjectNotFound(Exception):
+    def __init__(self, message: str = "Not found"):
+        self.message = message

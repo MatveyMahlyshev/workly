@@ -7,7 +7,7 @@ from .dependencies import get_vacancy_use_cases
 from shared.dependencies.token import http_bearer, get_token_payload
 from shared.dependencies.permissions import verify_recruiter_auth
 from shared.presentation.schemas import SuccessfullResponse
-from shared.domain.exceptions import CreateObjectException
+from shared.domain.exceptions import CreateObjectException, ObjectNotFound
 
 
 router = APIRouter()
@@ -47,3 +47,23 @@ async def create_vacancy(
 )
 async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)):
     return await use_cases.get_vacancies_list()
+
+
+@router.get(
+    "/{vacancy_id}/",
+    response_model=VacancyGet,
+    responses={
+        status.HTTP_200_OK: {"description": "Successfull request"},
+        status.HTTP_404_NOT_FOUND: {"description": "Not found"},
+    },
+)
+async def get_vacancy_by_id(
+    vacancy_id: int, use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)
+):
+    try:
+        return await use_cases.get_vacancy_by_id(vacancy_id=vacancy_id)
+    except ObjectNotFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e.message,
+        )

@@ -57,4 +57,5 @@ class VacancyCreate(VacancyBase):
 
 
 class VacancyGet(VacancyBase):
+    id: int
     recruiter_id: int

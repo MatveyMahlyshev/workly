@@ -8,7 +8,7 @@ from recruiting.application.interfaces import IVacancyRepository
 from recruiting.domain.entities import VacancyEntity, SkillEntity
 from shared.infrastructure.models import Vacancy, Skill, VacancySkillAssociation
 from shared.domain.entities import SuccessfullRequestEntity
-from shared.domain.exceptions import CreateObjectException
+from shared.domain.exceptions import CreateObjectException, ObjectNotFound
 
 
 class SQLVacancyRepository(IVacancyRepository):
@@ -62,8 +62,23 @@ class SQLVacancyRepository(IVacancyRepository):
 
         return SuccessfullRequestEntity()
 
-    async def get_vacancy(self, vacancy_id):
-        pass
+    async def get_vacancy_by_id(self, vacancy_id):
+        stmt = (
+            select(Vacancy)
+            .options(
+                selectinload(Vacancy.skill_associations).selectinload(
+                    VacancySkillAssociation.skill
+                )
+            )
+            .where(Vacancy.id == vacancy_id)
+        )
+        result: Result = await self.session.execute(statement=stmt)
+        vacancy = result.scalar_one_or_none()
+
+        if not vacancy:
+            raise ObjectNotFound(message=f"Vacancy with id={vacancy_id} not found")
+
+        return self._to_entity(model=vacancy)
 
     async def get_vacancies_list(self) -> list[VacancyEntity]:
         stmt = (
@@ -77,7 +92,7 @@ class SQLVacancyRepository(IVacancyRepository):
         )
         result: Result = await self.session.execute(statement=stmt)
         vacancy_models: list[Vacancy] = result.scalars().all()
-   
+
         return [self._to_entity(model=model) for model in vacancy_models]
 
     async def delete_vacancy(self, vacancy_id):
