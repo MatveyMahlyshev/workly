@@ -25,6 +25,7 @@ class SQLSkillREpository(ISkillRepository):
             self.session.add(skill_model)
             await self.session.commit()
             return SuccessfullRequestEntity()
+
         except IntegrityError:
             await self.session.rollback()
             raise SkillAlreadyExists()

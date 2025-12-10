@@ -1,11 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, Result
 from sqlalchemy.exc import IntegrityError
 
 
 from recruiting.application.interfaces import IVacancyRepository
 from recruiting.domain.entities import VacancyEntity
-from shared.infrastructure.models import User, Recruiter, Vacancy
+from shared.infrastructure.models import Vacancy
 from shared.domain.entities import SuccessfullRequestEntity
 from shared.domain.exceptions import CreateObjectException
 

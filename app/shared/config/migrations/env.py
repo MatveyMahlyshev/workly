@@ -21,17 +21,11 @@ if config.config_file_name is not None:
 
 project_root = Path(
     __file__
-).parent.parent.parent.parent  # Настройте путь в зависимости от структуры
+).parent.parent.parent.parent  
 sys.path.insert(0, str(project_root))
 from shared.infrastructure.base import Base
-from shared.infrastructure.models import (
-    User,
-    Recruiter,
-    Education,
-    Experience,
-    Candidate,
-)
-from recruiting.infrastructure.database.models import Skill, Vacancy
+from shared.infrastructure import models
+
 
 from shared.config.settings import settings
 

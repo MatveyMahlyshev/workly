@@ -4,7 +4,6 @@ from pydantic import (
     field_validator,
     Field,
     EmailStr,
-    ValidationInfo,
 )
 import re
 import random
@@ -22,6 +21,7 @@ def generate_phone_number() -> str:
 
 class UserBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+
     name: str = Field(min_length=2, max_length=50)
     surname: str = Field(min_length=2, max_length=50)
     patronymic: str | None = Field(min_length=2, max_length=50, default=None)
@@ -29,7 +29,9 @@ class UserBase(BaseModel):
     phone: str = Field(min_length=10, max_length=20, default=generate_phone_number())
 
     validate_field = create_text_validator(
-        ["name", "surname", "patronymic"], with_digits=False, to_lower=True
+        ["name", "surname", "patronymic"],
+        with_digits=False,
+        to_lower=True,
     )
 
     @field_validator("phone")
@@ -55,7 +57,11 @@ class User(UserBase):
 
 
 class UserCreate(UserBase):
-    password: str = Field(min_length=10, max_length=50, default="Stringstri11")
+    password: str = Field(
+        min_length=10,
+        max_length=50,
+        default="Stringstri11",
+    )
 
     @field_validator("password")
     def validate_password(cls, value):
