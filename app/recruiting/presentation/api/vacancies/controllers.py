@@ -7,7 +7,7 @@ from .dependencies import get_vacancy_use_cases
 from shared.dependencies.token import http_bearer, get_token_payload
 from shared.dependencies.permissions import verify_recruiter_auth
 from shared.presentation.schemas import SuccessfullResponse
-from shared.domain.exceptions import CreateObjectException, ObjectNotFound
+from shared.domain.exceptions import CreateObjectException, ObjectNotFound, ObjectUpdateError
 
 
 router = APIRouter()
@@ -81,4 +81,10 @@ async def toggle_is_published(
     use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
     _=Depends(verify_recruiter_auth),
 ):
-    return await use_cases.toggle_is_published(vacancy_id=vacancy_id)
+    try:
+        return await use_cases.toggle_is_published(vacancy_id=vacancy_id)
+    except ObjectUpdateError:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Server error",
+        )
