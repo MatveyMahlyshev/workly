@@ -7,12 +7,19 @@ from shared.infrastructure.base import Base
 
 if TYPE_CHECKING:
     from .vacancy_skill_association import VacancySkillAssociation
+    from .question import Question
 
 
 class Skill(Base):
     title: Mapped[str] = mapped_column(String(100), unique=True, index=True)
 
     vacancy_associations: Mapped[list["VacancySkillAssociation"]] = relationship(
+        back_populates="skill",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
+
+    questions: Mapped[list["Question"]] = relationship(
         back_populates="skill",
         cascade="all, delete-orphan",
         passive_deletes=True,

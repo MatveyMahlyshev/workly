@@ -13,10 +13,17 @@ class QuestionUseCases:
     ) -> SuccessfullRequestEntity:
         question_entities: list[QuestionEntity] = []
         for question in questions:
-            answers = [AnswerEntity(text=answer.text, is_correct=answer.is_correct) for answer in question.answers]
-            
-            question_entities.append(QuestionEntity(text=question.text, answers=answers))
-            
-        return self.repo.create_questions(skill_id=skill_id, questions=question_entities)
-        
+            answers = [
+                AnswerEntity(text=answer.text, is_correct=answer.is_correct)
+                for answer in question.answers
+            ]
+
+            question_entities.append(
+                QuestionEntity(text=question.text, answers=answers)
+            )
+
+        return self.repo.create_questions(
+            skill_id=skill_id, questions=question_entities
+        )
+
         # return await self.repo.create_questions(questions=)
