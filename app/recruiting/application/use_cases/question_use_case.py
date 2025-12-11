@@ -22,7 +22,7 @@ class QuestionUseCases:
                 QuestionEntity(text=question.text, answers=answers)
             )
 
-        return self.repo.create_questions(
+        return await self.repo.create_questions(
             skill_id=skill_id, questions=question_entities
         )
 

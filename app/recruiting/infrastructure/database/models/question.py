@@ -13,7 +13,7 @@ class Question(Base):
     __table_args__ = (
         UniqueConstraint("text", "skill_id", name="idx_unique_text_skillid"),
     )
-    
+
     text: Mapped[str]
     skill_id: Mapped[int] = mapped_column(ForeignKey("skills.id"))
 
