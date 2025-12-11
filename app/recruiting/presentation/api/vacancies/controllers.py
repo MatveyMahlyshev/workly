@@ -24,6 +24,7 @@ router = APIRouter()
         status.HTTP_403_FORBIDDEN: {"description": "Forbidden"},
         status.HTTP_500_INTERNAL_SERVER_ERROR: {"description": "Server error"},
     },
+    summary="Create vacancy draft",
 )
 async def create_vacancy(
     vacancy_data: VacancyCreate,
@@ -39,10 +40,23 @@ async def create_vacancy(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error",
         )
+    
+@router.get("/my-list/")
+async def my_vacancies():
+    pass
+
+
+@router.patch("/toggle/{vacancy_id}/", dependencies=[Depends(http_bearer)])
+async def toggle_is_published(
+    vacancy_id: int,
+    use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
+    _ = Depends(verify_recruiter_auth),
+):
+    return await use_cases.toggle_is_published(vacancy_id=vacancy_id)
 
 
 @router.get(
-    "/list/",
+    "/list/all/",
     response_model=list[VacancyGet],
 )
 async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)):

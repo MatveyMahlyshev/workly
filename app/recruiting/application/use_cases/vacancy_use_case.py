@@ -1,5 +1,6 @@
 from ..interfaces import IVacancyRepository, ISkillRepository
 from recruiting.domain.entities import VacancyEntity, SkillEntity
+from shared.domain.entities import SuccessfullRequestEntity
 
 
 class VacancyUseCases:
@@ -11,7 +12,7 @@ class VacancyUseCases:
         self,
         payload: dict,
         **vacancy_data: dict,
-    ):
+    ) -> SuccessfullRequestEntity:
         skills = []
         titles = {skill["title"] for skill in vacancy_data["skills"]}
 
@@ -38,8 +39,11 @@ class VacancyUseCases:
 
         return await self.vacancy_repo.create_vacancy(entity=entity)
 
-    async def get_vacancies_list(self):
+    async def get_vacancies_list(self) -> list[VacancyEntity]:
         return await self.vacancy_repo.get_vacancies_list()
 
-    async def get_vacancy_by_id(self, vacancy_id: int):
+    async def get_vacancy_by_id(self, vacancy_id: int) -> VacancyEntity:
         return await self.vacancy_repo.get_vacancy_by_id(vacancy_id=vacancy_id)
+
+    async def toggle_is_published(self, vacancy_id: int) -> SuccessfullRequestEntity:
+        return await self.vacancy_repo.toggle_is_published(vacancy_id=vacancy_id)

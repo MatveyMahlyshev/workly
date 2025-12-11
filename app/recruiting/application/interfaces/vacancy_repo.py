@@ -22,3 +22,6 @@ class IVacancyRepository(ABC):
     @abstractmethod
     async def delete_vacancy(self, vacancy_id: int) -> None:
         pass
+
+    async def toggle_is_published(self, vacancy_id: int) -> SuccessfullRequestEntity:
+        pass

@@ -1,14 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select, Result, desc
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, load_only
 
 
 from recruiting.application.interfaces import IVacancyRepository
 from recruiting.domain.entities import VacancyEntity, SkillEntity
 from shared.infrastructure.models import Vacancy, Skill, VacancySkillAssociation
 from shared.domain.entities import SuccessfullRequestEntity
-from shared.domain.exceptions import CreateObjectException, ObjectNotFound
+from shared.domain.exceptions import (
+    CreateObjectException,
+    ObjectNotFound,
+    ObjectUpdateError,
+)
 
 
 class SQLVacancyRepository(IVacancyRepository):
@@ -89,7 +93,7 @@ class SQLVacancyRepository(IVacancyRepository):
                 )
             )
             .order_by(desc(Vacancy.id))
-        )
+        ).where(Vacancy.is_published)
         result: Result = await self.session.execute(statement=stmt)
         vacancy_models: list[Vacancy] = result.scalars().all()
 
@@ -97,3 +101,27 @@ class SQLVacancyRepository(IVacancyRepository):
 
     async def delete_vacancy(self, vacancy_id):
         pass
+
+    async def toggle_is_published(self, vacancy_id: int) -> SuccessfullRequestEntity:
+        stmt = (
+            select(Vacancy)
+            .options(load_only(Vacancy.is_published))
+            .where(Vacancy.id == vacancy_id)
+        )
+        result: Result = await self.session.execute(statement=stmt)
+        vacancy: Vacancy = result.scalar_one_or_none()
+
+        if not vacancy:
+            raise ObjectNotFound(message="Vacancy with id={vacancy_id} not found")
+
+        if vacancy.is_published:
+            vacancy.is_published = False
+        else:
+            vacancy.is_published = True
+
+        try:
+            await self.session.commit()
+        except IntegrityError:
+            raise ObjectUpdateError()
+
+        return SuccessfullRequestEntity()
