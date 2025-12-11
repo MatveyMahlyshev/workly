@@ -13,6 +13,39 @@ from shared.domain.exceptions import CreateObjectException, ObjectNotFound
 router = APIRouter()
 
 
+@router.get(
+    "/list/all/",
+    response_model=list[VacancyGet],
+)
+async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)):
+    return await use_cases.get_vacancies_list()
+
+
+@router.get("/my-list/")
+async def my_vacancies():
+    pass
+
+
+@router.get(
+    "/{vacancy_id}/",
+    response_model=VacancyGet,
+    responses={
+        status.HTTP_200_OK: {"description": "Successfull request"},
+        status.HTTP_404_NOT_FOUND: {"description": "Not found"},
+    },
+)
+async def get_vacancy_by_id(
+    vacancy_id: int, use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)
+):
+    try:
+        return await use_cases.get_vacancy_by_id(vacancy_id=vacancy_id)
+    except ObjectNotFound as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=e.message,
+        )
+
+
 @router.post(
     "/create/vacancy/",
     dependencies=[Depends(http_bearer)],
@@ -40,44 +73,12 @@ async def create_vacancy(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error",
         )
-    
-@router.get("/my-list/")
-async def my_vacancies():
-    pass
 
 
 @router.patch("/toggle/{vacancy_id}/", dependencies=[Depends(http_bearer)])
 async def toggle_is_published(
     vacancy_id: int,
     use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
-    _ = Depends(verify_recruiter_auth),
+    _=Depends(verify_recruiter_auth),
 ):
     return await use_cases.toggle_is_published(vacancy_id=vacancy_id)
-
-
-@router.get(
-    "/list/all/",
-    response_model=list[VacancyGet],
-)
-async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)):
-    return await use_cases.get_vacancies_list()
-
-
-@router.get(
-    "/{vacancy_id}/",
-    response_model=VacancyGet,
-    responses={
-        status.HTTP_200_OK: {"description": "Successfull request"},
-        status.HTTP_404_NOT_FOUND: {"description": "Not found"},
-    },
-)
-async def get_vacancy_by_id(
-    vacancy_id: int, use_cases: VacancyUseCases = Depends(get_vacancy_use_cases)
-):
-    try:
-        return await use_cases.get_vacancy_by_id(vacancy_id=vacancy_id)
-    except ObjectNotFound as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=e.message,
-        )

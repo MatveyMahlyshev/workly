@@ -77,9 +77,9 @@ class SQLVacancyRepository(IVacancyRepository):
             .where(Vacancy.id == vacancy_id)
         )
         result: Result = await self.session.execute(statement=stmt)
-        vacancy = result.scalar_one_or_none()
+        vacancy: Vacancy = result.scalar_one_or_none()
 
-        if not vacancy:
+        if not vacancy or not vacancy.is_published:
             raise ObjectNotFound(message=f"Vacancy with id={vacancy_id} not found")
 
         return self._to_entity(model=vacancy)
