@@ -9,5 +9,8 @@ if TYPE_CHECKING:
 
 class Question(Base):
     text: Mapped[str]
-    
-    answers: Mapped[list["Answer"]] = relationship("Answer", back_populates="question",)
+
+    answers: Mapped[list["Answer"]] = relationship(
+        "Answer",
+        back_populates="question",
+    )

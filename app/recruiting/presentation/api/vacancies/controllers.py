@@ -7,7 +7,11 @@ from .dependencies import get_vacancy_use_cases
 from shared.dependencies.token import http_bearer, get_token_payload
 from shared.dependencies.permissions import verify_recruiter_auth
 from shared.presentation.schemas import SuccessfullResponse
-from shared.domain.exceptions import CreateObjectException, ObjectNotFound, ObjectUpdateError
+from shared.domain.exceptions import (
+    CreateObjectException,
+    ObjectNotFound,
+    ObjectUpdateError,
+)
 
 
 router = APIRouter()

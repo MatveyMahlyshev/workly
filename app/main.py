@@ -7,7 +7,7 @@ from pydantic import ValidationError
 
 from users.presentation.api import router as users_router
 from auth.presentation.api import router as auth_router
-from recruiting.presentation.api import router as skills_router
+from recruiting.presentation.api import router as recruiting_router
 from shared.handlers.exception_handlers import validation_exception_handler
 
 from shared.config.settings import settings
@@ -30,7 +30,7 @@ app.include_router(
     prefix=settings.api_v2_prefix,
 )
 app.include_router(
-    router=skills_router,
+    router=recruiting_router,
     prefix=settings.api_v2_prefix,
 )
 
