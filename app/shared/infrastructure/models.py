@@ -8,12 +8,16 @@ __all__ = (
     "Skill",
     "Vacancy",
     "VacancySkillAssociation",
+    "Question",
+    "Answer",
 )
 
 from recruiting.infrastructure.database.models import (
     Skill,
     Vacancy,
     VacancySkillAssociation,
+    Question, 
+    Answer,
 )
 from users.infrastructure.database.models import (
     User,
