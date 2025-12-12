@@ -6,12 +6,34 @@ from recruiting.application.interfaces import IQuestionRepository
 from recruiting.domain.entities import QuestionEntity, AnswerEntity
 from recruiting.infrastructure.database.models import Question, Answer
 from shared.domain.entities import SuccessfullRequestEntity
-from shared.domain.exceptions import CreateObjectException, UniqueException
+from shared.domain.exceptions import (
+    CreateObjectException,
+    UniqueException,
+    ObjectNotFound,
+)
 
 
 class SQLQuestionRepository(IQuestionRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
+
+    def _handle_integrity_error(
+        self, e: IntegrityError, object_id: int, object_name: str = "Object"
+    ) -> None:
+        error_message = str(e.orig)
+
+        if "duplicate key value violates unique constraint" in error_message:
+            raise UniqueException(
+                message=f"{object_name} with this text and object_id already exists"
+            )
+
+        if (
+            "insert or update on table" in error_message
+            or "violates foreign key constraint" in error_message
+        ):
+            raise ObjectNotFound(message=f"Object with id={object_id} not found")
+
+        raise CreateObjectException()
 
     def _to_answer_model(self, question_id: int, entity: AnswerEntity) -> Answer:
         return Answer(
@@ -46,9 +68,13 @@ class SQLQuestionRepository(IQuestionRepository):
 
         try:
             await self.session.commit()
-        except IntegrityError:
+        except IntegrityError as e:
             await self.session.rollback()
-            raise CreateObjectException()
+            self._handle_integrity_error(
+                e=e,
+                object_id=skill_id,
+                object_name="Question",
+            )
 
         return SuccessfullRequestEntity()
 
@@ -64,9 +90,10 @@ class SQLQuestionRepository(IQuestionRepository):
             await self.session.commit()
         except IntegrityError as e:
             await self.session.rollback()
-            if "duplicate key value violates unique constraint" in str(e._message):
-                raise UniqueException(message="Answer with this text already exists")
-            else:
-                raise CreateObjectException(message="Server error")
+            self._handle_integrity_error(
+                e=e,
+                object_id=question_id,
+                object_name="Answer",
+            )
 
         return SuccessfullRequestEntity()

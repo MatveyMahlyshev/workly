@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from shared.presentation.schemas.validators import create_text_validator
+from shared.presentation.schemas.validators import create_big_text_validator
 
 
 class AnswerBase(BaseModel):
@@ -8,6 +8,10 @@ class AnswerBase(BaseModel):
 
     text: str = Field(min_length=1)
     is_correct: bool
+
+    validate_text = create_big_text_validator(
+        ["text"],
+    )
 
 
 class Answer(AnswerBase):
