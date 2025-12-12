@@ -5,7 +5,7 @@ import re
 class UserAuth(BaseModel):
     model_config = ConfigDict(strict=True)
 
-    email: EmailStr
+    email: EmailStr = Field(min_length=5, max_length=254)
     password: str = Field(min_length=10, max_length=50, default="Stringstri11")
 
     @field_validator("password")

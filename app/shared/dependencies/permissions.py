@@ -32,7 +32,7 @@ async def get_permission_with_token(
     return (user.permission_level, payload)
 
 
-async def verify_recruiter_auth(auth_data: tuple = Depends(get_permission_with_token)):
+def verify_recruiter_auth(auth_data: tuple = Depends(get_permission_with_token)):
     if auth_data[0] != PermissionLevel.RECRUITER.value:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -41,7 +41,7 @@ async def verify_recruiter_auth(auth_data: tuple = Depends(get_permission_with_t
     return auth_data[1]
 
 
-async def verify_candidate_auth(auth_data: tuple = Depends(get_permission_with_token)):
+def verify_candidate_auth(auth_data: tuple = Depends(get_permission_with_token)):
     if auth_data[0] != PermissionLevel.CANDIDATE.value:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

@@ -15,6 +15,7 @@ def get_token_payload(
 
     try:
         payload = TokenRepoImpl().decode_jwt(token=token)
+        print(1)
     except InvalidTokenError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

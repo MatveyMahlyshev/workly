@@ -25,7 +25,7 @@ class UserBase(BaseModel):
     name: str = Field(min_length=2, max_length=50)
     surname: str = Field(min_length=2, max_length=50)
     patronymic: str | None = Field(min_length=2, max_length=50, default=None)
-    email: Annotated[EmailStr, MinLen(5), MaxLen(50)]
+    email: EmailStr = Field(min_length=5, max_length=254)
     phone: str = Field(min_length=10, max_length=20, default=generate_phone_number())
 
     validate_field = create_text_validator(

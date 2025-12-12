@@ -5,7 +5,10 @@ from pydantic import field_validator
 from .user import UserBase, UserCreate
 from .education import Education
 from .experience import Experience
-from shared.presentation.schemas.validators import create_text_validator
+from shared.presentation.schemas.validators import (
+    create_text_validator,
+    create_big_text_validator,
+)
 
 
 class CandidateBase(UserBase):
@@ -26,6 +29,7 @@ class CandidateBase(UserBase):
         with_digits=True,
         to_lower=False,
     )
+    validate_description = create_big_text_validator(["about_candidate"])
 
     @field_validator("birth_date")
     @classmethod

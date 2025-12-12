@@ -1,7 +1,10 @@
 from pydantic import ConfigDict, BaseModel, field_validator
 
 from recruiting.domain.entities import WorkExperience, Period, SkillEntity
-from shared.presentation.schemas.validators import create_text_validator
+from shared.presentation.schemas.validators import (
+    create_text_validator,
+    create_big_text_validator,
+)
 from .skill import Skill
 
 
@@ -22,6 +25,7 @@ class VacancyBase(BaseModel):
         with_digits=False,
         to_lower=False,
     )
+    validate_description = create_big_text_validator(["description"])
 
     @field_validator("max_salary")
     @classmethod

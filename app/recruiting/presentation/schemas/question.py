@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, Field
 
-from shared.presentation.schemas.validators import create_text_validator
+from shared.presentation.schemas.validators import create_big_text_validator
 from .answer import Answer
 
 
@@ -9,10 +9,8 @@ class QuestionBase(BaseModel):
 
     text: str = Field(min_length=2)
 
-    validate_text = create_text_validator(
+    validate_text = create_big_text_validator(
         ["text"],
-        with_digits=True,
-        to_lower=False,
     )
 
     answers: list[Answer]
