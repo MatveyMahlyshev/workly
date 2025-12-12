@@ -122,6 +122,7 @@ class SQLVacancyRepository(IVacancyRepository):
         try:
             await self.session.commit()
         except IntegrityError:
+            await self.session.rollback()
             raise ObjectUpdateError()
 
         return SuccessfullRequestEntity()

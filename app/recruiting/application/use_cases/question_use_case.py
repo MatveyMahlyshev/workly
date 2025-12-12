@@ -26,4 +26,12 @@ class QuestionUseCases:
             skill_id=skill_id, questions=question_entities
         )
 
-        # return await self.repo.create_questions(questions=)
+    async def add_answers(self, question_id: int, answers: list[AnswerEntity]):
+        answer_entities = [
+            AnswerEntity(text=answer.text, is_correct=False) for answer in answers
+        ]
+        print(answer_entities)
+        return await self.repo.add_answers(
+            question_id=question_id,
+            answers=answer_entities,
+        )

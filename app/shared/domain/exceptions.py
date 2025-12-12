@@ -11,7 +11,13 @@ class UserNotFound(Exception):
 
 
 class CreateObjectException(Exception):
-    pass
+    def __init__(self, message: str = "Server error"):
+        self.message = message
+
+
+class UniqueException(Exception):
+    def __init__(self, message: str):
+        self.message = message
 
 
 class ObjectNotFound(Exception):

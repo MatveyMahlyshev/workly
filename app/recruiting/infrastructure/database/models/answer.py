@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 from typing import TYPE_CHECKING
 
 from shared.infrastructure.base import Base
@@ -9,6 +9,13 @@ if TYPE_CHECKING:
 
 
 class Answer(Base):
+    __table_args__ = (
+        UniqueConstraint(
+            "text",
+            "question_id",
+            name="idx_unique_text_questionid",
+        ),
+    )
     text: Mapped[str]
     is_correct: Mapped[bool]
     question_id: Mapped[int] = mapped_column(ForeignKey("questions.id"))

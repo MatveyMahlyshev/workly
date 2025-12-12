@@ -18,7 +18,6 @@ def check_empty(value: str, field_name: str):
 
 
 def create_text_validator(fields: list[str], with_digits: bool, to_lower: bool):
-
     @field_validator(*fields)
     @classmethod
     def validator(cls, value: str, info: ValidationInfo):
