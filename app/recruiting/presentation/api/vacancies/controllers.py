@@ -25,9 +25,12 @@ async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cas
     return await use_cases.get_vacancies_list()
 
 
-@router.get("/my-list/")
-async def my_vacancies():
-    pass
+@router.get("/my-list/", dependencies=[Depends(http_bearer)], response_model=list[VacancyGet])
+async def my_vacancies(
+    payload: dict = Depends(verify_recruiter_auth),
+    use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
+):
+    return await use_cases.get_vacancies_by_user(payload=payload)
 
 
 @router.get(

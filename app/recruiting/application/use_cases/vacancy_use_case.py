@@ -39,6 +39,11 @@ class VacancyUseCases:
 
         return await self.vacancy_repo.create_vacancy(entity=entity)
 
+    async def get_vacancies_by_user(self, payload: dict) -> list[VacancyEntity]:
+        return await self.vacancy_repo.get_vacancies_by_user(
+            recruiter_id=payload.get("user_id")
+        )
+
     async def get_vacancies_list(self) -> list[VacancyEntity]:
         return await self.vacancy_repo.get_vacancies_list()
 

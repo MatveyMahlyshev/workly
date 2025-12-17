@@ -30,6 +30,7 @@ class SQLVacancyRepository(IVacancyRepository):
             experience=model.experience,
             description=model.description,
             recruiter_id=model.recruiter_id,
+            is_published=model.is_published,
             skills=[
                 SkillEntity(id=assoc.skill.id, title=assoc.skill.title)
                 for assoc in model.skill_associations
@@ -83,6 +84,21 @@ class SQLVacancyRepository(IVacancyRepository):
             raise ObjectNotFound(message=f"Vacancy with id={vacancy_id} not found")
 
         return self._to_entity(model=vacancy)
+
+    async def get_vacancies_by_user(self, recruiter_id: int):
+        stmt = (
+            select(Vacancy)
+            .options(
+                selectinload(Vacancy.skill_associations).selectinload(
+                    VacancySkillAssociation.skill
+                )
+            )
+            .where(Vacancy.recruiter_id == recruiter_id)
+        )
+
+        result: Result = await self.session.execute(statement=stmt)
+        vacancy_models: list[Vacancy] = result.scalars().all()
+        return [self._to_entity(model=model) for model in vacancy_models]
 
     async def get_vacancies_list(self) -> list[VacancyEntity]:
         stmt = (

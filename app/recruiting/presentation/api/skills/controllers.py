@@ -32,4 +32,3 @@ async def get_skills(
     use_cases: SkillUseCases = Depends(get_skill_use_cases),
 ) -> SkillGet:
     return await use_cases.get_skills()
-

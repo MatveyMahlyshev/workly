@@ -16,6 +16,10 @@ class IVacancyRepository(ABC):
         pass
 
     @abstractmethod
+    async def get_vacancies_by_user(self, recruiter_id: int) -> list[VacancyEntity]:
+        pass
+
+    @abstractmethod
     async def get_vacancies_list(self) -> list[VacancyEntity]:
         pass
 
