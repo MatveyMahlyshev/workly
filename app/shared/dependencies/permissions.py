@@ -25,7 +25,7 @@ async def get_permission_with_token(
     stmt = (
         select(User)
         .options(load_only(User.permission_level))
-        .where(User.email == payload.get("sub"))
+        .where(User.uuid == payload.get("sub"))
     )
     result: Result = await session.execute(statement=stmt)
     user: User = result.scalar_one_or_none()

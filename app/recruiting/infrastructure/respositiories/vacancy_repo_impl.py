@@ -66,7 +66,7 @@ class SQLVacancyRepository(IVacancyRepository):
 
         return SuccessfullRequestEntity()
 
-    async def get_vacancy_by_id(self, vacancy_id):
+    async def get_vacancy_by_id(self, vacancy_id: int):
         stmt = (
             select(Vacancy)
             .options(

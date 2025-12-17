@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer
+from sqlalchemy import String, Integer, Uuid, text
 from typing import TYPE_CHECKING, Optional
 from enum import IntEnum
+from uuid import UUID, uuid4
+
 
 from shared.infrastructure.base import Base
 
@@ -17,7 +19,13 @@ class PermissionLevel(IntEnum):
 
 
 class User(Base):
-
+    uuid: Mapped[UUID] = mapped_column(
+        Uuid(as_uuid=True),
+        default=uuid4,
+        server_default=text("gen_random_uuid()"),
+        index=True,
+        unique=True,
+    )
     email: Mapped[str] = mapped_column(
         String(254), unique=True, index=True, nullable=False
     )

@@ -7,7 +7,7 @@ from shared.infrastructure.models import User
 class IAuthRepository(ABC):
 
     @abstractmethod
-    async def login(self, access_token: str, refresh_token: str) -> TokenEntity:
+    def login(self, access_token: str, refresh_token: str) -> TokenEntity:
         pass
 
     @abstractmethod

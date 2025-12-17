@@ -101,7 +101,6 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
         return SuccessfullRequestEntity()
 
     async def get_profile(self, payload: dict) -> CandidateEntity:
-        email = payload.get("sub")
         stmt = (
             select(User)
             .options(
@@ -130,7 +129,7 @@ class SQLCandidateRepositoryImpl(UserRepoMixin, ICandidateRepository):
                     User.phone,
                 ),
             )
-            .where(User.email == email)
+            .where(User.uuid == payload.get("sub"))
         )
         result: Result = await self.session.execute(statement=stmt)
         user: User = result.scalar_one_or_none()

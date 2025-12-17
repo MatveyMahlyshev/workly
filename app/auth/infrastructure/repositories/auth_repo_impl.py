@@ -22,7 +22,7 @@ class AuthRepositoryImpl(IAuthRepository):
             .options(
                 joinedload(User.candidate),
                 joinedload(User.recruiter),
-                load_only(User.email, User.password_hash),
+                load_only(User.email, User.password_hash, User.uuid),
             )
             .where(User.email == entity.email)
         )

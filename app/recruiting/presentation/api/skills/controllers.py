@@ -33,15 +33,3 @@ async def get_skills(
 ) -> SkillGet:
     return await use_cases.get_skills()
 
-
-@router.get("/title/{title}/", response_model=SkillGet)
-async def get_skill(
-    title: str, use_cases: SkillUseCases = Depends(get_skill_use_cases)
-) -> SkillGet:
-    try:
-        return await use_cases.get_skill(title=title)
-    except SkillNotFound as e:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=e.message,
-        )

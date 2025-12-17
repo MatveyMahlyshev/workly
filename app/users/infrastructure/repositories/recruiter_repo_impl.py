@@ -68,7 +68,7 @@ class SQLRecruiterRepositoryImpl(UserRepoMixin, IRecruiterRepository):
                     User.surname, User.name, User.patronymic, User.email, User.phone
                 ),
             )
-            .where(User.email == payload.get("sub"))
+            .where(User.uuid == payload.get("sub"))
         )
 
         result: Result = await self.session.execute(statement=stmt)

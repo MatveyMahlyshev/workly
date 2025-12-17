@@ -26,9 +26,10 @@ class AuthUseCases:
         ):
             raise InvalidLoginData()
         token_data = {
-            "sub": login_data.email,
+            "sub": str(user.uuid),
             "user_id": role_id,
         }
+        print(token_data)
 
         access_token = self.token_repo.create_token(
             token_data=token_data,
