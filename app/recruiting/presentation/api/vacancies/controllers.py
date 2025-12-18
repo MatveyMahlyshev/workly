@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from recruiting.presentation.schemas import VacancyCreate, VacancyGet
 from recruiting.application.use_cases import VacancyUseCases
 from .dependencies import get_vacancy_use_cases
-from shared.dependencies.token import http_bearer, get_token_payload
+from shared.dependencies.token import http_bearer
 from shared.dependencies.permissions import verify_recruiter_auth
 from shared.presentation.schemas import SuccessfullResponse
 from shared.domain.exceptions import (

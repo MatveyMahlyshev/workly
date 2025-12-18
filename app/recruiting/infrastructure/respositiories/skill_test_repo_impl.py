@@ -2,8 +2,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
 
-from recruiting.application.interfaces import IQuestionRepository
-from recruiting.domain.entities import QuestionEntity, AnswerEntity
+from recruiting.application.interfaces import ISkillRepository
+from recruiting.domain.entities import SkillQuestionEntity, SkillAnswerEntity
 from recruiting.infrastructure.database.models import Question, Answer
 from shared.domain.entities import SuccessfullRequestEntity
 from shared.domain.exceptions import (
@@ -13,7 +13,7 @@ from shared.domain.exceptions import (
 )
 
 
-class SQLQuestionRepository(IQuestionRepository):
+class SQLSkillTestRepository(ISkillRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
@@ -35,14 +35,14 @@ class SQLQuestionRepository(IQuestionRepository):
 
         raise CreateObjectException()
 
-    def _to_answer_model(self, question_id: int, entity: AnswerEntity) -> Answer:
+    def _to_answer_model(self, question_id: int, entity: SkillAnswerEntity) -> Answer:
         return Answer(
             text=entity.text,
             is_correct=entity.is_correct,
             question_id=question_id,
         )
 
-    def _to_question_answer_models(self, entity: QuestionEntity, skill_id: int):
+    def _to_question_answer_models(self, entity: SkillQuestionEntity, skill_id: int):
         question = Question(text=entity.text, skill_id=skill_id)
         answers = [
             Answer(
@@ -55,7 +55,7 @@ class SQLQuestionRepository(IQuestionRepository):
         return question, answers
 
     async def create_questions(
-        self, skill_id: int, questions: list[QuestionEntity]
+        self, skill_id: int, questions: list[SkillQuestionEntity]
     ) -> SuccessfullRequestEntity:
         for question_entity in questions:
             question, answers = self._to_question_answer_models(
@@ -81,7 +81,7 @@ class SQLQuestionRepository(IQuestionRepository):
     async def add_answers(
         self,
         question_id: int,
-        answers: list[AnswerEntity],
+        answers: list[SkillAnswerEntity],
     ) -> SuccessfullRequestEntity:
         try:
             for answer in answers:

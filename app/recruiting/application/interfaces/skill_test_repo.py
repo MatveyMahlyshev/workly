@@ -1,20 +1,20 @@
 from abc import ABC, abstractmethod
 
 
-from recruiting.domain.entities import QuestionEntity, AnswerEntity
+from recruiting.domain.entities import SkillQuestionEntity, SkillAnswerEntity
 from shared.domain.entities import SuccessfullRequestEntity
 
 
-class IQuestionRepository(ABC):
+class ISkillTestRepository(ABC):
 
     @abstractmethod
     async def create_questions(
-        self, skill_id: int, questions: list[QuestionEntity]
+        self, skill_id: int, questions: list[SkillQuestionEntity]
     ) -> SuccessfullRequestEntity:
         pass
 
     @abstractmethod
     async def add_answers(
-        self, question_id: int, answers: list[AnswerEntity]
+        self, question_id: int, answers: list[SkillAnswerEntity]
     ) -> SuccessfullRequestEntity:
         pass

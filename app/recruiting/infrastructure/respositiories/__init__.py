@@ -1,9 +1,9 @@
 __all__ = (
     "SQLSkillREpository",
     "SQLVacancyRepository",
-    "SQLQuestionRepository",
+    "SQLSkillTestRepository",
 )
 
 from .skill_repo_impl import SQLSkillREpository
 from .vacancy_repo_impl import SQLVacancyRepository
-from .question_repo_impl import SQLQuestionRepository
+from .skill_test_repo_impl import SQLSkillTestRepository

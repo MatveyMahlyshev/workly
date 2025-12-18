@@ -3,11 +3,10 @@ __all__ = (
     "VacancyEntity",
     "Period",
     "WorkExperience",
-    "QuestionEntity",
-    "AnswerEntity",
+    "SkillQuestionEntity",
+    "SkillAnswerEntity",
 )
 
 from .skill import SkillEntity
 from .vacancy import VacancyEntity, Period, WorkExperience
-from .question import QuestionEntity
-from .answer import AnswerEntity
+from .skill_test import SkillAnswerEntity, SkillQuestionEntity
