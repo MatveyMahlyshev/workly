@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import StrEnum
+from datetime import datetime
 
 from .skill import SkillEntity
 
@@ -31,3 +32,4 @@ class VacancyEntity:
     is_published: bool = False
     skills: list[SkillEntity] | None = None
     recruiter_id: int = 0
+    created_at: datetime = datetime.now()

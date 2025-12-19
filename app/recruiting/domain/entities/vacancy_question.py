@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class VacancyAnswerTextEntity:
     text: str = ""
 
+
 @dataclass
 class VacancyQuestionTextEntity:
     text: str = ""

@@ -9,7 +9,7 @@ from shared.domain.entities import SuccessfullRequestEntity
 from shared.domain.exceptions import (
     CreateObjectException,
     UniqueException,
-    ObjectNotFound,
+    ObjectNotFoundException,
 )
 
 
@@ -31,7 +31,7 @@ class SQLSkillTestRepository(ISkillRepository):
             "insert or update on table" in error_message
             or "violates foreign key constraint" in error_message
         ):
-            raise ObjectNotFound(message=f"Object with id={object_id} not found")
+            raise ObjectNotFoundException(message=f"Object with id={object_id} not found")
 
         raise CreateObjectException()
 

@@ -10,8 +10,9 @@ from shared.infrastructure.models import Vacancy, Skill, VacancySkillAssociation
 from shared.domain.entities import SuccessfullRequestEntity
 from shared.domain.exceptions import (
     CreateObjectException,
-    ObjectNotFound,
-    ObjectUpdateError,
+    ObjectNotFoundException,
+    ObjectUpdateException,
+    AccessDeniedException,
 )
 
 
@@ -35,6 +36,7 @@ class SQLVacancyRepository(IVacancyRepository):
                 SkillEntity(id=assoc.skill.id, title=assoc.skill.title)
                 for assoc in model.skill_associations
             ],
+            created_at=model.created_at,
         )
 
     def _to_model(self, entity: VacancyEntity) -> Vacancy:
@@ -48,6 +50,7 @@ class SQLVacancyRepository(IVacancyRepository):
             company=entity.company,
             is_published=entity.is_published,
             recruiter_id=entity.recruiter_id,
+            created_at=entity.created_at,
         )
         vacancy_skills = [
             VacancySkillAssociation(skill_id=skill.id, vacancy=vacancy)
@@ -81,7 +84,9 @@ class SQLVacancyRepository(IVacancyRepository):
         vacancy: Vacancy = result.scalar_one_or_none()
 
         if not vacancy or not vacancy.is_published:
-            raise ObjectNotFound(message=f"Vacancy with id={vacancy_id} not found")
+            raise ObjectNotFoundException(
+                message=f"Vacancy with id={vacancy_id} not found"
+            )
 
         return self._to_entity(model=vacancy)
 
@@ -93,6 +98,7 @@ class SQLVacancyRepository(IVacancyRepository):
                     VacancySkillAssociation.skill
                 )
             )
+            .order_by(desc(Vacancy.is_published), desc(Vacancy.created_at))
             .where(Vacancy.recruiter_id == recruiter_id)
         )
 
@@ -118,10 +124,12 @@ class SQLVacancyRepository(IVacancyRepository):
     async def delete_vacancy(self, vacancy_id):
         pass
 
-    async def toggle_is_published(self, vacancy_id: int) -> SuccessfullRequestEntity:
+    async def toggle_is_published(
+        self, payload: dict, vacancy_id: int
+    ) -> SuccessfullRequestEntity:
         stmt = (
             select(Vacancy)
-            .options(load_only(Vacancy.is_published))
+            .options(load_only(Vacancy.is_published, Vacancy.recruiter_id))
             .where(Vacancy.id == vacancy_id)
         )
         result: Result = await self.session.execute(statement=stmt)
@@ -129,6 +137,8 @@ class SQLVacancyRepository(IVacancyRepository):
 
         if not vacancy:
             raise ObjectNotFound(message="Vacancy with id={vacancy_id} not found")
+        if vacancy.recruiter_id != payload.get("user_id"):
+            raise AccessDeniedException(message="Access denied")
 
         if vacancy.is_published:
             vacancy.is_published = False
@@ -139,6 +149,6 @@ class SQLVacancyRepository(IVacancyRepository):
             await self.session.commit()
         except IntegrityError:
             await self.session.rollback()
-            raise ObjectUpdateError()
+            raise ObjectUpdateException()
 
         return SuccessfullRequestEntity()

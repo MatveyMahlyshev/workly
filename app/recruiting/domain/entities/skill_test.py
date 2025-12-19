@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class SkillAnswerEntity:
     id: int | None = None

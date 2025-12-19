@@ -8,7 +8,7 @@ from recruiting.application.use_cases import SkillTestUseCases
 from shared.domain.exceptions import (
     CreateObjectException,
     UniqueException,
-    ObjectNotFound,
+    ObjectNotFoundException,
 )
 from .dependencies import get_skill_use_cases, get_skill_tests_use_cases
 
@@ -63,7 +63,7 @@ async def create_questions(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
         )
-    except ObjectNotFound as e:
+    except ObjectNotFoundException as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=e.message,
@@ -98,7 +98,7 @@ async def add_answers(
             status_code=status.HTTP_409_CONFLICT,
             detail=e.message,
         )
-    except ObjectNotFound as e:
+    except ObjectNotFoundException as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=e.message,

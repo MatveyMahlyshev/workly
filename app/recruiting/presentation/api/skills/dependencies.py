@@ -1,7 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
 
-from recruiting.infrastructure.respositiories import SQLSkillREpository, SQLSkillTestRepository
+from recruiting.infrastructure.respositiories import (
+    SQLSkillREpository,
+    SQLSkillTestRepository,
+)
 from recruiting.application.use_cases import SkillUseCases, SkillTestUseCases
 from shared.dependencies.db import get_db
 
@@ -14,7 +17,6 @@ def get_skill_use_cases(
     skill_repo: SQLSkillREpository = Depends(get_skill_repo),
 ) -> SkillUseCases:
     return SkillUseCases(repo=skill_repo)
-
 
 
 def get_skill_test_repository(

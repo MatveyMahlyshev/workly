@@ -1,7 +1,11 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 
 
-from recruiting.presentation.schemas import VacancyCreate, VacancyGet
+from recruiting.presentation.schemas import (
+    VacancyCreate,
+    VacancyGet,
+    VacancyRecruiterGet,
+)
 from recruiting.application.use_cases import VacancyUseCases
 from .dependencies import get_vacancy_use_cases
 from shared.dependencies.token import http_bearer
@@ -9,8 +13,9 @@ from shared.dependencies.permissions import verify_recruiter_auth
 from shared.presentation.schemas import SuccessfullResponse
 from shared.domain.exceptions import (
     CreateObjectException,
-    ObjectNotFound,
-    ObjectUpdateError,
+    ObjectNotFoundException,
+    ObjectUpdateException,
+    AccessDeniedException,
 )
 
 
@@ -25,7 +30,11 @@ async def get_vacancies(use_cases: VacancyUseCases = Depends(get_vacancy_use_cas
     return await use_cases.get_vacancies_list()
 
 
-@router.get("/my-list/", dependencies=[Depends(http_bearer)], response_model=list[VacancyGet])
+@router.get(
+    "/my-list/",
+    dependencies=[Depends(http_bearer)],
+    response_model=list[VacancyRecruiterGet],
+)
 async def my_vacancies(
     payload: dict = Depends(verify_recruiter_auth),
     use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
@@ -46,7 +55,7 @@ async def get_vacancy_by_id(
 ):
     try:
         return await use_cases.get_vacancy_by_id(vacancy_id=vacancy_id)
-    except ObjectNotFound as e:
+    except ObjectNotFoundException as e:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=e.message,
@@ -86,11 +95,16 @@ async def create_vacancy(
 async def toggle_is_published(
     vacancy_id: int,
     use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
-    _=Depends(verify_recruiter_auth),
+    payload: dict = Depends(verify_recruiter_auth),
 ):
     try:
-        return await use_cases.toggle_is_published(vacancy_id=vacancy_id)
-    except ObjectUpdateError:
+        return await use_cases.toggle_is_published(payload=payload, vacancy_id=vacancy_id,)
+    except AccessDeniedException as e:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=e.message,
+        )
+    except ObjectUpdateException:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error",

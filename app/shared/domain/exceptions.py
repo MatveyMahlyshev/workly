@@ -1,3 +1,8 @@
+class BaseException(Exception):
+    def __init__(self, message: str = "Operation error"):
+        self.message = message
+
+
 class InvalidTokenType(Exception):
     pass
 
@@ -15,15 +20,17 @@ class CreateObjectException(Exception):
         self.message = message
 
 
-class UniqueException(Exception):
-    def __init__(self, message: str):
-        self.message = message
+class UniqueException(BaseException):
+    pass
 
 
-class ObjectNotFound(Exception):
-    def __init__(self, message: str = "Not found"):
-        self.message = message
+class ObjectNotFoundException(BaseException):
+    pass
 
 
-class ObjectUpdateError(Exception):
+class ObjectUpdateException(Exception):
+    pass
+
+
+class AccessDeniedException(BaseException):
     pass

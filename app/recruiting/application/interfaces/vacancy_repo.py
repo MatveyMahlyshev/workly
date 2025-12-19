@@ -27,5 +27,7 @@ class IVacancyRepository(ABC):
     async def delete_vacancy(self, vacancy_id: int) -> None:
         pass
 
-    async def toggle_is_published(self, vacancy_id: int) -> SuccessfullRequestEntity:
+    async def toggle_is_published(
+        self, payload: dict, vacancy_id: int
+    ) -> SuccessfullRequestEntity:
         pass

@@ -5,6 +5,7 @@ from shared.presentation.schemas.validators import (
     create_text_validator,
     create_big_text_validator,
 )
+from datetime import datetime
 from .skill import Skill
 
 
@@ -62,3 +63,8 @@ class VacancyCreate(VacancyBase):
 
 class VacancyGet(VacancyBase):
     id: int
+    created_at: datetime
+
+
+class VacancyRecruiterGet(VacancyGet):
+    is_published: bool
