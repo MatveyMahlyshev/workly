@@ -53,5 +53,7 @@ class VacancyUseCases:
     async def toggle_is_published(
         self, payload: dict, vacancy_id: int
     ) -> SuccessfullRequestEntity:
-        print("111111111111111111111")
-        return await self.vacancy_repo.toggle_is_published(payload=payload, vacancy_id=vacancy_id,)
+        return await self.vacancy_repo.toggle_is_published(
+            payload=payload,
+            vacancy_id=vacancy_id,
+        )

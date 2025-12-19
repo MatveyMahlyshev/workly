@@ -98,7 +98,10 @@ async def toggle_is_published(
     payload: dict = Depends(verify_recruiter_auth),
 ):
     try:
-        return await use_cases.toggle_is_published(payload=payload, vacancy_id=vacancy_id,)
+        return await use_cases.toggle_is_published(
+            payload=payload,
+            vacancy_id=vacancy_id,
+        )
     except AccessDeniedException as e:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -109,3 +112,8 @@ async def toggle_is_published(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Server error",
         )
+
+
+@router.post("{vacancy_id}/add/question/")
+async def add_questions(questions: str):
+    pass

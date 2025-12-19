@@ -1,6 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from recruiting.presentation.schemas import SkillCreate, SkillGet, Question, Answer
+from recruiting.presentation.schemas import (
+    SkillCreate,
+    SkillGet,
+    SkillQuestion,
+    SkillAnswer,
+)
 from recruiting.application.use_cases import SkillUseCases
 from shared.presentation.schemas import SuccessfullResponse
 from recruiting.domain.exceptions import SkillAlreadyExists
@@ -41,7 +46,7 @@ async def get_skills(
 
 
 @router.post(
-    "/{skill_id}/add/question/",
+    "/{skill_id}/add/SkillQuestion/",
     status_code=status.HTTP_201_CREATED,
     response_model=SuccessfullResponse,
     responses={
@@ -53,7 +58,7 @@ async def get_skills(
 )
 async def create_questions(
     skill_id: int,
-    questions: list[Question],
+    questions: list[SkillQuestion],
     use_cases: SkillTestUseCases = Depends(get_skill_tests_use_cases),
 ):
     try:
@@ -88,7 +93,7 @@ async def create_questions(
 )
 async def add_answers(
     qustion_id: int,
-    answers: list[Answer],
+    answers: list[SkillAnswer],
     use_cases: SkillTestUseCases = Depends(get_skill_tests_use_cases),
 ):
     try:

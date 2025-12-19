@@ -1,5 +1,8 @@
 from pydantic import BaseModel, ConfigDict, Field
-from shared.presentation.schemas.validators import create_text_validator
+from shared.presentation.schemas.validators import (
+    create_text_validator,
+    create_big_text_validator,
+)
 
 
 class SkillBase(BaseModel):
@@ -26,4 +29,39 @@ class SkillCreate(SkillBase):
 
 
 class SkillGet(Skill):
+    pass
+
+
+class SkillAnswerBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    text: str = Field(min_length=1)
+    is_correct: bool
+
+    validate_text = create_big_text_validator(
+        ["text"],
+    )
+
+
+class SkillAnswer(SkillAnswerBase):
+    pass
+
+
+class SkillQuestionBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    text: str = Field(min_length=2)
+
+    validate_text = create_big_text_validator(
+        ["text"],
+    )
+
+    answers: list[SkillAnswer]
+
+
+class SkillQuestion(SkillQuestionBase):
+    pass
+
+
+class SkillQuestionCreate(SkillQuestionBase):
     pass
