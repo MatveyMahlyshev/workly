@@ -2,10 +2,10 @@ from dataclasses import dataclass
 
 
 @dataclass
-class VacancyAnswerTextEntity:
+class VacancyInitialAnswerTextEntity:
     text: str = ""
 
 
 @dataclass
-class VacancyQuestionTextEntity:
+class VacancyInitialQuestionTextEntity:
     text: str = ""

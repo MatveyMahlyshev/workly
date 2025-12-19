@@ -6,6 +6,12 @@ __all__ = (
     "SkillQuestion",
     "SkillAnswer",
     "VacancyRecruiterGet",
+    "VacancyFirstQuestionCreate",
 )
 from .skill import SkillCreate, SkillGet, SkillAnswer, SkillQuestion
-from .vacancy import VacancyCreate, VacancyGet, VacancyRecruiterGet
+from .vacancy import (
+    VacancyCreate,
+    VacancyGet,
+    VacancyRecruiterGet,
+    VacancyFirstQuestionCreate,
+)

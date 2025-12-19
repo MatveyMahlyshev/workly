@@ -5,6 +5,7 @@ from recruiting.presentation.schemas import (
     VacancyCreate,
     VacancyGet,
     VacancyRecruiterGet,
+    VacancyFirstQuestionCreate,
 )
 from recruiting.application.use_cases import VacancyUseCases
 from .dependencies import get_vacancy_use_cases
@@ -115,5 +116,14 @@ async def toggle_is_published(
 
 
 @router.post("{vacancy_id}/add/question/")
-async def add_questions(questions: str):
-    pass
+async def add_questions(
+    vacancy_id: int,
+    questions: list[VacancyFirstQuestionCreate],
+    use_cases: VacancyUseCases = Depends(get_vacancy_use_cases),
+    payload: dict = Depends(verify_recruiter_auth),
+):
+    return await use_cases.create_initial_questions(
+        payload=payload,
+        vacancy_id=vacancy_id,
+        questions=questions,
+    )

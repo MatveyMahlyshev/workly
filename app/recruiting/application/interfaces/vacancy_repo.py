@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-from recruiting.domain.entities import VacancyEntity
+from recruiting.domain.entities import VacancyEntity, VacancyInitialQuestionTextEntity
 from shared.domain.entities import SuccessfullRequestEntity
 
 
@@ -27,7 +27,17 @@ class IVacancyRepository(ABC):
     async def delete_vacancy(self, vacancy_id: int) -> None:
         pass
 
+    @abstractmethod
     async def toggle_is_published(
         self, payload: dict, vacancy_id: int
+    ) -> SuccessfullRequestEntity:
+        pass
+
+    @abstractmethod
+    async def create_initial_questions(
+        self,
+        payload: dict,
+        vacancy_id: int,
+        questions: list[VacancyInitialQuestionTextEntity],
     ) -> SuccessfullRequestEntity:
         pass

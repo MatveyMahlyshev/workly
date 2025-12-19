@@ -1,5 +1,9 @@
 from ..interfaces import IVacancyRepository, ISkillRepository
-from recruiting.domain.entities import VacancyEntity, SkillEntity
+from recruiting.domain.entities import (
+    VacancyEntity,
+    SkillEntity,
+    VacancyInitialQuestionTextEntity,
+)
 from shared.domain.entities import SuccessfullRequestEntity
 
 
@@ -56,4 +60,16 @@ class VacancyUseCases:
         return await self.vacancy_repo.toggle_is_published(
             payload=payload,
             vacancy_id=vacancy_id,
+        )
+
+    async def create_initial_questions(
+        self,
+        payload: dict,
+        vacancy_id: int,
+        questions: list[VacancyInitialQuestionTextEntity],
+    ) -> SuccessfullRequestEntity:
+        return await self.vacancy_repo.create_initial_questions(
+            payload=payload,
+            vacancy_id=vacancy_id,
+            questions=questions,
         )

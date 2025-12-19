@@ -5,7 +5,7 @@ from sqlalchemy.orm import selectinload, load_only
 
 
 from recruiting.application.interfaces import IVacancyRepository
-from recruiting.domain.entities import VacancyEntity, SkillEntity
+from recruiting.domain.entities import VacancyEntity, SkillEntity, VacancyInitialQuestionTextEntity
 from shared.infrastructure.models import Vacancy, Skill, VacancySkillAssociation
 from shared.domain.entities import SuccessfullRequestEntity
 from shared.domain.exceptions import (
@@ -152,3 +152,6 @@ class SQLVacancyRepository(IVacancyRepository):
             raise ObjectUpdateException()
 
         return SuccessfullRequestEntity()
+
+    async def create_initial_questions(self, payload: dict, vacancy_id: int, questions: list[VacancyInitialQuestionTextEntity]) -> SuccessfullRequestEntity:
+        pass

@@ -1,6 +1,6 @@
-from pydantic import ConfigDict, BaseModel, field_validator
+from pydantic import ConfigDict, BaseModel, field_validator, Field
 
-from recruiting.domain.entities import WorkExperience, Period, SkillEntity
+from recruiting.domain.entities import WorkExperience, Period
 from shared.presentation.schemas.validators import (
     create_text_validator,
     create_big_text_validator,
@@ -68,3 +68,15 @@ class VacancyGet(VacancyBase):
 
 class VacancyRecruiterGet(VacancyGet):
     is_published: bool
+
+
+class VacancyFirstQuestionBase(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    text: str = Field(min_length=2)
+
+    validate_text = create_big_text_validator(fields=["text"])
+
+
+class VacancyFirstQuestionCreate(VacancyFirstQuestionBase):
+    pass
