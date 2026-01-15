@@ -41,7 +41,7 @@ jobs:
     
     - name: Запуск миграций
       run: |
-        cd app
+        cd app/shared/
         alembic upgrade head
       env:
         DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
