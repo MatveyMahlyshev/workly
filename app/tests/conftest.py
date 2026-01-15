@@ -16,7 +16,7 @@ async def engine():
     """Движок БД - создается для каждого теста"""
     engine = create_async_engine(
         settings.db.test_url,
-        echo=True,
+        echo=False,
     )
 
     async with engine.begin() as conn:
