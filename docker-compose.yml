@@ -38,6 +38,7 @@ services:
       - "8000:8000"
     environment:
       DB_URL: postgresql+asyncpg://postgres:postgres@db:5432/workly_db
+      TEST_DB_URL: postgresql+asyncpg://postgres:postgres@test_db:5433/test_db
     command: >
       sh -c "cd auth && python certs.py && cd .. &&
             cd shared && alembic upgrade head &&

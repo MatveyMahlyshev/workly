@@ -18,26 +18,22 @@ async def engine():
         settings.db.test_url,
         echo=True,
     )
-    
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-    
+
     yield engine
-    
+
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
-    
+
     await engine.dispose()
 
 
 @pytest.fixture(scope="function")
 def session_factory(engine):
     """Фабрика сессий"""
-    return async_sessionmaker(
-        engine,
-        class_=AsyncSession,
-        expire_on_commit=False
-    )
+    return async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest.fixture
@@ -60,20 +56,16 @@ async def setup_data(db_session: AsyncSession):
     from shared.infrastructure.models import Skill
 
     # Создаем 3 навыка
-    skills_data = [
-        {"title": "skill_1"},
-        {"title": "skill_2"}, 
-        {"title": "skill_3"}
-    ]
+    skills_data = [{"title": "skill_1"}, {"title": "skill_2"}, {"title": "skill_3"}]
     created_skills = []
-    
+
     for skill_data in skills_data:
         skill = Skill(**skill_data)
         db_session.add(skill)
         created_skills.append(skill)
-    
+
     await db_session.commit()
-    
+
     # Возвращаем ID созданных навыков
     return [skill.id for skill in created_skills]
 
@@ -81,23 +73,22 @@ async def setup_data(db_session: AsyncSession):
 @pytest.fixture
 async def client(db_session: AsyncSession):
     """AsyncClient с подменой зависимости БД"""
-    
+
     async def override_get_db():
         yield db_session
-    
+
     # Подменяем зависимость
     app.dependency_overrides[get_db] = override_get_db
-    
+
     # ПРАВИЛЬНОЕ создание AsyncClient с ASGITransport
     async with AsyncClient(
         transport=ASGITransport(app=app),  # Используем ASGITransport
-        base_url="http://test"
+        base_url="http://test",
     ) as ac:
         yield ac
-    
+
     # Очищаем подмену зависимостей
     app.dependency_overrides.clear()
-
 
 
 @pytest.fixture

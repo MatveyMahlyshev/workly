@@ -44,11 +44,11 @@ jobs:
         cd app/shared/
         alembic upgrade head
       env:
-        DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
+        TEST_DB_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
     
     - name: Запуск тестов
       run: |
         cd app
         python -m pytest tests/ -v
       env:
-        DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
+        TEST_DB_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
