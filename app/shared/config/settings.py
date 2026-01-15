@@ -17,8 +17,9 @@ class AuthJWT(BaseModel):
 class DBSettings(BaseModel):
     url: str = (
         os.getenv("DB_URL")
-        or "postgresql+asyncpg://postgres:postgres@localhost:5432/arch_db"
+        or "postgresql+asyncpg://postgres:postgres@localhost:5432/workly_db"
     )
+    test_url: str = "postgresql+asyncpg://postgres:postgres@localhost:5433/test_db"
     echo: bool = True
 
 
