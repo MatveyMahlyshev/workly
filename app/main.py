@@ -20,6 +20,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+
 app.include_router(
     router=auth_router,
     prefix=settings.api_v2_prefix,
@@ -44,7 +45,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8080",
         "http://192.168.0.7:8080",
-    ],  # или ["*"] для всех
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
