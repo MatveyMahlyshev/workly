@@ -35,16 +35,9 @@ jobs:
         cd auth
         python certs.py
     
-    - name: Запуск базы данных
+    - name: Ожидание запуска PostgreSQL
       run: |
         sleep 5
-    
-    - name: Запуск миграций
-      run: |
-        cd app/shared/
-        alembic -x dburl=postgresql+asyncpg://postgres:postgres@localhost:5433/test_db upgrade head
-      env:
-        TEST_DB_URL: postgresql+asyncpg://postgres:postgres@localhost:5433/test_db
     
     - name: Запуск тестов
       run: |
