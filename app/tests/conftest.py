@@ -13,7 +13,7 @@ from shared.config.settings import settings
 
 @pytest.fixture(scope="function")
 async def engine():
-    """Движок БД - создается для каждого теста"""
+
     engine = create_async_engine(
         settings.db.test_url,
         echo=False,
@@ -32,13 +32,11 @@ async def engine():
 
 @pytest.fixture(scope="function")
 def session_factory(engine):
-    """Фабрика сессий"""
     return async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
 @pytest.fixture
 async def db_session(session_factory) -> AsyncGenerator[AsyncSession, None]:
-    """Сессия БД - создается для каждого теста"""
     async with session_factory() as session:
         try:
             yield session
@@ -52,10 +50,8 @@ async def db_session(session_factory) -> AsyncGenerator[AsyncSession, None]:
 
 @pytest.fixture
 async def setup_data(db_session: AsyncSession):
-    """Подготовка тестовых данных"""
     from shared.infrastructure.models import Skill
 
-    # Создаем 3 навыка
     skills_data = [{"title": "skill_1"}, {"title": "skill_2"}, {"title": "skill_3"}]
     created_skills = []
 
@@ -65,34 +61,27 @@ async def setup_data(db_session: AsyncSession):
         created_skills.append(skill)
 
     await db_session.commit()
-
-    # Возвращаем ID созданных навыков
     return [skill.id for skill in created_skills]
 
 
 @pytest.fixture
-async def client(db_session: AsyncSession):
-    """AsyncClient с подменой зависимости БД"""
+async def create_client(db_session: AsyncSession):
 
     async def override_get_db():
         yield db_session
 
-    # Подменяем зависимость
     app.dependency_overrides[get_db] = override_get_db
 
-    # ПРАВИЛЬНОЕ создание AsyncClient с ASGITransport
     async with AsyncClient(
-        transport=ASGITransport(app=app),  # Используем ASGITransport
+        transport=ASGITransport(app=app), 
         base_url="http://test",
     ) as ac:
         yield ac
 
-    # Очищаем подмену зависимостей
     app.dependency_overrides.clear()
 
 
 @pytest.fixture
-async def client_with_skills(client: AsyncClient, setup_data):
-    """Клиент с БД, где уже есть 3 навыка"""
-    client.skill_ids = setup_data
-    yield client
+async def client(create_client: AsyncClient, setup_data):
+    create_client.skill_ids = setup_data
+    yield create_client

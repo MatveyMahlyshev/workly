@@ -3,9 +3,9 @@ from httpx import AsyncClient
 
 
 @pytest.mark.asyncio
-async def test_get_skills(client_with_skills: AsyncClient):
+async def test_get_skills(client: AsyncClient):
     """Тест получения списка навыков (уже есть 3 навыка)"""
-    response = await client_with_skills.get("/api/v2/recruiting/skills/list/")
+    response = await client.get("/api/v2/recruiting/skills/list/")
 
     assert response.status_code == 200
 
@@ -15,8 +15,8 @@ async def test_get_skills(client_with_skills: AsyncClient):
 
 
 @pytest.mark.asyncio
-async def test_create_skill(client_with_skills: AsyncClient):
-    response = await client_with_skills.post(
+async def test_create_skill(client: AsyncClient):
+    response = await client.post(
         "/api/v2/recruiting/skills/create/",
         json={"title": "skill_5"},
     )
