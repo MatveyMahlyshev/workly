@@ -34,9 +34,9 @@ class TestSkills:
             "/api/v2/recruiting/skills/create/",
             json={field: value},
         )
-        
+
         assert response.status_code == expected
-        
+
     @pytest.mark.asyncio
     async def test_create_skill_duplicate(
         self,
@@ -50,5 +50,5 @@ class TestSkills:
             "/api/v2/recruiting/skills/create/",
             json={"title": "skill_1"},
         )
-        
+
         assert response.status_code == 409
