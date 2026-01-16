@@ -65,7 +65,7 @@ async def setup_data(db_session: AsyncSession):
 
 
 @pytest.fixture
-async def create_client(db_session: AsyncSession):
+async def client(db_session: AsyncSession):
 
     async def override_get_db():
         yield db_session
@@ -73,7 +73,7 @@ async def create_client(db_session: AsyncSession):
     app.dependency_overrides[get_db] = override_get_db
 
     async with AsyncClient(
-        transport=ASGITransport(app=app), 
+        transport=ASGITransport(app=app),
         base_url="http://test",
     ) as ac:
         yield ac
@@ -82,6 +82,6 @@ async def create_client(db_session: AsyncSession):
 
 
 @pytest.fixture
-async def client(create_client: AsyncClient, setup_data):
-    create_client.skill_ids = setup_data
-    yield create_client
+async def async_client(client: AsyncClient, setup_data):
+    client.skill_ids = setup_data
+    yield client
