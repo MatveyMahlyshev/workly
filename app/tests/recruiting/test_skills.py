@@ -18,7 +18,6 @@ class TestSkills:
         "field,value,expected",
         [
             ("title", "skill_4", 201),
-            ("title", "skill_1", 201),
             ("title", None, 422),
             ("title", "", 422),
             ("title", 4, 422),
@@ -38,3 +37,18 @@ class TestSkills:
         
         assert response.status_code == expected
         
+    @pytest.mark.asyncio
+    async def test_create_skill_duplicate(
+        self,
+        async_client: AsyncClient,
+    ):
+        await async_client.post(
+            "/api/v2/recruiting/skills/create/",
+            json={"title": "skill_1"},
+        )
+        response = await async_client.post(
+            "/api/v2/recruiting/skills/create/",
+            json={"title": "skill_1"},
+        )
+        
+        assert response.status_code == 409

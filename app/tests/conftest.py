@@ -13,12 +13,10 @@ from shared.config.settings import settings
 
 @pytest.fixture(scope="function")
 async def engine():
-
     engine = create_async_engine(
         settings.db.test_url,
         echo=False,
     )
-
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -36,16 +34,9 @@ def session_factory(engine):
 
 
 @pytest.fixture
-async def db_session(session_factory) -> AsyncGenerator[AsyncSession, None]:
+async def db_session(session_factory):
     async with session_factory() as session:
-        try:
-            yield session
-            await session.commit()
-        except Exception:
-            await session.rollback()
-            raise
-        finally:
-            await session.close()
+        yield session
 
 
 @pytest.fixture
@@ -65,10 +56,11 @@ async def setup_data(db_session: AsyncSession):
 
 
 @pytest.fixture
-async def client(db_session: AsyncSession):
+async def client(session_factory):
 
     async def override_get_db():
-        yield db_session
+        async with session_factory() as session:
+            yield session
 
     app.dependency_overrides[get_db] = override_get_db
 
