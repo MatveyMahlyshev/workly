@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: workly
+spec:
+  containers:
+    - name: workly-backend
+      image: haythamdrugs/workly:test
+      command: ["python"]
+      args: ["main.py"]
+
+      imagePullPolicy: Always
+      ports:
+        - name: backend
+          containerPort: 8000
+          protocol: TCP
+    
