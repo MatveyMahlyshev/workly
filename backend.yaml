@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
     - name: workly-backend
-      image: haythamdrugs/workly:test
+      image: haythamdrugs/workly:v3
       command: ["python"]
       args: ["main.py"]
 
